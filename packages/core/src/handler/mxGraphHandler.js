@@ -15,7 +15,7 @@ import mxConstants from '../util/mxConstants';
 import mxDictionary from '../util/datatypes/mxDictionary';
 import mxCellHighlight from './mxCellHighlight';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import { isAltDown, isMultiTouchEvent } from '../util/mxEventUtils';
+import { getClientX, getClientY, isAltDown, isMultiTouchEvent } from '../util/mxEventUtils';
 
 /**
  * Class: mxGraphHandler
@@ -1709,8 +1709,8 @@ class mxGraphHandler {
       if (pState != null) {
         let pt = mxUtils.convertPoint(
           this.graph.container,
-          mxEvent.getClientX(evt),
-          mxEvent.getClientY(evt)
+          getClientX(evt),
+          getClientY(evt)
         );
         const alpha = mxUtils.toRadians(
           mxUtils.getValue(pState.style, mxConstants.STYLE_ROTATION) || 0

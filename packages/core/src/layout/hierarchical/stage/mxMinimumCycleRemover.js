@@ -6,6 +6,7 @@
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
 import mxUtils from '../../../util/mxUtils';
+import { clone } from '../../../util/mxCloneUtils';
 
 /**
  * Class: mxMinimumCycleRemover
@@ -85,7 +86,7 @@ class mxMinimumCycleRemover extends mxHierarchicalLayoutStage {
     // If there are any nodes that should be nodes that the dfs can miss
     // these need to be processed with the dfs and the roots assigned
     // correctly to form a correct internal model
-    const seenNodesCopy = mxUtils.clone(seenNodes, null, true);
+    const seenNodesCopy = clone(seenNodes, null, true);
 
     // Pick a random cell and dfs from it
     model.visit(

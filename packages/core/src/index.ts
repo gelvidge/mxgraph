@@ -1,5 +1,17 @@
 import mxClient from './mxClient';
 
+import mxCellAttributeChange from './atomic_changes/mxCellAttributeChange';
+import mxChildChange from './atomic_changes/mxChildChange';
+import mxCollapseChange from './atomic_changes/mxCollapseChange';
+import mxCurrentRootChange from './atomic_changes/mxCurrentRootChange';
+import mxGeometryChange from './atomic_changes/mxGeometryChange';
+import mxRootChange from './atomic_changes/mxRootChange';
+import mxSelectionChange from './atomic_changes/mxSelectionChange';
+import mxStyleChange from './atomic_changes/mxStyleChange';
+import mxTerminalChange from './atomic_changes/mxTerminalChange';
+import mxValueChange from './atomic_changes/mxValueChange';
+import mxVisibleChange from './atomic_changes/mxVisibleChange';
+
 import mxDefaultKeyHandler from './editor/mxDefaultKeyHandler';
 import mxDefaultPopupMenu from './editor/mxDefaultPopupMenu';
 import mxDefaultToolbar from './editor/mxDefaultToolbar';
@@ -173,6 +185,8 @@ import mxOutline from './view/graph/mxOutline';
 import mxPrintPreview from './view/graph/mxPrintPreview';
 import mxSwimlaneManager from './view/graph/mxSwimlaneManager';
 
+import '../css/common.css';
+
 export default {
   mxClient,
   mxLog,
@@ -320,5 +334,16 @@ export default {
 	mxGestureUtils,
 	mxStringUtils,
 	mxXmlUtils,
-	mxDomHelpers
+	mxDomHelpers,
+	mxCellAttributeChange,
+	mxChildChange,
+	mxCollapseChange,
+	mxCurrentRootChange,
+	mxGeometryChange,
+	mxRootChange,
+	mxSelectionChange,
+	mxStyleChange,
+	mxTerminalChange,
+	mxValueChange,
+	mxVisibleChange
 };

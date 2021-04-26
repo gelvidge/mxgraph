@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "start-storybook -p 8901"
+    "dev": "start-storybook -p 8901 -s ./public"
   },
   "author": "",
   "license": "ISC",

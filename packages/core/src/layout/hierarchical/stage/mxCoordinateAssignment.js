@@ -990,10 +990,11 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
         let downSegCount = 0;
         const upXPositions = [];
         const downXPositions = [];
+        let i = 0;
 
         let currentX = cell.getGeneralPurposeVariable(cell.minRank + 1);
 
-        for (let i = cell.minRank + 1; i < cell.maxRank - 1; i += 1) {
+        for (i = cell.minRank + 1; i < cell.maxRank - 1; i += 1) {
           // Attempt to straight out the control point on the
           // next segment up with the current control point.
           const nextX = cell.getX(i + 1);

@@ -601,6 +601,7 @@ class mxEdgeStyle {
     }
 
     const lastInx = pts.length - 1;
+    let pe = null;
 
     // Adds the waypoints
     if (controlHints != null && controlHints.length > 0) {
@@ -634,7 +635,7 @@ class mxEdgeStyle {
         }
       }
 
-      const pe = pts[lastInx];
+      pe = pts[lastInx];
 
       if (pe != null && hints[hints.length - 1] != null) {
         if (Math.abs(hints[hints.length - 1].x - pe.x) < tol) {

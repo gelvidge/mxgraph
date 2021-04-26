@@ -1,5 +1,6 @@
 import mxDragSource from './drag_pan/mxDragSource';
 import mxPoint from './datatypes/mxPoint';
+import mxConstants from './mxConstants';
 
 /**
  * Function: makeDraggable

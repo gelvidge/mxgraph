@@ -5,7 +5,6 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxUtils from '../util/mxUtils';
 import mxCellPath from '../view/cell/mxCellPath';
 import mxCodecRegistry from './mxCodecRegistry';
 import mxConstants from '../util/mxConstants';
@@ -13,6 +12,7 @@ import mxCell from '../view/cell/mxCell';
 import mxLog from '../util/gui/mxLog';
 import { getFunctionName } from '../util/mxStringUtils';
 import { importNode, isNode } from '../util/mxDomUtils';
+import { createXmlDocument } from '../util/mxXmlUtils';
 
 /**
  * XML codec for JavaScript object graphs. See {@link mxObjectCodec} for a
@@ -120,7 +120,7 @@ import { importNode, isNode } from '../util/mxDomUtils';
  */
 class mxCodec {
   constructor(document) {
-    this.document = document || mxUtils.createXmlDocument();
+    this.document = document || createXmlDocument();
     this.objects = [];
   }
 

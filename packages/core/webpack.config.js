@@ -17,6 +17,22 @@ module.exports = merge(base, {
     library: 'mxgraph',
     libraryTarget: 'umd'
   },
+  module: {
+    rules: [
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+        loader: 'url-loader',
+        options: {
+          name: 'images/[hash].[ext]',
+          limit: 10000,
+        },
+      }
+    ]
+  },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1,

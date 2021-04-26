@@ -1,8 +1,0 @@
-{
-  "extends": "@ijsto",
-  "rules": {
-    "newIsCap": 0,
-    "indent": ["error", 2, {"FunctionDeclaration": {"parameters": "first"},
-                            "FunctionExpression": {"parameters": "first"}}]
-  }
-}

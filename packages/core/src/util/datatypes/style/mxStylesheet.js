@@ -7,6 +7,7 @@
 import mxConstants from '../../mxConstants';
 import mxPerimeter from './mxPerimeter';
 import mxUtils from '../../mxUtils';
+import { clone } from '../../mxCloneUtils';
 
 /**
  * @class mxStylesheet
@@ -190,7 +191,7 @@ class mxStylesheet {
       const pairs = name.split(';');
 
       if (style != null && name.charAt(0) !== ';') {
-        style = mxUtils.clone(style);
+        style = clone(style);
       } else {
         style = {};
       }

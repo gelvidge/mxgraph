@@ -29,7 +29,7 @@ class mxArrow extends mxShape {
    */
   // augmentBoundingBox(bbox: mxRectangle): void;
   augmentBoundingBox(bbox) {
-    super.augmentBoundingBox.apply(bbox);
+    super.augmentBoundingBox(bbox);
 
     const w = Math.max(this.arrowWidth, this.endSize);
     bbox.grow((w / 2 + this.strokewidth) * this.scale);

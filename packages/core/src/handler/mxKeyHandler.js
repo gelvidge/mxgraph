@@ -7,7 +7,7 @@
 
 import mxEvent from '../util/event/mxEvent';
 import { isAncestorNode } from '../util/mxDomUtils';
-import { getSource, isAltDown, isConsumed, isShiftDown } from '../util/mxEventUtils';
+import { getSource, isAltDown, isConsumed, isControlDown as _isControlDown, isShiftDown } from '../util/mxEventUtils';
 import mxUtils from '../util/mxUtils';
 
 /**
@@ -235,7 +235,7 @@ class mxKeyHandler {
    * evt - Key event whose control key pressed state should be returned.
    */
   isControlDown(evt) {
-    return mxEvent.isControlDown(evt);
+    return _isControlDown(evt);
   }
 
   /**

@@ -1,7 +1,20 @@
 import mxgraph from '@mxgraph/core';
 
+import { globalTypes } from '../.storybook/preview';
+
 export default {
-  title: 'Backgrounds/Grid'
+  title: 'Backgrounds/Grid',
+  argTypes: {
+    ...globalTypes,
+    contextMenu: {
+      type: 'boolean',
+      defaultValue: false
+    },
+    rubberBand: {
+      type: 'boolean',
+      defaultValue: true
+    }
+  }
 };
 
 const Template = ({ label, ...args }) => {
@@ -21,11 +34,13 @@ const Template = ({ label, ...args }) => {
   const container = document.createElement('div');
   container.style.position = 'relative';
   container.style.overflow = 'hidden';
-  container.style.height = '481px';
+  container.style.width = `${args.width}px`;
+  container.style.height = `${args.height}px`;
   container.style.cursor = 'default';
   div.appendChild(container);
 
-  mxEvent.disableContextMenu(container);
+  if (!args.contextMenu)
+    mxEvent.disableContextMenu(container);
 
   // Creates the graph inside the given container
   var graph = new mxGraph(container);
@@ -33,7 +48,8 @@ const Template = ({ label, ...args }) => {
   graph.setPanning(true);
 
   // Enables rubberband selection
-  new mxRubberband(graph);
+  if (args.rubberBand)
+    new mxRubberband(graph);
 
   let repaintGrid;
 
