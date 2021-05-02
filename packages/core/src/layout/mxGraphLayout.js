@@ -9,7 +9,7 @@ import mxDictionary from '../util/datatypes/mxDictionary';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxGeometry from '../util/datatypes/mxGeometry';
 import mxPoint from '../util/datatypes/mxPoint';
-import mxConstants from '../util/mxConstants';
+import { STYLE_NOEDGESTYLE, STYLE_ORTHOGONAL } from '../util/mxConstants';
 
 /**
  * @class mxGraphLayout
@@ -212,10 +212,7 @@ class mxGraphLayout {
    */
   // isVertexIgnored(vertex: mxCell): boolean;
   isVertexIgnored(vertex) {
-    return (
-      !vertex.isVertex() ||
-      !this.graph.isCellVisible(vertex)
-    );
+    return !vertex.isVertex() || !vertex.isVisible();
   }
 
   /**
@@ -230,7 +227,7 @@ class mxGraphLayout {
 
     return (
       !edge.isEdge() ||
-      !this.graph.isCellVisible(edge) ||
+      !edge.isVisible() ||
       edge.getTerminal(true) == null ||
       edge.getTerminal(false) == null
     );
@@ -241,9 +238,7 @@ class mxGraphLayout {
    */
   // setEdgeStyleEnabled(edge: mxCell, value: any): void;
   setEdgeStyleEnabled(edge, value) {
-    this.graph.setCellStyles(mxConstants.STYLE_NOEDGESTYLE, value ? '0' : '1', [
-      edge,
-    ]);
+    this.graph.setCellStyles(STYLE_NOEDGESTYLE, value ? '0' : '1', [edge]);
   }
 
   /**
@@ -251,9 +246,7 @@ class mxGraphLayout {
    */
   // setOrthogonalEdge(edge: mxCell, value: any): void;
   setOrthogonalEdge(edge, value) {
-    this.graph.setCellStyles(mxConstants.STYLE_ORTHOGONAL, value ? '1' : '0', [
-      edge,
-    ]);
+    this.graph.setCellStyles(STYLE_ORTHOGONAL, value ? '1' : '0', [edge]);
   }
 
   /**
@@ -424,7 +417,7 @@ class mxGraphLayout {
     }
 
     if (this.parent != null) {
-      const parent = this.cell.getParent();
+      const parent = cell.getParent();
       geo = geo.clone();
 
       if (parent != null && parent !== this.parent) {

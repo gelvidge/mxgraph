@@ -66,7 +66,7 @@ class mxPanningHandler extends mxEventSource {
       );
 
       // Handles pinch gestures
-      this.gestureHandler = mxUtils.bind(this, (sender, eo) => {
+      this.gestureHandler = (sender, eo) => {
         if (this.isPinchEnabled()) {
           const evt = eo.getProperty('event');
 
@@ -86,7 +86,7 @@ class mxPanningHandler extends mxEventSource {
             this.zoomGraph(evt);
           }
         }
-      });
+      };
 
       this.graph.addListener(mxEvent.GESTURE, this.gestureHandler);
 

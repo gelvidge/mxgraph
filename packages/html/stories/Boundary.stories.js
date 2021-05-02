@@ -22,12 +22,9 @@ const Template = ({ label, ...args }) => {
     mxGraph, 
     mxEvent, 
     mxRubberband, 
-    mxConnectionHandler, 
-    mxConnectionConstraint,
-    mxGeometry,
-    mxPolyline,
     mxPoint,
-    mxConstants
+    mxConstants,
+    mxUtils
   } = mxgraph;
 
   const container = document.createElement('div');

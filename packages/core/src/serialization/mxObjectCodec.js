@@ -9,7 +9,7 @@ import mxObjectIdentity from '../util/datatypes/mxObjectIdentity';
 import mxLog from '../util/gui/mxLog';
 import mxGeometry from '../util/datatypes/mxGeometry';
 import mxPoint from '../util/datatypes/mxPoint';
-import mxConstants from '../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 import { getTextContent } from '../util/mxDomUtils';
 
@@ -313,8 +313,7 @@ class mxObjectCodec {
   // isExcluded(obj: any, attr: string, value: any, write?: boolean): boolean;
   isExcluded(obj, attr, value, write) {
     return (
-      attr == mxObjectIdentity.FIELD_NAME ||
-      mxUtils.indexOf(this.exclude, attr) >= 0
+      attr == mxObjectIdentity.FIELD_NAME || this.exclude.indexOf(attr) >= 0
     );
   }
 
@@ -331,7 +330,7 @@ class mxObjectCodec {
    */
   // isReference(obj: any, attr: string, value: any, write?: boolean): boolean;
   isReference(obj, attr, value, write) {
-    return mxUtils.indexOf(this.idrefs, attr) >= 0;
+    return this.idrefs.indexOf(attr) >= 0;
   }
 
   /**
@@ -783,7 +782,7 @@ class mxObjectCodec {
       const tmp = child.nextSibling;
 
       if (
-        child.nodeType === mxConstants.NODETYPE_ELEMENT &&
+        child.nodeType === NODETYPE_ELEMENT &&
         !this.processInclude(dec, child, obj)
       ) {
         this.decodeChild(dec, child, obj);

@@ -13,7 +13,6 @@ import mxCollapseChange from '../atomic_changes/mxCollapseChange';
 import mxVisibleChange from '../atomic_changes/mxVisibleChange';
 import mxCellAttributeChange from '../atomic_changes/mxCellAttributeChange';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from '../util/mxUtils';
 import { isNode } from '../util/mxDomUtils';
 
 /**

@@ -7,12 +7,24 @@
 
 import mxCellPath from '../view/cell/mxCellPath';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxConstants from '../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 import mxCell from '../view/cell/mxCell';
 import mxLog from '../util/gui/mxLog';
 import { getFunctionName } from '../util/mxStringUtils';
 import { importNode, isNode } from '../util/mxDomUtils';
-import { createXmlDocument } from '../util/mxXmlUtils';
+
+const createXmlDocument = () => {
+  // Put here from '../util/mxXmlUtils' to eliminate circular dependency
+  let doc = null;
+
+  if (document.implementation && document.implementation.createDocument) {
+    doc = document.implementation.createDocument('', '', null);
+  } else if ('ActiveXObject' in window) {
+    doc = mxUtils.createMsXmlDocument();
+  }
+
+  return doc;
+};
 
 /**
  * XML codec for JavaScript object graphs. See {@link mxObjectCodec} for a
@@ -244,7 +256,7 @@ class mxCodec {
    */
   // addElement(node: Node): void;
   addElement(node) {
-    if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (node.nodeType === NODETYPE_ELEMENT) {
       const id = node.getAttribute('id');
 
       if (id != null) {
@@ -338,9 +350,7 @@ class mxCodec {
         node = importNode(this.document, obj, true);
       } else {
         mxLog.warn(
-          `mxCodec.encode: No codec for ${getFunctionName(
-            obj.constructor
-          )}`
+          `mxCodec.encode: No codec for ${getFunctionName(obj.constructor)}`
         );
       }
     }
@@ -365,7 +375,7 @@ class mxCodec {
     this.updateElements();
     let obj = null;
 
-    if (node != null && node.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (node != null && node.nodeType === NODETYPE_ELEMENT) {
       let ctor = null;
 
       try {
@@ -448,7 +458,7 @@ class mxCodec {
     restoreStructures = restoreStructures != null ? restoreStructures : true;
     let cell = null;
 
-    if (node != null && node.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (node != null && node.nodeType === NODETYPE_ELEMENT) {
       // Tries to find a codec for the given node name. If that does
       // not return a codec then the node is the user object (an XML node
       // that contains the mxCell, aka inversion).

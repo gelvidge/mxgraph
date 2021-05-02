@@ -93,12 +93,7 @@ class mxSwimlaneModel {
               internalTargetCell.connectsAsTarget = [];
             }
 
-            if (
-              mxUtils.indexOf(
-                internalTargetCell.connectsAsTarget,
-                internalEdge
-              ) < 0
-            ) {
+            if (internalTargetCell.connectsAsTarget.indexOf(internalEdge) < 0) {
               internalTargetCell.connectsAsTarget.push(internalEdge);
             }
           }
@@ -274,12 +269,7 @@ class mxSwimlaneModel {
 
             internalEdge.source = internalVertices[i];
 
-            if (
-              mxUtils.indexOf(
-                internalVertices[i].connectsAsSource,
-                internalEdge
-              ) < 0
-            ) {
+            if (internalVertices[i].connectsAsSource.indexOf(internalEdge) < 0) {
               internalVertices[i].connectsAsSource.push(internalEdge);
             }
           }

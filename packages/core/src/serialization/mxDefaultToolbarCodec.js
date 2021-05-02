@@ -10,6 +10,7 @@ import mxDefaultToolbar from '../editor/mxDefaultToolbar';
 import mxCodecRegistry from './mxCodecRegistry';
 import { getChildNodes, getTextContent } from '../util/mxDomUtils';
 import { getClientX, getClientY } from '../util/mxEventUtils';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 
 /**
  * Class: mxDefaultToolbarCodec
@@ -131,7 +132,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
       node = node.firstChild;
 
       while (node != null) {
-        if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
+        if (node.nodeType === NODETYPE_ELEMENT) {
           if (!this.processInclude(dec, node, into)) {
             if (node.nodeName === 'separator') {
               into.addSeparator();
@@ -240,7 +241,7 @@ class mxDefaultToolbarCodec extends mxObjectCodec {
                     // Selects the toolbar icon if a selection change
                     // is made in the corresponding combobox.
                     mxEvent.addListener(select, 'change', () => {
-                      into.toolbar.selectMode(img, evt => {
+                      into.toolbar.selectMode(img, (evt) => {
                         const pt = mxUtils.convertPoint(
                           editor.graph.container,
                           getClientX(evt),

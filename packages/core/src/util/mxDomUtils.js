@@ -1,3 +1,5 @@
+import { NODETYPE_ELEMENT } from './mxConstants';
+
 /**
  * Function: extractTextWithWhitespace
  *
@@ -7,7 +9,7 @@
  *
  * elems - DOM nodes to return the text for.
  */
-export const extractTextWithWhitespace = elems => {
+export const extractTextWithWhitespace = (elems) => {
   // Known block elements for handling linefeeds (list is not complete)
   const blocks = [
     'BLOCKQUOTE',
@@ -56,10 +58,7 @@ export const extractTextWithWhitespace = elems => {
           doExtract(elem.childNodes);
         }
 
-        if (
-          i < elts.length - 1 &&
-          blocks.indexOf(elts[i + 1].nodeName) >= 0
-        ) {
+        if (i < elts.length - 1 && blocks.indexOf(elts[i + 1].nodeName) >= 0) {
           ret.push('\n');
         }
       }
@@ -80,7 +79,7 @@ export const extractTextWithWhitespace = elems => {
  *
  * node - DOM node to return the text content for.
  */
-export const getTextContent = node => {
+export const getTextContent = (node) => {
   return node != null
     ? node[node.textContent === undefined ? 'text' : 'textContent']
     : '';
@@ -115,7 +114,7 @@ export const setTextContent = (node, text) => {
  *
  * node - DOM node to return the inner HTML for.
  */
-export const getInnerHtml = node => {
+export const getInnerHtml = (node) => {
   if (node != null) {
     const serializer = new XMLSerializer();
     return serializer.serializeToString(node);
@@ -135,7 +134,7 @@ export const getInnerHtml = node => {
  *
  * node - DOM node to return the outer HTML for.
  */
-export const getOuterHtml = node => {
+export const getOuterHtml = (node) => {
   if (node != null) {
     const serializer = new XMLSerializer();
     return serializer.serializeToString(node);
@@ -255,8 +254,7 @@ export const isNode = (value, nodeName, attributeName, attributeValue) => {
   if (
     value != null &&
     !isNaN(value.nodeType) &&
-    (nodeName == null ||
-      value.nodeName.toLowerCase() == nodeName.toLowerCase())
+    (nodeName == null || value.nodeName.toLowerCase() == nodeName.toLowerCase())
   ) {
     return (
       attributeName == null ||
@@ -305,7 +303,7 @@ export const isAncestorNode = (ancestor, child) => {
  * <mxConstants.NODETYPE_ELEMENT>.
  */
 export const getChildNodes = (node, nodeType) => {
-  nodeType = nodeType || mxConstants.NODETYPE_ELEMENT;
+  nodeType = nodeType || NODETYPE_ELEMENT;
 
   const children = [];
   let tmp = node.firstChild;
@@ -366,11 +364,7 @@ export const importNodeImplementation = (doc, node, allChildren) => {
       if (allChildren && node.childNodes && node.childNodes.length > 0) {
         for (let i = 0; i < node.childNodes.length; i += 1) {
           newNode.appendChild(
-            importNodeImplementation(
-              doc,
-              node.childNodes[i],
-              allChildren
-            )
+            importNodeImplementation(doc, node.childNodes[i], allChildren)
           );
         }
       }

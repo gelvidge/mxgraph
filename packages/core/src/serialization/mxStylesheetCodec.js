@@ -8,7 +8,7 @@
 import mxStylesheet from '../util/datatypes/style/mxStylesheet';
 import mxUtils from '../util/mxUtils';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxConstants from '../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 import mxLog from '../util/gui/mxLog';
 import mxStyleRegistry from '../util/datatypes/style/mxStyleRegistry';
 import mxObjectCodec from './mxObjectCodec';
@@ -160,7 +160,7 @@ class mxStylesheetCodec extends mxObjectCodec {
           let entry = node.firstChild;
 
           while (entry != null) {
-            if (entry.nodeType === mxConstants.NODETYPE_ELEMENT) {
+            if (entry.nodeType === NODETYPE_ELEMENT) {
               const key = entry.getAttribute('as');
 
               if (entry.nodeName === 'add') {

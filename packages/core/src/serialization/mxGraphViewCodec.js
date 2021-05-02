@@ -62,7 +62,7 @@ class mxGraphViewCodec extends mxObjectCodec {
 
     if (parent == null || state != null) {
       const childCount = cell.getChildCount();
-      const geo = view.graph.getCellGeometry(cell);
+      const geo = cell.getGeometry();
       let name = null;
 
       if (parent === model.getRoot()) {

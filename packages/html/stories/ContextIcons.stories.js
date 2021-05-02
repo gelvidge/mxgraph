@@ -18,9 +18,6 @@ const Template = ({ label, ...args }) => {
     mxGraph, 
     mxEvent, 
     mxRubberband, 
-    mxConnectionHandler, 
-    mxConnectionConstraint,
-    mxGeometry,
     mxEventUtils,
     mxUtils,
     mxVertexHandler

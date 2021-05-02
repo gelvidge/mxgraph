@@ -6,7 +6,7 @@
  */
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
-import mxConstants from '../util/mxConstants';
+import { TOOLTIP_VERTICAL_OFFSET } from '../util/mxConstants';
 import { getSource, isMouseEvent } from '../util/mxEventUtils';
 import { isNode } from '../util/mxDomUtils';
 
@@ -156,7 +156,7 @@ class mxTooltipHandler {
 
       document.body.appendChild(this.div);
 
-      mxEvent.addGestureListeners(this.div, evt => {
+      mxEvent.addGestureListeners(this.div, (evt) => {
         const source = getSource(evt);
 
         if (source.nodeName !== 'A') {
@@ -326,9 +326,7 @@ class mxTooltipHandler {
 
       this.div.style.zIndex = this.zIndex;
       this.div.style.left = `${x + origin.x}px`;
-      this.div.style.top = `${y +
-        mxConstants.TOOLTIP_VERTICAL_OFFSET +
-        origin.y}px`;
+      this.div.style.top = `${y + TOOLTIP_VERTICAL_OFFSET + origin.y}px`;
 
       if (!isNode(tip)) {
         this.div.innerHTML = tip.replace(/\n/g, '<br>');

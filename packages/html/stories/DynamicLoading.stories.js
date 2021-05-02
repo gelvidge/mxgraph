@@ -13,6 +13,7 @@ const Template = ({ label, ...args }) => {
   const {
     mxGraph,
     mxText,
+    mxEffects,
     mxEvent,
     mxConstants,
     mxPerimeter,
@@ -108,7 +109,7 @@ const Template = ({ label, ...args }) => {
         }
 
         // Merges the response model with the client model
-        graph.getModel().mergeChildren(model.getRoot().getChildAt(0), parent);
+        graph.getModel().mergeChildren(graph.getModel().getRoot().getChildAt(0), parent);
 
         // Moves the given cell to the center
         let geo = cell.getGeometry();

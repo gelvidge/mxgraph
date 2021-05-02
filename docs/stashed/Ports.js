@@ -157,7 +157,7 @@ export default Ports;
             // processing wrt the parent label)
             return '';
           }
-          else if (this.isCellCollapsed(cell))
+          else if (cell.isCollapsed())
           {
             let index = tmp.indexOf('</h1>');
 

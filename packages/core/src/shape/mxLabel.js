@@ -5,7 +5,22 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxConstants from '../util/mxConstants';
+import {
+  ALIGN_BOTTOM,
+  ALIGN_CENTER,
+  ALIGN_LEFT,
+  ALIGN_MIDDLE,
+  ALIGN_RIGHT,
+  ALIGN_TOP,
+  DEFAULT_IMAGESIZE,
+  STYLE_IMAGE_ALIGN,
+  STYLE_IMAGE_HEIGHT,
+  STYLE_IMAGE_VERTICAL_ALIGN,
+  STYLE_IMAGE_WIDTH,
+  STYLE_INDICATOR_HEIGHT,
+  STYLE_INDICATOR_WIDTH,
+  STYLE_SPACING,
+} from '../util/mxConstants';
 import mxRectangleShape from './node/mxRectangleShape';
 import mxUtils from '../util/mxUtils';
 
@@ -39,7 +54,7 @@ class mxLabel extends mxRectangleShape {
    * @default mxConstants.DEFAULT_IMAGESIZE
    */
   // imageSize: number;
-  imageSize = mxConstants.DEFAULT_IMAGESIZE;
+  imageSize = DEFAULT_IMAGESIZE;
 
   /**
    * Default value for image spacing
@@ -157,42 +172,37 @@ class mxLabel extends mxRectangleShape {
    */
   // getImageBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getImageBounds(x, y, w, h) {
-    const align = mxUtils.getValue(
-      this.style,
-      mxConstants.STYLE_IMAGE_ALIGN,
-      mxConstants.ALIGN_LEFT
-    );
+    const align = mxUtils.getValue(this.style, STYLE_IMAGE_ALIGN, ALIGN_LEFT);
     const valign = mxUtils.getValue(
       this.style,
-      mxConstants.STYLE_IMAGE_VERTICAL_ALIGN,
-      mxConstants.ALIGN_MIDDLE
+      STYLE_IMAGE_VERTICAL_ALIGN,
+      ALIGN_MIDDLE
     );
     const width = mxUtils.getNumber(
       this.style,
-      mxConstants.STYLE_IMAGE_WIDTH,
-      mxConstants.DEFAULT_IMAGESIZE
+      STYLE_IMAGE_WIDTH,
+      DEFAULT_IMAGESIZE
     );
     const height = mxUtils.getNumber(
       this.style,
-      mxConstants.STYLE_IMAGE_HEIGHT,
-      mxConstants.DEFAULT_IMAGESIZE
+      STYLE_IMAGE_HEIGHT,
+      DEFAULT_IMAGESIZE
     );
     const spacing =
-      mxUtils.getNumber(this.style, mxConstants.STYLE_SPACING, this.spacing) +
-      5;
+      mxUtils.getNumber(this.style, STYLE_SPACING, this.spacing) + 5;
 
-    if (align === mxConstants.ALIGN_CENTER) {
+    if (align === ALIGN_CENTER) {
       x += (w - width) / 2;
-    } else if (align === mxConstants.ALIGN_RIGHT) {
+    } else if (align === ALIGN_RIGHT) {
       x += w - width - spacing;
     } // default is left
     else {
       x += spacing;
     }
 
-    if (valign === mxConstants.ALIGN_TOP) {
+    if (valign === ALIGN_TOP) {
       y += spacing;
-    } else if (valign === mxConstants.ALIGN_BOTTOM) {
+    } else if (valign === ALIGN_BOTTOM) {
       y += h - height - spacing;
     } // default is middle
     else {
@@ -240,40 +250,36 @@ class mxLabel extends mxRectangleShape {
    */
   // getIndicatorBounds(x: number, y: number, w: number, h: number): mxRectangle;
   getIndicatorBounds(x, y, w, h) {
-    const align = mxUtils.getValue(
-      this.style,
-      mxConstants.STYLE_IMAGE_ALIGN,
-      mxConstants.ALIGN_LEFT
-    );
+    const align = mxUtils.getValue(this.style, STYLE_IMAGE_ALIGN, ALIGN_LEFT);
     const valign = mxUtils.getValue(
       this.style,
-      mxConstants.STYLE_IMAGE_VERTICAL_ALIGN,
-      mxConstants.ALIGN_MIDDLE
+      STYLE_IMAGE_VERTICAL_ALIGN,
+      ALIGN_MIDDLE
     );
     const width = mxUtils.getNumber(
       this.style,
-      mxConstants.STYLE_INDICATOR_WIDTH,
+      STYLE_INDICATOR_WIDTH,
       this.indicatorSize
     );
     const height = mxUtils.getNumber(
       this.style,
-      mxConstants.STYLE_INDICATOR_HEIGHT,
+      STYLE_INDICATOR_HEIGHT,
       this.indicatorSize
     );
     const spacing = this.spacing + 5;
 
-    if (align === mxConstants.ALIGN_RIGHT) {
+    if (align === ALIGN_RIGHT) {
       x += w - width - spacing;
-    } else if (align === mxConstants.ALIGN_CENTER) {
+    } else if (align === ALIGN_CENTER) {
       x += (w - width) / 2;
     } // default is left
     else {
       x += spacing;
     }
 
-    if (valign === mxConstants.ALIGN_BOTTOM) {
+    if (valign === ALIGN_BOTTOM) {
       y += h - height - spacing;
-    } else if (valign === mxConstants.ALIGN_TOP) {
+    } else if (valign === ALIGN_TOP) {
       y += spacing;
     } // default is middle
     else {

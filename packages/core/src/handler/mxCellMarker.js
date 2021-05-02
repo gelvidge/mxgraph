@@ -5,7 +5,13 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxEventSource from '../util/event/mxEventSource';
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_HOTSPOT,
+  DEFAULT_INVALID_COLOR,
+  DEFAULT_VALID_COLOR,
+  MAX_HOTSPOT_SIZE,
+  MIN_HOTSPOT_SIZE,
+} from '../util/mxConstants';
 import mxCellHighlight from './mxCellHighlight';
 import mxEventObject from '../util/event/mxEventObject';
 import mxEvent from '../util/event/mxEvent';
@@ -57,11 +63,10 @@ class mxCellMarker extends mxEventSource {
 
     if (graph != null) {
       this.graph = graph;
-      this.validColor =
-        validColor != null ? validColor : mxConstants.DEFAULT_VALID_COLOR;
+      this.validColor = validColor != null ? validColor : DEFAULT_VALID_COLOR;
       this.invalidColor =
-        invalidColor != null ? invalidColor : mxConstants.DEFAULT_INVALID_COLOR;
-      this.hotspot = hotspot != null ? hotspot : mxConstants.DEFAULT_HOTSPOT;
+        invalidColor != null ? invalidColor : DEFAULT_INVALID_COLOR;
+      this.hotspot = hotspot != null ? hotspot : DEFAULT_HOTSPOT;
 
       this.highlight = new mxCellHighlight(graph);
     }
@@ -92,7 +97,7 @@ class mxCellMarker extends mxEventSource {
    * mxConstants.DEFAULT_HOTSPOT.
    */
   // hotspot: number;
-  hotspot = mxConstants.DEFAULT_HOTSPOT;
+  hotspot = DEFAULT_HOTSPOT;
 
   /**
    * Variable: hotspotEnabled
@@ -420,8 +425,8 @@ class mxCellMarker extends mxEventSource {
         me.getGraphX(),
         me.getGraphY(),
         this.hotspot,
-        mxConstants.MIN_HOTSPOT_SIZE,
-        mxConstants.MAX_HOTSPOT_SIZE
+        MIN_HOTSPOT_SIZE,
+        MAX_HOTSPOT_SIZE
       );
     }
 

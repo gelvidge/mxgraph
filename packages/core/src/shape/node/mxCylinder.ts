@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxShape from '../mxShape';
-import mxConstants from '../../util/mxConstants';
+import { STYLE_BACKGROUND_OUTLINE } from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
@@ -62,7 +62,7 @@ class mxCylinder extends mxShape {
     if (
       !this.outline ||
       this.style == null ||
-      mxUtils.getValue(this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0
+      mxUtils.getValue(this.style, STYLE_BACKGROUND_OUTLINE, 0) == 0
     ) {
       c.setShadow(false);
       c.begin();

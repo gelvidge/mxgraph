@@ -14,7 +14,6 @@ const Template = ({ label, ...args }) => {
     mxEditor,
     mxConnectionHandler,
     mxImage,
-    mxUtils,
     mxPerimeter,
     mxPoint,
     mxConstants,
@@ -23,8 +22,7 @@ const Template = ({ label, ...args }) => {
     mxEvent,
     mxSwimlaneManager,
     mxStackLayout,
-    mxLayoutManager,
-    mxGraphModel
+    mxLayoutManager
   } = mxgraph;
 
   const container = document.createElement('div');
@@ -224,7 +222,7 @@ const Template = ({ label, ...args }) => {
     // TODO super cannot be used here
     // let style = super.getStyle();
     let style;
-    if (this.isCellCollapsed()) {
+    if (this.isCollapsed()) {
       if (style != null) {
         style += ';';
       } else {
@@ -286,7 +284,7 @@ const Template = ({ label, ...args }) => {
   };
 
   // Adds cells to the model in a single step
-  model.batchUpdate(() => {
+  graph.batchUpdate(() => {
     const pool1 = insertVertex({
       parent,
       value: 'Pool 1',

@@ -306,7 +306,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
         parent.isVertex() != null &&
         this.maintainParentLocation
       ) {
-        const geo = this.graph.getCellGeometry(parent);
+        const geo = parent.getGeometry();
 
         if (geo != null) {
           this.parentX = geo.x;
@@ -376,7 +376,7 @@ class mxCompactTreeLayout extends mxGraphLayout {
 
           // Maintaining parent location
           if (this.parentX != null && this.parentY != null) {
-            let geo = this.graph.getCellGeometry(parent);
+            let geo = parent.getGeometry();
 
             if (geo != null) {
               geo = geo.clone();

@@ -5,8 +5,15 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxAbstractCanvas2D from './mxAbstractCanvas2D';
-import mxConstants from '../mxConstants';
-import mxUtils from '../mxUtils';
+import {
+  DEFAULT_FONTFAMILY,
+  DEFAULT_FONTSIZE,
+  NONE,
+  SHADOWCOLOR,
+  SHADOW_OFFSET_X,
+  SHADOW_OFFSET_Y,
+  SHADOW_OPACITY,
+} from '../mxConstants';
 import { getOuterHtml } from '../mxDomUtils';
 
 /**
@@ -73,25 +80,25 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
 
     // Writes font defaults
     elem = this.createElement('fontfamily');
-    elem.setAttribute('family', mxConstants.DEFAULT_FONTFAMILY);
+    elem.setAttribute('family', DEFAULT_FONTFAMILY);
     this.root.appendChild(elem);
 
     elem = this.createElement('fontsize');
-    elem.setAttribute('size', mxConstants.DEFAULT_FONTSIZE);
+    elem.setAttribute('size', DEFAULT_FONTSIZE);
     this.root.appendChild(elem);
 
     // Writes shadow defaults
     elem = this.createElement('shadowcolor');
-    elem.setAttribute('color', mxConstants.SHADOWCOLOR);
+    elem.setAttribute('color', SHADOWCOLOR);
     this.root.appendChild(elem);
 
     elem = this.createElement('shadowalpha');
-    elem.setAttribute('alpha', mxConstants.SHADOW_OPACITY);
+    elem.setAttribute('alpha', SHADOW_OPACITY);
     this.root.appendChild(elem);
 
     elem = this.createElement('shadowoffset');
-    elem.setAttribute('dx', mxConstants.SHADOW_OFFSET_X);
-    elem.setAttribute('dy', mxConstants.SHADOW_OFFSET_Y);
+    elem.setAttribute('dx', SHADOW_OFFSET_X);
+    elem.setAttribute('dy', SHADOW_OFFSET_Y);
     this.root.appendChild(elem);
   }
 
@@ -250,7 +257,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   // setFillColor(value: string): void;
   setFillColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -262,7 +269,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
     }
 
     const elem = this.createElement('fillcolor');
-    elem.setAttribute('color', value != null ? value : mxConstants.NONE);
+    elem.setAttribute('color', value != null ? value : NONE);
     this.root.appendChild(elem);
   }
 
@@ -322,7 +329,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
    */
   // setStrokeColor(value: string): void;
   setStrokeColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -334,7 +341,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
     }
 
     const elem = this.createElement('strokecolor');
-    elem.setAttribute('color', value != null ? value : mxConstants.NONE);
+    elem.setAttribute('color', value != null ? value : NONE);
     this.root.appendChild(elem);
   }
 
@@ -478,7 +485,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   // setFontColor(value: string): void;
   setFontColor(value) {
     if (this.textEnabled) {
-      if (value === mxConstants.NONE) {
+      if (value === NONE) {
         value = null;
       }
 
@@ -490,7 +497,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       }
 
       const elem = this.createElement('fontcolor');
-      elem.setAttribute('color', value != null ? value : mxConstants.NONE);
+      elem.setAttribute('color', value != null ? value : NONE);
       this.root.appendChild(elem);
     }
   }
@@ -503,7 +510,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   // setFontBackgroundColor(value: string): void;
   setFontBackgroundColor(value) {
     if (this.textEnabled) {
-      if (value === mxConstants.NONE) {
+      if (value === NONE) {
         value = null;
       }
 
@@ -515,7 +522,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       }
 
       const elem = this.createElement('fontbackgroundcolor');
-      elem.setAttribute('color', value != null ? value : mxConstants.NONE);
+      elem.setAttribute('color', value != null ? value : NONE);
       this.root.appendChild(elem);
     }
   }
@@ -528,7 +535,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   // setFontBorderColor(value: string): void;
   setFontBorderColor(value) {
     if (this.textEnabled) {
-      if (value === mxConstants.NONE) {
+      if (value === NONE) {
         value = null;
       }
 
@@ -540,7 +547,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
       }
 
       const elem = this.createElement('fontbordercolor');
-      elem.setAttribute('color', value != null ? value : mxConstants.NONE);
+      elem.setAttribute('color', value != null ? value : NONE);
       this.root.appendChild(elem);
     }
   }
@@ -644,7 +651,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
   // setShadowColor(value: string): void;
   setShadowColor(value) {
     if (this.compressed) {
-      if (value === mxConstants.NONE) {
+      if (value === NONE) {
         value = null;
       }
 
@@ -656,7 +663,7 @@ class mxXmlCanvas2D extends mxAbstractCanvas2D {
     }
 
     const elem = this.createElement('shadowcolor');
-    elem.setAttribute('color', value != null ? value : mxConstants.NONE);
+    elem.setAttribute('color', value != null ? value : NONE);
     this.root.appendChild(elem);
   }
 

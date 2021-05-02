@@ -179,7 +179,7 @@ class mxCellStatePreview {
         state.view.updateCellState(state);
       }
 
-      const geo = this.graph.getCellGeometry(<mxCell>state.cell);
+      const geo = (<mxCell>state.cell).getGeometry();
       const pState = state.view.getState(<mxCell>state.cell.getParent());
 
       // Moves selection vertices which are relative

@@ -8,7 +8,33 @@
 import mxUtils from '../../mxUtils';
 import mxPoint from '../mxPoint';
 import mxCellState from '../../../view/cell/mxCellState';
-import mxConstants from '../../mxConstants';
+import {
+  DEFAULT_MARKERSIZE,
+  DIRECTION_EAST,
+  DIRECTION_MASK_ALL,
+  DIRECTION_MASK_EAST,
+  DIRECTION_MASK_NONE,
+  DIRECTION_MASK_NORTH,
+  DIRECTION_MASK_SOUTH,
+  DIRECTION_MASK_WEST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+  ELBOW_VERTICAL,
+  ENTITY_SEGMENT,
+  NONE,
+  STYLE_DIRECTION,
+  STYLE_ELBOW,
+  STYLE_ENDARROW,
+  STYLE_ENDSIZE,
+  STYLE_JETTY_SIZE,
+  STYLE_ROTATION,
+  STYLE_SEGMENT,
+  STYLE_SOURCE_JETTY_SIZE,
+  STYLE_STARTARROW,
+  STYLE_STARTSIZE,
+  STYLE_TARGET_JETTY_SIZE,
+} from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
 
 /**
@@ -108,11 +134,7 @@ class mxEdgeStyle {
     const { view } = state;
     const { graph } = view;
     const segment =
-      mxUtils.getValue(
-        state.style,
-        mxConstants.STYLE_SEGMENT,
-        mxConstants.ENTITY_SEGMENT
-      ) * view.scale;
+      mxUtils.getValue(state.style, STYLE_SEGMENT, ENTITY_SEGMENT) * view.scale;
 
     const pts = state.absolutePoints;
     const p0 = pts[0];
@@ -121,7 +143,7 @@ class mxEdgeStyle {
     let isSourceLeft = false;
 
     if (source != null) {
-      const sourceGeometry = graph.getCellGeometry(source.cell);
+      const sourceGeometry = source.cell.getGeometry();
 
       if (sourceGeometry.relative) {
         isSourceLeft = sourceGeometry.x <= 0.5;
@@ -141,15 +163,14 @@ class mxEdgeStyle {
         source,
         state,
         true,
-        mxConstants.DIRECTION_MASK_NONE
+        DIRECTION_MASK_NONE
       );
 
       if (
-        constraint !== mxConstants.DIRECTION_MASK_NONE &&
-        constraint !==
-          mxConstants.DIRECTION_MASK_WEST + mxConstants.DIRECTION_MASK_EAST
+        constraint !== DIRECTION_MASK_NONE &&
+        constraint !== DIRECTION_MASK_WEST + DIRECTION_MASK_EAST
       ) {
-        isSourceLeft = constraint === mxConstants.DIRECTION_MASK_WEST;
+        isSourceLeft = constraint === DIRECTION_MASK_WEST;
       }
     } else {
       return;
@@ -158,7 +179,7 @@ class mxEdgeStyle {
     let isTargetLeft = true;
 
     if (target != null) {
-      const targetGeometry = graph.getCellGeometry(target.cell);
+      const targetGeometry = target.cell.getGeometry();
 
       if (targetGeometry.relative) {
         isTargetLeft = targetGeometry.x <= 0.5;
@@ -178,15 +199,14 @@ class mxEdgeStyle {
         target,
         state,
         false,
-        mxConstants.DIRECTION_MASK_NONE
+        DIRECTION_MASK_NONE
       );
 
       if (
-        constraint !== mxConstants.DIRECTION_MASK_NONE &&
-        constraint !=
-          mxConstants.DIRECTION_MASK_WEST + mxConstants.DIRECTION_MASK_EAST
+        constraint !== DIRECTION_MASK_NONE &&
+        constraint != DIRECTION_MASK_WEST + DIRECTION_MASK_EAST
       ) {
-        isTargetLeft = constraint === mxConstants.DIRECTION_MASK_WEST;
+        isTargetLeft = constraint === DIRECTION_MASK_WEST;
       }
     }
 
@@ -269,21 +289,15 @@ class mxEdgeStyle {
       let dy = 0;
 
       const seg =
-        mxUtils.getValue(
-          state.style,
-          mxConstants.STYLE_SEGMENT,
-          graph.gridSize
-        ) * view.scale;
+        mxUtils.getValue(state.style, STYLE_SEGMENT, graph.gridSize) *
+        view.scale;
       const dir = mxUtils.getValue(
         state.style,
-        mxConstants.STYLE_DIRECTION,
-        mxConstants.DIRECTION_WEST
+        STYLE_DIRECTION,
+        DIRECTION_WEST
       );
 
-      if (
-        dir === mxConstants.DIRECTION_NORTH ||
-        dir === mxConstants.DIRECTION_SOUTH
-      ) {
+      if (dir === DIRECTION_NORTH || dir === DIRECTION_SOUTH) {
         x = view.getRoutingCenterX(source);
         dx = seg;
       } else {
@@ -295,11 +309,11 @@ class mxEdgeStyle {
         if (pt != null) {
           x = pt.x;
           dy = Math.max(Math.abs(y - pt.y), dy);
-        } else if (dir === mxConstants.DIRECTION_NORTH) {
+        } else if (dir === DIRECTION_NORTH) {
           y = source.y - 2 * dx;
-        } else if (dir === mxConstants.DIRECTION_SOUTH) {
+        } else if (dir === DIRECTION_SOUTH) {
           y = source.y + source.height + 2 * dx;
-        } else if (dir === mxConstants.DIRECTION_EAST) {
+        } else if (dir === DIRECTION_EAST) {
           x = source.x - 2 * dy;
         } else {
           x = source.x + source.width + 2 * dy;
@@ -371,8 +385,7 @@ class mxEdgeStyle {
 
     if (
       !horizontal &&
-      (vertical ||
-        state.style[mxConstants.STYLE_ELBOW] === mxConstants.ELBOW_VERTICAL)
+      (vertical || state.style[STYLE_ELBOW] === ELBOW_VERTICAL)
     ) {
       mxEdgeStyle.TopToBottom(state, source, target, points, result);
     } else {
@@ -952,29 +965,23 @@ class mxEdgeStyle {
   static getJettySize(state, isSource) {
     let value = mxUtils.getValue(
       state.style,
-      isSource
-        ? mxConstants.STYLE_SOURCE_JETTY_SIZE
-        : mxConstants.STYLE_TARGET_JETTY_SIZE,
-      mxUtils.getValue(
-        state.style,
-        mxConstants.STYLE_JETTY_SIZE,
-        mxEdgeStyle.orthBuffer
-      )
+      isSource ? STYLE_SOURCE_JETTY_SIZE : STYLE_TARGET_JETTY_SIZE,
+      mxUtils.getValue(state.style, STYLE_JETTY_SIZE, mxEdgeStyle.orthBuffer)
     );
 
     if (value === 'auto') {
       // Computes the automatic jetty size
       const type = mxUtils.getValue(
         state.style,
-        isSource ? mxConstants.STYLE_STARTARROW : mxConstants.STYLE_ENDARROW,
-        mxConstants.NONE
+        isSource ? STYLE_STARTARROW : STYLE_ENDARROW,
+        NONE
       );
 
-      if (type !== mxConstants.NONE) {
+      if (type !== NONE) {
         const size = mxUtils.getNumber(
           state.style,
-          isSource ? mxConstants.STYLE_STARTSIZE : mxConstants.STYLE_ENDSIZE,
-          mxConstants.DEFAULT_MARKERSIZE
+          isSource ? STYLE_STARTSIZE : STYLE_ENDSIZE,
+          DEFAULT_MARKERSIZE
         );
         value =
           Math.max(
@@ -1075,10 +1082,8 @@ class mxEdgeStyle {
     result
   ) {
     const { graph } = state.view;
-    const sourceEdge =
-      source == null ? false : source.cell.isEdge();
-    const targetEdge =
-      target == null ? false : target.cell.isEdge();
+    const sourceEdge = source == null ? false : source.cell.isEdge();
+    const targetEdge = target == null ? false : target.cell.isEdge();
 
     const pts = mxEdgeStyle.scalePointArray(
       state.absolutePoints,
@@ -1145,10 +1150,7 @@ class mxEdgeStyle {
     // Determine the side(s) of the source and target vertices
     // that the edge may connect to
     // portConstraint [source, target]
-    const portConstraint = [
-      mxConstants.DIRECTION_MASK_ALL,
-      mxConstants.DIRECTION_MASK_ALL,
-    ];
+    const portConstraint = [DIRECTION_MASK_ALL, DIRECTION_MASK_ALL];
     let rotation = 0;
 
     if (source != null) {
@@ -1156,9 +1158,9 @@ class mxEdgeStyle {
         source,
         state,
         true,
-        mxConstants.DIRECTION_MASK_ALL
+        DIRECTION_MASK_ALL
       );
-      rotation = mxUtils.getValue(source.style, mxConstants.STYLE_ROTATION, 0);
+      rotation = mxUtils.getValue(source.style, STYLE_ROTATION, 0);
 
       // console.log('source rotation', rotation);
 
@@ -1179,9 +1181,9 @@ class mxEdgeStyle {
         target,
         state,
         false,
-        mxConstants.DIRECTION_MASK_ALL
+        DIRECTION_MASK_ALL
       );
-      rotation = mxUtils.getValue(target.style, mxConstants.STYLE_ROTATION, 0);
+      rotation = mxUtils.getValue(target.style, STYLE_ROTATION, 0);
 
       // console.log('target rotation', rotation);
 
@@ -1268,17 +1270,17 @@ class mxEdgeStyle {
         constraint[i][0] = (currentTerm.x - geo[i][0]) / geo[i][2];
 
         if (Math.abs(currentTerm.x - geo[i][0]) <= 1) {
-          dir[i] = mxConstants.DIRECTION_MASK_WEST;
+          dir[i] = DIRECTION_MASK_WEST;
         } else if (Math.abs(currentTerm.x - geo[i][0] - geo[i][2]) <= 1) {
-          dir[i] = mxConstants.DIRECTION_MASK_EAST;
+          dir[i] = DIRECTION_MASK_EAST;
         }
 
         constraint[i][1] = (currentTerm.y - geo[i][1]) / geo[i][3];
 
         if (Math.abs(currentTerm.y - geo[i][1]) <= 1) {
-          dir[i] = mxConstants.DIRECTION_MASK_NORTH;
+          dir[i] = DIRECTION_MASK_NORTH;
         } else if (Math.abs(currentTerm.y - geo[i][1] - geo[i][3]) <= 1) {
-          dir[i] = mxConstants.DIRECTION_MASK_SOUTH;
+          dir[i] = DIRECTION_MASK_SOUTH;
         }
       }
 
@@ -1320,12 +1322,12 @@ class mxEdgeStyle {
 
     horPref[0] =
       sourceLeftDist >= sourceRightDist
-        ? mxConstants.DIRECTION_MASK_WEST
-        : mxConstants.DIRECTION_MASK_EAST;
+        ? DIRECTION_MASK_WEST
+        : DIRECTION_MASK_EAST;
     vertPref[0] =
       sourceTopDist >= sourceBottomDist
-        ? mxConstants.DIRECTION_MASK_NORTH
-        : mxConstants.DIRECTION_MASK_SOUTH;
+        ? DIRECTION_MASK_NORTH
+        : DIRECTION_MASK_SOUTH;
 
     horPref[1] = mxUtils.reversePortConstraints(horPref[0]);
     vertPref[1] = mxUtils.reversePortConstraints(vertPref[0]);
@@ -1431,10 +1433,10 @@ class mxEdgeStyle {
       dir[i] = dirPref[i] & 0xf;
 
       if (
-        portConstraint[i] === mxConstants.DIRECTION_MASK_WEST ||
-        portConstraint[i] === mxConstants.DIRECTION_MASK_NORTH ||
-        portConstraint[i] === mxConstants.DIRECTION_MASK_EAST ||
-        portConstraint[i] === mxConstants.DIRECTION_MASK_SOUTH
+        portConstraint[i] === DIRECTION_MASK_WEST ||
+        portConstraint[i] === DIRECTION_MASK_NORTH ||
+        portConstraint[i] === DIRECTION_MASK_EAST ||
+        portConstraint[i] === DIRECTION_MASK_SOUTH
       ) {
         dir[i] = portConstraint[i];
       }
@@ -1443,8 +1445,8 @@ class mxEdgeStyle {
     //= =============================================================
     // End of source and target direction determination
 
-    let sourceIndex = dir[0] === mxConstants.DIRECTION_MASK_EAST ? 3 : dir[0];
-    let targetIndex = dir[1] === mxConstants.DIRECTION_MASK_EAST ? 3 : dir[1];
+    let sourceIndex = dir[0] === DIRECTION_MASK_EAST ? 3 : dir[0];
+    let targetIndex = dir[1] === DIRECTION_MASK_EAST ? 3 : dir[1];
 
     sourceIndex -= quad;
     targetIndex -= quad;
@@ -1466,19 +1468,19 @@ class mxEdgeStyle {
     mxEdgeStyle.wayPoints1[0][1] = geo[0][1];
 
     switch (dir[0]) {
-      case mxConstants.DIRECTION_MASK_WEST:
+      case DIRECTION_MASK_WEST:
         mxEdgeStyle.wayPoints1[0][0] -= sourceBuffer;
         mxEdgeStyle.wayPoints1[0][1] += constraint[0][1] * geo[0][3];
         break;
-      case mxConstants.DIRECTION_MASK_SOUTH:
+      case DIRECTION_MASK_SOUTH:
         mxEdgeStyle.wayPoints1[0][0] += constraint[0][0] * geo[0][2];
         mxEdgeStyle.wayPoints1[0][1] += geo[0][3] + sourceBuffer;
         break;
-      case mxConstants.DIRECTION_MASK_EAST:
+      case DIRECTION_MASK_EAST:
         mxEdgeStyle.wayPoints1[0][0] += geo[0][2] + sourceBuffer;
         mxEdgeStyle.wayPoints1[0][1] += constraint[0][1] * geo[0][3];
         break;
-      case mxConstants.DIRECTION_MASK_NORTH:
+      case DIRECTION_MASK_NORTH:
         mxEdgeStyle.wayPoints1[0][0] += constraint[0][0] * geo[0][2];
         mxEdgeStyle.wayPoints1[0][1] -= sourceBuffer;
         break;
@@ -1488,11 +1490,7 @@ class mxEdgeStyle {
 
     // Orientation, 0 horizontal, 1 vertical
     let lastOrientation =
-      (dir[0] &
-        (mxConstants.DIRECTION_MASK_EAST | mxConstants.DIRECTION_MASK_WEST)) >
-      0
-        ? 0
-        : 1;
+      (dir[0] & (DIRECTION_MASK_EAST | DIRECTION_MASK_WEST)) > 0 ? 0 : 1;
     const initialOrientation = lastOrientation;
     let currentOrientation = 0;
 
@@ -1502,7 +1500,7 @@ class mxEdgeStyle {
       // Rotate the index of this direction by the quad
       // to get the real direction
       let directionIndex =
-        nextDirection === mxConstants.DIRECTION_MASK_EAST ? 3 : nextDirection;
+        nextDirection === DIRECTION_MASK_EAST ? 3 : nextDirection;
 
       directionIndex += quad;
 
@@ -1598,12 +1596,7 @@ class mxEdgeStyle {
         // number of turns (points), different requires
         // odd.
         const targetOrientation =
-          (dir[1] &
-            (mxConstants.DIRECTION_MASK_EAST |
-              mxConstants.DIRECTION_MASK_WEST)) >
-          0
-            ? 0
-            : 1;
+          (dir[1] & (DIRECTION_MASK_EAST | DIRECTION_MASK_WEST)) > 0 ? 0 : 1;
         const sameOrient = targetOrientation === initialOrientation ? 0 : 1;
 
         // (currentIndex + 1) % 2 is 0 for even number of points,
@@ -1642,8 +1635,8 @@ class mxEdgeStyle {
   }
 
   static getRoutePattern(dir, quad, dx, dy) {
-    let sourceIndex = dir[0] === mxConstants.DIRECTION_MASK_EAST ? 3 : dir[0];
-    let targetIndex = dir[1] === mxConstants.DIRECTION_MASK_EAST ? 3 : dir[1];
+    let sourceIndex = dir[0] === DIRECTION_MASK_EAST ? 3 : dir[0];
+    let targetIndex = dir[1] === DIRECTION_MASK_EAST ? 3 : dir[1];
 
     sourceIndex -= quad;
     targetIndex -= quad;

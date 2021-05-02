@@ -5,7 +5,12 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxHierarchicalLayoutStage from './mxHierarchicalLayoutStage';
-import mxConstants from '../../../util/mxConstants';
+import {
+  DIRECTION_EAST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+} from '../../../util/mxConstants';
 import mxLog from '../../../util/gui/mxLog';
 import WeightedCellSorter from '../../WeightedCellSorter';
 import mxDictionary from '../../../util/datatypes/mxDictionary';
@@ -133,7 +138,7 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
    * The position of the root ( start ) node(s) relative to the rest of the
    * laid out graph. Default is <mxConstants.DIRECTION_NORTH>.
    */
-  orientation = mxConstants.DIRECTION_NORTH;
+  orientation = DIRECTION_NORTH;
 
   /**
    * Variable: initialX
@@ -791,8 +796,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
         if (bounds != null) {
           if (
-            this.orientation === mxConstants.DIRECTION_NORTH ||
-            this.orientation === mxConstants.DIRECTION_SOUTH
+            this.orientation === DIRECTION_NORTH ||
+            this.orientation === DIRECTION_SOUTH
           ) {
             node.width = bounds.width;
             node.height = bounds.height;
@@ -871,8 +876,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
 
           if (bounds != null) {
             if (
-              this.orientation === mxConstants.DIRECTION_NORTH ||
-              this.orientation === mxConstants.DIRECTION_SOUTH
+              this.orientation === DIRECTION_NORTH ||
+              this.orientation === DIRECTION_SOUTH
             ) {
               node.width = bounds.width;
               node.height = bounds.height;
@@ -926,8 +931,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       lastRankMaxCellHeight = maxCellHeight;
 
       if (
-        this.orientation === mxConstants.DIRECTION_NORTH ||
-        this.orientation === mxConstants.DIRECTION_WEST
+        this.orientation === DIRECTION_NORTH ||
+        this.orientation === DIRECTION_WEST
       ) {
         y += distanceToNextRank;
       } else {
@@ -1329,8 +1334,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
       const source = cell.isReversed ? cell.target.cell : cell.source.cell;
       const { graph } = this.layout;
       const layoutReversed =
-        this.orientation === mxConstants.DIRECTION_EAST ||
-        this.orientation === mxConstants.DIRECTION_SOUTH;
+        this.orientation === DIRECTION_EAST ||
+        this.orientation === DIRECTION_SOUTH;
 
       for (let i = 0; i < cell.edges.length; i += 1) {
         const realEdge = cell.edges[i];
@@ -1389,8 +1394,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           }
 
           if (
-            this.orientation === mxConstants.DIRECTION_NORTH ||
-            this.orientation === mxConstants.DIRECTION_SOUTH
+            this.orientation === DIRECTION_NORTH ||
+            this.orientation === DIRECTION_SOUTH
           ) {
             newPoints.push(new mxPoint(x, y));
 
@@ -1446,8 +1451,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           }
 
           if (
-            this.orientation === mxConstants.DIRECTION_NORTH ||
-            this.orientation === mxConstants.DIRECTION_SOUTH
+            this.orientation === DIRECTION_NORTH ||
+            this.orientation === DIRECTION_SOUTH
           ) {
             newPoints.push(new mxPoint(positionX, topChannelY));
             newPoints.push(new mxPoint(positionX, bottomChannelY));
@@ -1497,8 +1502,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
           }
 
           if (
-            this.orientation === mxConstants.DIRECTION_NORTH ||
-            this.orientation === mxConstants.DIRECTION_SOUTH
+            this.orientation === DIRECTION_NORTH ||
+            this.orientation === DIRECTION_SOUTH
           ) {
             if (this.layout.edgeStyle === mxHierarchicalEdgeStyle.CURVE) {
               newPoints.push(new mxPoint(x, y - jetty));
@@ -1561,8 +1566,8 @@ class mxCoordinateAssignment extends mxHierarchicalLayoutStage {
     );
 
     if (
-      this.orientation === mxConstants.DIRECTION_NORTH ||
-      this.orientation === mxConstants.DIRECTION_SOUTH
+      this.orientation === DIRECTION_NORTH ||
+      this.orientation === DIRECTION_SOUTH
     ) {
       this.layout.setVertexLocation(realCell, positionX, positionY);
     } else {

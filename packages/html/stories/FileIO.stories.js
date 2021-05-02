@@ -12,11 +12,6 @@ export default {
 const Template = ({ label, ...args }) => {
   const {
     mxGraph,
-    mxRectangleShape,
-    mxDomHelpers,
-    mxText,
-    mxPoint,
-    mxRectangle,
     mxConstants
   } = mxgraph;
 

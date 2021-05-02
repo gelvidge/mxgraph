@@ -18,8 +18,7 @@ const Template = ({ label, ...args }) => {
     mxGraph,
     mxUtils,
     mxConstants,
-    mxRubberband,
-    mxStencilRegistry
+    mxRubberband
   } = mxgraph;
 
   const container = document.createElement('div');

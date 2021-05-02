@@ -309,9 +309,9 @@ const Template = ({ label, ...args }) => {
     overlay.align = mxConstants.ALIGN_CENTER;
     overlay.addListener(
       mxEvent.CLICK,
-      mxUtils.bind(this, function(sender, evt) {
+      (sender, evt) => {
         addChild(graph, cell);
-      })
+      }
     );
 
     graph.addCellOverlay(cell, overlay);
@@ -327,9 +327,9 @@ const Template = ({ label, ...args }) => {
       overlay.verticalAlign = mxConstants.ALIGN_TOP;
       overlay.addListener(
         mxEvent.CLICK,
-        mxUtils.bind(this, function(sender, evt) {
+        (sender, evt) => {
           deleteSubtree(graph, cell);
-        })
+        }
       );
 
       graph.addCellOverlay(cell, overlay);

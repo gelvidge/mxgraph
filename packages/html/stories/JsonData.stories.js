@@ -1,4 +1,5 @@
 import mxgraph from '@mxgraph/core';
+import { popup } from '@mxgraph/core/src/util/gui/mxWindow';
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -16,7 +17,6 @@ const Template = ({ label, ...args }) => {
     mxDomHelpers,
     mxCodecRegistry,
     mxEvent,
-    mxWindow,
     mxClient,
     mxCodec,
     mxDomUtils,
@@ -89,7 +89,7 @@ const Template = ({ label, ...args }) => {
     mxDomHelpers.button('Show JSON', function() {
       const encoder = new mxCodec();
       const node = encoder.encode(graph.getModel());
-      mxWindow.popup(mxUtils.getXml(node), true);
+      popup(mxUtils.getXml(node), true);
     })
   );
 

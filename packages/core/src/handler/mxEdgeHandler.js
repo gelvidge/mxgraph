@@ -6,7 +6,39 @@
  */
 import mxCellMarker from './mxCellMarker';
 import mxPoint from '../util/datatypes/mxPoint';
-import mxConstants from '../util/mxConstants';
+import {
+  CONNECT_HANDLE_FILLCOLOR,
+  CURSOR_BEND_HANDLE,
+  CURSOR_LABEL_HANDLE,
+  CURSOR_MOVABLE_EDGE,
+  CURSOR_TERMINAL_HANDLE,
+  CURSOR_VIRTUAL_BEND_HANDLE,
+  DEFAULT_VALID_COLOR,
+  DIALECT_MIXEDHTML,
+  DIALECT_STRICTHTML,
+  DIALECT_SVG,
+  EDGE_SELECTION_COLOR,
+  EDGE_SELECTION_DASHED,
+  EDGE_SELECTION_STROKEWIDTH,
+  HANDLE_FILLCOLOR,
+  HANDLE_SIZE,
+  HANDLE_STROKECOLOR,
+  HIGHLIGHT_STROKEWIDTH,
+  LABEL_HANDLE_FILLCOLOR,
+  LABEL_HANDLE_SIZE,
+  LOCKED_HANDLE_FILLCOLOR,
+  NONE,
+  OUTLINE_HIGHLIGHT_COLOR,
+  OUTLINE_HIGHLIGHT_STROKEWIDTH,
+  STYLE_EDGE,
+  STYLE_ENTRY_X,
+  STYLE_ENTRY_Y,
+  STYLE_EXIT_X,
+  STYLE_EXIT_Y,
+  STYLE_NOEDGESTYLE,
+  STYLE_ROTATION,
+  STYLE_SHAPE,
+} from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 import mxImageShape from '../shape/node/mxImageShape';
 import mxRectangleShape from '../shape/node/mxRectangleShape';
@@ -16,7 +48,13 @@ import mxConstraintHandler from './mxConstraintHandler';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxClient from '../mxClient';
 import mxEdgeStyle from '../util/datatypes/style/mxEdgeStyle';
-import { getClientX, getClientY, isAltDown, isMouseEvent, isShiftDown } from '../util/mxEventUtils';
+import {
+  getClientX,
+  getClientY,
+  isAltDown,
+  isMouseEvent,
+  isShiftDown,
+} from '../util/mxEventUtils';
 
 /**
  * Graph event handler that reconnects edges and modifies control points and the edge
@@ -272,9 +310,7 @@ class mxEdgeHandler {
    * always returns true.
    */
   isParentHighlightVisible() {
-    return !this.graph.isCellSelected(
-      this.state.cell.getParent()
-    );
+    return !this.graph.isCellSelected(this.state.cell.getParent());
   }
 
   /**
@@ -321,10 +357,10 @@ class mxEdgeHandler {
         ) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
-          this.parentHighlight.dialect = mxConstants.DIALECT_SVG;
+          this.parentHighlight.dialect = DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(
-            pstate.style[mxConstants.STYLE_ROTATION] || '0'
+            pstate.style[STYLE_ROTATION] || '0'
           );
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
           this.parentHighlight.redraw();
@@ -356,12 +392,10 @@ class mxEdgeHandler {
     this.abspoints = this.getSelectionPoints(this.state);
     this.shape = this.createSelectionShape(this.abspoints);
     this.shape.dialect =
-      this.graph.dialect !== mxConstants.DIALECT_SVG
-        ? mxConstants.DIALECT_MIXEDHTML
-        : mxConstants.DIALECT_SVG;
+      this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
     this.shape.init(this.graph.getView().getOverlayPane());
     this.shape.pointerEvents = false;
-    this.shape.setCursor(mxConstants.CURSOR_MOVABLE_EDGE);
+    this.shape.setCursor(CURSOR_MOVABLE_EDGE);
     mxEvent.redirectMouseEvents(this.shape.node, this.graph, this.state);
 
     // Updates preferHtml
@@ -411,7 +445,7 @@ class mxEdgeHandler {
     );
     this.labelShape = this.createLabelHandleShape();
     this.initBend(this.labelShape);
-    this.labelShape.setCursor(mxConstants.CURSOR_LABEL_HANDLE);
+    this.labelShape.setCursor(CURSOR_LABEL_HANDLE);
 
     this.customHandles = this.createCustomHandles();
 
@@ -440,11 +474,10 @@ class mxEdgeHandler {
   isVirtualBendsEnabled(evt) {
     return (
       this.virtualBendsEnabled &&
-      (this.state.style[mxConstants.STYLE_EDGE] == null ||
-        this.state.style[mxConstants.STYLE_EDGE] === mxConstants.NONE ||
-        this.state.style[mxConstants.STYLE_NOEDGESTYLE] === 1) &&
-      mxUtils.getValue(this.state.style, mxConstants.STYLE_SHAPE, null) !=
-        'arrow'
+      (this.state.style[STYLE_EDGE] == null ||
+        this.state.style[STYLE_EDGE] === NONE ||
+        this.state.style[STYLE_NOEDGESTYLE] === 1) &&
+      mxUtils.getValue(this.state.style, STYLE_SHAPE, null) != 'arrow'
     );
   }
 
@@ -533,7 +566,7 @@ class mxEdgeHandler {
    */
   // getSelectionColor(): string;
   getSelectionColor() {
-    return mxConstants.EDGE_SELECTION_COLOR;
+    return EDGE_SELECTION_COLOR;
   }
 
   /**
@@ -543,7 +576,7 @@ class mxEdgeHandler {
    */
   // getSelectionStrokeWidth(): number;
   getSelectionStrokeWidth() {
-    return mxConstants.EDGE_SELECTION_STROKEWIDTH;
+    return EDGE_SELECTION_STROKEWIDTH;
   }
 
   /**
@@ -553,7 +586,7 @@ class mxEdgeHandler {
    */
   // isSelectionDashed(): boolean;
   isSelectionDashed() {
-    return mxConstants.EDGE_SELECTION_DASHED;
+    return EDGE_SELECTION_DASHED;
   }
 
   /**
@@ -589,7 +622,7 @@ class mxEdgeHandler {
     class MyMarker extends mxCellMarker {
       // Only returns edges if they are connectable and never returns
       // the edge that is currently being modified
-      getCell = me => {
+      getCell = (me) => {
         let cell = super.getCell(me);
 
         // Checks for cell at preview point (with grid)
@@ -601,13 +634,10 @@ class mxEdgeHandler {
         }
 
         // Uses connectable parent vertex if one exists
-        if (cell != null && !this.graph.isCellConnectable(cell)) {
-          const parent = this.cell.getParent();
+        if (cell != null && !cell.isConnectable()) {
+          const parent = cell.getParent();
 
-          if (
-            parent.isVertex() &&
-            this.graph.isCellConnectable(parent)
-          ) {
+          if (parent.isVertex() && parent.isConnectable()) {
             cell = parent;
           }
         }
@@ -624,28 +654,24 @@ class mxEdgeHandler {
             )) ||
           !self.isConnectableCell(cell) ||
           cell === self.state.cell ||
-          (cell != null &&
-            !self.graph.connectableEdges &&
-            cell.isEdge()) ||
+          (cell != null && !self.graph.connectableEdges && cell.isEdge()) ||
           model.isAncestor(self.state.cell, cell)
         ) {
           cell = null;
         }
 
-        if (!this.graph.isCellConnectable(cell)) {
+        if (cell && !cell.isConnectable()) {
           cell = null;
         }
         return cell;
       };
 
       // Sets the highlight color according to validateConnection
-      isValidState = state => {
+      isValidState = (state) => {
         const model = self.graph.getModel();
         const other = self.graph.view.getTerminalPort(
           state,
-          self.graph.view.getState(
-            self.state.cell.getTerminal(!self.isSource)
-          ),
+          self.graph.view.getState(self.state.cell.getTerminal(!self.isSource)),
           !self.isSource
         );
         const otherCell = other != null ? other.cell : null;
@@ -697,7 +723,7 @@ class mxEdgeHandler {
         const terminal = source || target;
 
         if (terminal || this.graph.isCellBendable(cell)) {
-          (index => {
+          ((index) => {
             const bend = this.createHandleShape(index);
             this.initBend(bend, () => {
               if (this.dblClickRemoveEnabled) {
@@ -707,9 +733,7 @@ class mxEdgeHandler {
 
             if (this.isHandleEnabled(i)) {
               bend.setCursor(
-                terminal
-                  ? mxConstants.CURSOR_TERMINAL_HANDLE
-                  : mxConstants.CURSOR_BEND_HANDLE
+                terminal ? CURSOR_TERMINAL_HANDLE : CURSOR_BEND_HANDLE
               );
             }
 
@@ -741,9 +765,9 @@ class mxEdgeHandler {
 
     if (this.graph.isCellBendable(cell)) {
       for (let i = 1; i < this.abspoints.length; i += 1) {
-        mxUtils.bind(this, bend => {
+        ((bend) => {
           this.initBend(bend);
-          bend.setCursor(mxConstants.CURSOR_VIRTUAL_BEND_HANDLE);
+          bend.setCursor(CURSOR_VIRTUAL_BEND_HANDLE);
           bends.push(bend);
         })(this.createHandleShape());
       }
@@ -771,7 +795,7 @@ class mxEdgeHandler {
   isHandleVisible(index) {
     const source = this.state.getVisibleTerminalState(true);
     const target = this.state.getVisibleTerminalState(false);
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
     const edgeStyle =
       geo != null
         ? this.graph.view.getEdgeStyle(this.state, geo.points, source, target)
@@ -806,7 +830,7 @@ class mxEdgeHandler {
 
       return shape;
     }
-    let s = mxConstants.HANDLE_SIZE;
+    let s = HANDLE_SIZE;
 
     if (this.preferHtml) {
       s -= 1;
@@ -814,8 +838,8 @@ class mxEdgeHandler {
 
     return new mxRectangleShape(
       new mxRectangle(0, 0, s, s),
-      mxConstants.HANDLE_FILLCOLOR,
-      mxConstants.HANDLE_STROKECOLOR
+      HANDLE_FILLCOLOR,
+      HANDLE_STROKECOLOR
     );
   }
 
@@ -842,11 +866,11 @@ class mxEdgeHandler {
 
       return shape;
     }
-    const s = mxConstants.LABEL_HANDLE_SIZE;
+    const s = LABEL_HANDLE_SIZE;
     return new mxRectangleShape(
       new mxRectangle(0, 0, s, s),
-      mxConstants.LABEL_HANDLE_FILLCOLOR,
-      mxConstants.HANDLE_STROKECOLOR
+      LABEL_HANDLE_FILLCOLOR,
+      HANDLE_STROKECOLOR
     );
   }
 
@@ -862,13 +886,11 @@ class mxEdgeHandler {
   // initBend(bend: mxShape, dblClick: (evt: Event) => void): boolean;
   initBend(bend, dblClick) {
     if (this.preferHtml) {
-      bend.dialect = mxConstants.DIALECT_STRICTHTML;
+      bend.dialect = DIALECT_STRICTHTML;
       bend.init(this.graph.container);
     } else {
       bend.dialect =
-        this.graph.dialect !== mxConstants.DIALECT_SVG
-          ? mxConstants.DIALECT_MIXEDHTML
-          : mxConstants.DIALECT_SVG;
+        this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
       bend.init(this.graph.getView().getOverlayPane());
     }
 
@@ -1157,7 +1179,7 @@ class mxEdgeHandler {
     let overrideY = false;
 
     if (tt > 0 && this.isSnapToTerminalsEvent(me)) {
-      const snapToPoint = pt => {
+      const snapToPoint = (pt) => {
         if (pt != null) {
           const { x } = pt;
           if (Math.abs(point.x - x) < tt) {
@@ -1174,7 +1196,7 @@ class mxEdgeHandler {
       };
 
       // Temporary function
-      const snapToTerminal = terminal => {
+      const snapToTerminal = (terminal) => {
         if (terminal != null) {
           snapToPoint(
             new mxPoint(
@@ -1251,9 +1273,7 @@ class mxEdgeHandler {
       const model = this.graph.getModel();
       const other = this.graph.view.getTerminalPort(
         this.state,
-        this.graph.view.getState(
-          this.state.cell.getTerminal(!this.isSource)
-        ),
+        this.graph.view.getState(this.state.cell.getTerminal(!this.isSource)),
         !this.isSource
       );
       const otherCell = other != null ? other.cell : null;
@@ -1309,7 +1329,7 @@ class mxEdgeHandler {
    */
   // getPreviewPoints(pt: mxPoint, me?: mxMouseEvent): mxPoint[];
   getPreviewPoints(pt, me) {
-    const geometry = this.graph.getCellGeometry(this.state.cell);
+    const geometry = this.state.cell.getGeometry();
     let points = geometry.points != null ? geometry.points.slice() : null;
     const point = new mxPoint(pt.x, pt.y);
     let result = null;
@@ -1516,19 +1536,18 @@ class mxEdgeHandler {
         this.constraintHandler.currentFocus != null
       ) {
         this.marker.highlight.shape.stroke = outline
-          ? mxConstants.OUTLINE_HIGHLIGHT_COLOR
+          ? OUTLINE_HIGHLIGHT_COLOR
           : 'transparent';
         this.marker.highlight.shape.strokewidth =
-          mxConstants.OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
+          OUTLINE_HIGHLIGHT_STROKEWIDTH / s / s;
         this.marker.highlight.repaint();
       } else if (this.marker.hasValidState()) {
         this.marker.highlight.shape.stroke =
-          this.graph.isCellConnectable(me.getCell()) &&
+          me.getCell().isConnectable() &&
           this.marker.getValidState() !== me.getState()
             ? 'transparent'
-            : mxConstants.DEFAULT_VALID_COLOR;
-        this.marker.highlight.shape.strokewidth =
-          mxConstants.HIGHLIGHT_STROKEWIDTH / s / s;
+            : DEFAULT_VALID_COLOR;
+        this.marker.highlight.shape.strokewidth = HIGHLIGHT_STROKEWIDTH / s / s;
         this.marker.highlight.repaint();
       }
     }
@@ -1541,19 +1560,13 @@ class mxEdgeHandler {
 
     if (this.isSource || this.isTarget) {
       if (constraint != null && constraint.point != null) {
-        edge.style[
-          this.isSource ? mxConstants.STYLE_EXIT_X : mxConstants.STYLE_ENTRY_X
-        ] = constraint.point.x;
-        edge.style[
-          this.isSource ? mxConstants.STYLE_EXIT_Y : mxConstants.STYLE_ENTRY_Y
-        ] = constraint.point.y;
+        edge.style[this.isSource ? STYLE_EXIT_X : STYLE_ENTRY_X] =
+          constraint.point.x;
+        edge.style[this.isSource ? STYLE_EXIT_Y : STYLE_ENTRY_Y] =
+          constraint.point.y;
       } else {
-        delete edge.style[
-          this.isSource ? mxConstants.STYLE_EXIT_X : mxConstants.STYLE_ENTRY_X
-        ];
-        delete edge.style[
-          this.isSource ? mxConstants.STYLE_EXIT_Y : mxConstants.STYLE_ENTRY_Y
-        ];
+        delete edge.style[this.isSource ? STYLE_EXIT_X : STYLE_ENTRY_X];
+        delete edge.style[this.isSource ? STYLE_EXIT_Y : STYLE_ENTRY_Y];
       }
     }
 
@@ -1661,7 +1674,7 @@ class mxEdgeHandler {
           } else if (
             terminalState != null &&
             terminalState !== me.getState() &&
-            this.graph.isCellConnectable(me.getCell()) &&
+            me.getCell().isConnectable() &&
             this.marker.highlight.shape != null
           ) {
             this.marker.highlight.shape.stroke = 'transparent';
@@ -1820,9 +1833,7 @@ class mxEdgeHandler {
               pt.y / this.graph.view.scale - this.graph.view.translate.y
             );
 
-            const pstate = this.graph
-              .getView()
-              .getState(edge.getParent());
+            const pstate = this.graph.getView().getState(edge.getParent());
 
             if (pstate != null) {
               pt.x -= pstate.origin.x;
@@ -1903,7 +1914,7 @@ class mxEdgeHandler {
       }
     }
 
-    this.setPreviewColor(mxConstants.EDGE_SELECTION_COLOR);
+    this.setPreviewColor(EDGE_SELECTION_COLOR);
     this.removeHint();
     this.redraw();
   }
@@ -1945,9 +1956,7 @@ class mxEdgeHandler {
     point.x = Math.round(point.x / scale - tr.x);
     point.y = Math.round(point.y / scale - tr.y);
 
-    const pstate = this.graph
-      .getView()
-      .getState(this.state.cell.getParent());
+    const pstate = this.graph.getView().getState(this.state.cell.getParent());
 
     if (pstate != null) {
       point.x -= pstate.origin.x;
@@ -2149,7 +2158,7 @@ class mxEdgeHandler {
    */
   // addPointAt(state: mxCellState, x: number, y: number): void;
   addPointAt(state, x, y) {
-    let geo = this.graph.getCellGeometry(state.cell);
+    let geo = state.cell.getGeometry();
     const pt = new mxPoint(x, y);
 
     if (geo != null) {
@@ -2191,7 +2200,7 @@ class mxEdgeHandler {
   // removePoint(state: mxCellState, index: number): void;
   removePoint(state, index) {
     if (index > 0 && index < this.abspoints.length - 1) {
-      let geo = this.graph.getCellGeometry(this.state.cell);
+      let geo = this.state.cell.getGeometry();
 
       if (geo != null && geo.points != null) {
         geo = geo.clone();
@@ -2213,19 +2222,19 @@ class mxEdgeHandler {
     const isSource = index === 0;
     const { cell } = this.state;
     const terminal = cell.getTerminal(isSource);
-    let color = mxConstants.HANDLE_FILLCOLOR;
+    let color = HANDLE_FILLCOLOR;
 
     if (
       (terminal != null &&
         !this.graph.isCellDisconnectable(cell, terminal, isSource)) ||
       (terminal == null && !this.graph.isTerminalPointMovable(cell, isSource))
     ) {
-      color = mxConstants.LOCKED_HANDLE_FILLCOLOR;
+      color = LOCKED_HANDLE_FILLCOLOR;
     } else if (
       terminal != null &&
       this.graph.isCellDisconnectable(cell, terminal, isSource)
     ) {
-      color = mxConstants.CONNECT_HANDLE_FILLCOLOR;
+      color = CONNECT_HANDLE_FILLCOLOR;
     }
 
     return color;
@@ -2465,8 +2474,8 @@ class mxEdgeHandler {
             this.labelShape.visible &&
             mxUtils.intersects(this.bends[i].bounds, this.labelShape.bounds)
           ) {
-            const w = mxConstants.HANDLE_SIZE + 3;
-            const h = mxConstants.HANDLE_SIZE + 3;
+            const w = HANDLE_SIZE + 3;
+            const h = HANDLE_SIZE + 3;
             this.bends[i].bounds = new mxRectangle(
               Math.round(x - w / 2),
               Math.round(y - h / 2),

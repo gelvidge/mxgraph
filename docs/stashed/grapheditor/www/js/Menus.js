@@ -791,7 +791,7 @@ Menus.prototype.edgeStyleChange = function(menu, label, keys, values, sprite, pa
 				{
 					if (reset)
 					{
-						let geo = graph.getCellGeometry(cell);
+						let geo = cell.getGeometry();
 			
 						// Resets all edge points
 						if (geo != null)

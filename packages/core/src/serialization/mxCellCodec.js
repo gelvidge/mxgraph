@@ -8,8 +8,7 @@
 import mxCell from '../view/cell/mxCell';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from '../util/mxUtils';
-import mxConstants from '../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 import { removeWhitespace } from '../util/mxStringUtils';
 import { importNode } from '../util/mxDomUtils';
 
@@ -87,9 +86,7 @@ class mxCellCodec extends mxObjectCodec {
   isExcluded(obj, attr, value, isWrite) {
     return (
       super.isExcluded(obj, attr, value, isWrite) ||
-      (isWrite &&
-        attr === 'value' &&
-        value.nodeType === mxConstants.NODETYPE_ELEMENT)
+      (isWrite && attr === 'value' && value.nodeType === NODETYPE_ELEMENT)
     );
   }
 
@@ -100,10 +97,7 @@ class mxCellCodec extends mxObjectCodec {
    * XML of the user object (inversion).
    */
   afterEncode(enc, obj, node) {
-    if (
-      obj.value != null &&
-      obj.value.nodeType === mxConstants.NODETYPE_ELEMENT
-    ) {
+    if (obj.value != null && obj.value.nodeType === NODETYPE_ELEMENT) {
       // Wraps the graphical annotation up in the user object (inversion)
       // by putting the result of the default encoding into a clone of the
       // user object (node type 1) and returning this cloned user object.

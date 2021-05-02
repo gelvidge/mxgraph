@@ -5,7 +5,14 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxConstants from '../../util/mxConstants';
+import {
+  LINE_ARCSIZE,
+  NONE,
+  RECTANGLE_ROUNDING_FACTOR,
+  STYLE_ABSOLUTE_ARCSIZE,
+  STYLE_ARCSIZE,
+  STYLE_POINTER_EVENTS,
+} from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxShape from '../mxShape';
 import mxAbstractCanvas2D from '../../util/canvas/mxAbstractCanvas2D';
@@ -43,16 +50,14 @@ class mxRectangleShape extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events =
-        mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') ==
-        '1';
+      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
     }
 
     return (
       !this.isRounded &&
       !this.glass &&
       this.rotation === 0 &&
-      (events || (this.fill != null && this.fill !== mxConstants.NONE))
+      (events || (this.fill != null && this.fill !== NONE))
     );
   }
 
@@ -70,44 +75,35 @@ class mxRectangleShape extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events =
-        mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') ==
-        '1';
+      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
     }
 
     if (
       events ||
-      (this.fill != null && this.fill !== mxConstants.NONE) ||
-      (this.stroke != null && this.stroke !== mxConstants.NONE)
+      (this.fill != null && this.fill !== NONE) ||
+      (this.stroke != null && this.stroke !== NONE)
     ) {
-      if (!events && (this.fill == null || this.fill === mxConstants.NONE)) {
+      if (!events && (this.fill == null || this.fill === NONE)) {
         c.pointerEvents = false;
       }
 
       if (this.isRounded) {
         let r = 0;
 
-        if (
-          mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) ==
-          '1'
-        ) {
+        if (mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
           r = Math.min(
             w / 2,
             Math.min(
               h / 2,
-              mxUtils.getValue(
-                this.style,
-                mxConstants.STYLE_ARCSIZE,
-                mxConstants.LINE_ARCSIZE
-              ) / 2
+              mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
             )
           );
         } else {
           const f =
             mxUtils.getValue(
               this.style,
-              mxConstants.STYLE_ARCSIZE,
-              mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
+              STYLE_ARCSIZE,
+              RECTANGLE_ROUNDING_FACTOR * 100
             ) / 100;
           r = Math.min(w * f, h * f);
         }
@@ -150,7 +146,7 @@ class mxRectangleShape extends mxShape {
       this.glass &&
       !this.outline &&
       this.fill != null &&
-      this.fill !== mxConstants.NONE
+      this.fill !== NONE
     ) {
       this.paintGlassEffect(
         c,

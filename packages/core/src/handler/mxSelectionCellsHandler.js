@@ -201,12 +201,12 @@ class mxSelectionCellsHandler extends mxEventSource {
 
     // Destroys unused handlers
     oldHandlers.visit(
-      mxUtils.bind(this, (key, handler) => {
+      (key, handler) => {
         this.fireEvent(
           new mxEventObject(mxEvent.REMOVE, 'state', handler.state)
         );
         handler.destroy();
-      })
+      }
     );
 
     // Creates new handlers and updates parent highlight on existing handlers

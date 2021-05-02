@@ -104,11 +104,11 @@ class mxDefaultToolbar {
       });
 
       // Resets the selected tool after a doubleclick or escape keystroke
-      this.resetHandler = mxUtils.bind(this, () => {
+      this.resetHandler = () => {
         if (this.toolbar != null) {
           this.toolbar.resetMode(true);
         }
-      });
+      };
 
       this.editor.graph.addListener(mxEvent.DOUBLE_CLICK, this.resetHandler);
       this.editor.addListener(mxEvent.ESCAPE, this.resetHandler);
@@ -176,9 +176,9 @@ class mxDefaultToolbar {
    */
   // addActionOption(combo: HTMLElement, title: string, action: string): void;
   addActionOption(combo, title, action) {
-    const clickHandler = mxUtils.bind(this, () => {
+    const clickHandler = () => {
       this.editor.execute(action);
-    });
+    };
 
     this.addOption(combo, title, clickHandler);
   }
@@ -241,7 +241,7 @@ class mxDefaultToolbar {
   addPrototype(title, icon, ptype, pressed, insert, toggle) {
     // Creates a wrapper function that is in charge of constructing
     // the new cell instance to be inserted into the graph
-    const factory = mxUtils.bind(this, () => {
+    const factory = () => {
       if (typeof ptype === 'function') {
         return ptype();
       }
@@ -250,7 +250,7 @@ class mxDefaultToolbar {
       }
 
       return null;
-    });
+    };
 
     // Defines the function for a click event on the graph
     // after this item has been selected in the toolbar
@@ -305,7 +305,7 @@ class mxDefaultToolbar {
       target == null ||
       target.isEdge() ||
       !this.connectOnDrop ||
-      !graph.isCellConnectable(target)
+      !target.isConnectable()
     ) {
       while (
         target != null &&
@@ -363,7 +363,7 @@ class mxDefaultToolbar {
 
     if (
       source != null &&
-      graph.isCellConnectable(vertex) &&
+      vertex.isCellConnectable() &&
       graph.isEdgeValid(null, source, vertex)
     ) {
       let edge = null;
@@ -428,7 +428,7 @@ class mxDefaultToolbar {
     sprite.setAttribute('src', img.getAttribute('src'));
 
     // Handles delayed loading of the images
-    const loader = mxUtils.bind(this, evt => {
+    const loader = evt => {
       // Preview uses the image node with double size. Later this can be
       // changed to use a separate preview and guides, but for this the
       // dropHandler must use the additional x- and y-arguments and the
@@ -439,7 +439,7 @@ class mxDefaultToolbar {
 
       makeDraggable(img, this.editor.graph, dropHandler, sprite);
       mxEvent.removeListener(sprite, 'load', loader);
-    });
+    };
   }
 
   /**

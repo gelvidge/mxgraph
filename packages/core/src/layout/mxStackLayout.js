@@ -7,7 +7,12 @@
 import mxGraphLayout from './mxGraphLayout';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_STARTSIZE,
+  STYLE_HORIZONTAL,
+  STYLE_STARTSIZE,
+  STYLE_STROKEWIDTH,
+} from '../util/mxConstants';
 
 /**
  * Class: mxStackLayout
@@ -247,8 +252,8 @@ class mxStackLayout extends mxGraphLayout {
 
     if (this.allowGaps) {
       cells.sort((c1, c2) => {
-        const geo1 = this.graph.getCellGeometry(c1);
-        const geo2 = this.graph.getCellGeometry(c2);
+        const geo1 = c1.getGeometry();
+        const geo2 = c2.getGeometry();
 
         return this.horizontal
           ? geo1.x === geo2.x
@@ -311,11 +316,10 @@ class mxStackLayout extends mxGraphLayout {
         const style = this.graph.getCellStyle(parent);
         let start = mxUtils.getNumber(
           style,
-          mxConstants.STYLE_STARTSIZE,
-          mxConstants.DEFAULT_STARTSIZE
+          STYLE_STARTSIZE,
+          DEFAULT_STARTSIZE
         );
-        const horz =
-          mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, true) == 1;
+        const horz = mxUtils.getValue(style, STYLE_HORIZONTAL, true) == 1;
 
         if (pgeo != null) {
           if (horz) {
@@ -377,11 +381,7 @@ class mxStackLayout extends mxGraphLayout {
 
             if (!this.borderCollapse) {
               const childStyle = this.graph.getCellStyle(child);
-              sw = mxUtils.getNumber(
-                childStyle,
-                mxConstants.STYLE_STROKEWIDTH,
-                1
-              );
+              sw = mxUtils.getNumber(childStyle, STYLE_STROKEWIDTH, 1);
             }
 
             if (last != null) {
@@ -456,7 +456,7 @@ class mxStackLayout extends mxGraphLayout {
           this.resizeParent &&
           pgeo != null &&
           last != null &&
-          !this.graph.isCellCollapsed(parent)
+          !parent.isCollapsed()
         ) {
           this.updateParentGeometry(parent, pgeo, last);
         } else if (
@@ -496,7 +496,7 @@ class mxStackLayout extends mxGraphLayout {
    * geo - The specific geometry of <mxGeometry>.
    */
   setChildGeometry(child, geo) {
-    const geo2 = this.graph.getCellGeometry(child);
+    const geo2 = child.getGeometry();
 
     if (
       geo2 == null ||

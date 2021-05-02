@@ -8,17 +8,17 @@ export default {
     ...globalTypes,
     contextMenu: {
       type: 'boolean',
-      defaultValue: false
+      defaultValue: false,
     },
     rubberBand: {
       type: 'boolean',
-      defaultValue: true
-    }
-  }
+      defaultValue: true,
+    },
+  },
 };
 
 const Template = ({ label, ...args }) => {
-  const {mxGraph, mxEvent, mxRubberband} = mxgraph;
+  const { mxGraph, mxEvent, mxRubberband } = mxgraph;
 
   const container = document.createElement('div');
   container.style.position = 'relative';
@@ -28,13 +28,11 @@ const Template = ({ label, ...args }) => {
   container.style.background = 'url(/images/grid.gif)';
   container.style.cursor = 'default';
 
-  if (!args.contextMenu)
-    mxEvent.disableContextMenu(container);
+  if (!args.contextMenu) mxEvent.disableContextMenu(container);
 
   const graph = new mxGraph(container);
 
-  if (args.rubberBand)
-    new mxRubberband(graph);
+  if (args.rubberBand) new mxRubberband(graph);
 
   const parent = graph.getDefaultParent();
 
@@ -64,6 +62,6 @@ const Template = ({ label, ...args }) => {
   });
 
   return container;
-}
+};
 
 export const Default = Template.bind({});

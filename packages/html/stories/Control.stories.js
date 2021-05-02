@@ -22,7 +22,6 @@ const Template = ({ label, ...args }) => {
     mxImageShape,
     mxRectangle,
     mxCellRenderer,
-    mxUtils,
     mxImage
   } = mxgraph;
 

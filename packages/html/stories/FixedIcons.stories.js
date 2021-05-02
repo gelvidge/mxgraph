@@ -16,10 +16,7 @@ export default {
 const Template = ({ label, ...args }) => {
   const {
     mxGraph, 
-    mxEvent, 
     mxRubberband, 
-    mxDomHelpers, 
-    mxImageShape,
     mxRectangle,
     mxConstants,
     mxUtils,

@@ -4,7 +4,22 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxConstants from '../../mxConstants';
+import {
+  ALIGN_CENTER,
+  ALIGN_MIDDLE,
+  ARROW_CLASSIC,
+  NONE,
+  SHAPE_CONNECTOR,
+  SHAPE_RECTANGLE,
+  STYLE_ALIGN,
+  STYLE_ENDARROW,
+  STYLE_FILLCOLOR,
+  STYLE_FONTCOLOR,
+  STYLE_PERIMETER,
+  STYLE_SHAPE,
+  STYLE_STROKECOLOR,
+  STYLE_VERTICAL_ALIGN,
+} from '../../mxConstants';
 import mxPerimeter from './mxPerimeter';
 import mxUtils from '../../mxUtils';
 import { clone } from '../../mxCloneUtils';
@@ -79,13 +94,13 @@ class mxStylesheet {
   // createDefaultVertexStyle(): StyleMap;
   createDefaultVertexStyle() {
     const style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
-    style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_FILLCOLOR] = '#C3D9FF';
-    style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
-    style[mxConstants.STYLE_FONTCOLOR] = '#774400';
+    style[STYLE_SHAPE] = SHAPE_RECTANGLE;
+    style[STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+    style[STYLE_VERTICAL_ALIGN] = ALIGN_MIDDLE;
+    style[STYLE_ALIGN] = ALIGN_CENTER;
+    style[STYLE_FILLCOLOR] = '#C3D9FF';
+    style[STYLE_STROKECOLOR] = '#6482B9';
+    style[STYLE_FONTCOLOR] = '#774400';
     return style;
   }
 
@@ -95,12 +110,12 @@ class mxStylesheet {
   // createDefaultEdgeStyle(): StyleMap;
   createDefaultEdgeStyle() {
     const style = {};
-    style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
-    style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-    style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-    style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-    style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
-    style[mxConstants.STYLE_FONTCOLOR] = '#446299';
+    style[STYLE_SHAPE] = SHAPE_CONNECTOR;
+    style[STYLE_ENDARROW] = ARROW_CLASSIC;
+    style[STYLE_VERTICAL_ALIGN] = ALIGN_MIDDLE;
+    style[STYLE_ALIGN] = ALIGN_CENTER;
+    style[STYLE_STROKECOLOR] = '#6482B9';
+    style[STYLE_FONTCOLOR] = '#446299';
     return style;
   }
 
@@ -205,7 +220,7 @@ class mxStylesheet {
           const key = tmp.substring(0, pos);
           const value = tmp.substring(pos + 1);
 
-          if (value === mxConstants.NONE) {
+          if (value === NONE) {
             delete style[key];
           } else if (mxUtils.isNumeric(value)) {
             style[key] = parseFloat(value);

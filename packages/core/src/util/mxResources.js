@@ -3,7 +3,7 @@
  * Copyright (c) 2006-2016, Gaudenz Alder
  */
 import mxClient from '../mxClient';
-import mxConstants from './mxConstants';
+import { NONE } from './mxConstants';
 
 /**
  * Class: mxResources
@@ -107,9 +107,9 @@ const mxResources = {
    *
    * lan - The current language.
    */
-  isLanguageSupported: lan => {
+  isLanguageSupported: (lan) => {
     if (mxClient.languages != null) {
-      return mxUtils.indexOf(mxClient.languages, lan) >= 0;
+      return mxClient.languages.indexOf(lan) >= 0;
     }
 
     return true;
@@ -171,7 +171,9 @@ const mxResources = {
       mxResources.isLanguageSupported(lan) &&
       lan != mxClient.defaultLanguage
     ) {
-      return `${basename}_${lan}${(mxResources.extension ?? mxClient.mxResourceExtension)}`;
+      return `${basename}_${lan}${
+        mxResources.extension ?? mxClient.mxResourceExtension
+      }`;
     }
     return null;
   },
@@ -204,9 +206,9 @@ const mxResources = {
         ? lan
         : mxClient.language != null
         ? mxClient.language.toLowerCase()
-        : mxConstants.NONE;
+        : NONE;
 
-    if (lan !== mxConstants.NONE) {
+    if (lan !== NONE) {
       const defaultBundle = mxResources.getDefaultBundle(basename, lan);
       const specialBundle = mxResources.getSpecialBundle(basename, lan);
 
@@ -215,7 +217,7 @@ const mxResources = {
           if (callback) {
             mxUtils.get(
               specialBundle,
-              req => {
+              (req) => {
                 mxResources.parse(req.getText());
                 callback();
               },
@@ -243,7 +245,7 @@ const mxResources = {
         if (callback) {
           mxUtils.get(
             defaultBundle,
-            req => {
+            (req) => {
               mxResources.parse(req.getText());
               loadSpecialBundle();
             },
@@ -277,7 +279,7 @@ const mxResources = {
    * Parses the key, value pairs in the specified
    * text and stores them as local resources.
    */
-  parse: text => {
+  parse: (text) => {
     if (text != null) {
       const lines = text.split('\n');
 
@@ -398,7 +400,7 @@ const mxResources = {
    *
    * callback - Callback function for asynchronous loading.
    */
-  loadResources: callback => {
+  loadResources: (callback) => {
     mxResources.add(`${mxClient.basePath}/resources/editor`, null, () => {
       mxResources.add(`${mxClient.basePath}/resources/graph`, null, callback);
     });

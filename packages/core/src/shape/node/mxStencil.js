@@ -10,7 +10,19 @@ import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxShape from '../mxShape';
 import mxResources from '../../util/mxResources';
 import mxUtils from '../../util/mxUtils';
-import mxConstants from '../../util/mxConstants';
+import {
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  NODETYPE_ELEMENT,
+  NONE,
+  RECTANGLE_ROUNDING_FACTOR,
+  STYLE_BACKGROUND_OUTLINE,
+  STYLE_DIRECTION,
+  STYLE_FLIPH,
+  STYLE_FLIPV,
+  STYLE_POINTER_EVENTS,
+  STYLE_STROKEWIDTH,
+} from '../../util/mxConstants';
 import mxStencilRegistry from './mxStencilRegistry';
 import { getChildNodes, getTextContent } from '../../util/mxDomUtils';
 
@@ -236,28 +248,21 @@ class mxStencil extends mxShape {
     // (start, segment, end blocks), pluggable markers, how to implement
     // swimlanes (title area) with this API, add icon, horizontal/vertical
     // label, indicator for all shapes, rotation
-    const direction = mxUtils.getValue(
-      shape.style,
-      mxConstants.STYLE_DIRECTION,
-      null
-    );
+    const direction = mxUtils.getValue(shape.style, STYLE_DIRECTION, null);
     const aspect = this.computeAspect(shape.style, x, y, w, h, direction);
     const minScale = Math.min(aspect.width, aspect.height);
     const sw =
       this.strokewidth == 'inherit'
-        ? Number(
-            mxUtils.getNumber(shape.style, mxConstants.STYLE_STROKEWIDTH, 1)
-          )
+        ? Number(mxUtils.getNumber(shape.style, STYLE_STROKEWIDTH, 1))
         : Number(this.strokewidth) * minScale;
     canvas.setStrokeWidth(sw);
 
     // Draws a transparent rectangle for catching events
     if (
       shape.style != null &&
-      mxUtils.getValue(shape.style, mxConstants.STYLE_POINTER_EVENTS, '0') ==
-        '1'
+      mxUtils.getValue(shape.style, STYLE_POINTER_EVENTS, '0') == '1'
     ) {
-      canvas.setStrokeColor(mxConstants.NONE);
+      canvas.setStrokeColor(NONE);
       canvas.rect(x, y, w, h);
       canvas.stroke();
       canvas.setStrokeColor(shape.stroke);
@@ -287,11 +292,7 @@ class mxStencil extends mxShape {
       true,
       !shape.outline ||
         shape.style == null ||
-        mxUtils.getValue(
-          shape.style,
-          mxConstants.STYLE_BACKGROUND_OUTLINE,
-          0
-        ) == 0
+        mxUtils.getValue(shape.style, STYLE_BACKGROUND_OUTLINE, 0) == 0
     );
 
     // Restores stack for unequal count of save/restore calls
@@ -310,7 +311,7 @@ class mxStencil extends mxShape {
       let tmp = node.firstChild;
 
       while (tmp != null) {
-        if (tmp.nodeType === mxConstants.NODETYPE_ELEMENT) {
+        if (tmp.nodeType === NODETYPE_ELEMENT) {
           this.drawNode(canvas, shape, tmp, aspect, disableShadow, paint);
         }
 
@@ -340,8 +341,7 @@ class mxStencil extends mxShape {
     let sy = h / this.h0;
 
     const inverse =
-      direction === mxConstants.DIRECTION_NORTH ||
-      direction === mxConstants.DIRECTION_SOUTH;
+      direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
 
     if (inverse) {
       sy = w / this.h0;
@@ -404,7 +404,7 @@ class mxStencil extends mxShape {
           let childNode = node.firstChild;
 
           while (childNode != null) {
-            if (childNode.nodeType === mxConstants.NODETYPE_ELEMENT) {
+            if (childNode.nodeType === NODETYPE_ELEMENT) {
               const childName = childNode.nodeName;
 
               if (childName === 'move' || childName === 'line') {
@@ -452,7 +452,7 @@ class mxStencil extends mxShape {
           let childNode = node.firstChild;
 
           while (childNode != null) {
-            if (childNode.nodeType === mxConstants.NODETYPE_ELEMENT) {
+            if (childNode.nodeType === NODETYPE_ELEMENT) {
               this.drawNode(
                 canvas,
                 shape,
@@ -515,7 +515,7 @@ class mxStencil extends mxShape {
         let arcsize = Number(node.getAttribute('arcsize'));
 
         if (arcsize === 0) {
-          arcsize = mxConstants.RECTANGLE_ROUNDING_FACTOR * 100;
+          arcsize = RECTANGLE_ROUNDING_FACTOR * 100;
         }
 
         const w = Number(node.getAttribute('w')) * sx;
@@ -562,10 +562,8 @@ class mxStencil extends mxShape {
             const dr = shape.rotation;
 
             // Depends on flipping
-            const flipH =
-              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPH, 0) == 1;
-            const flipV =
-              mxUtils.getValue(shape.style, mxConstants.STYLE_FLIPV, 0) == 1;
+            const flipH = mxUtils.getValue(shape.style, STYLE_FLIPH, 0) == 1;
+            const flipV = mxUtils.getValue(shape.style, STYLE_FLIPV, 0) == 1;
 
             if (flipH && flipV) {
               rotation -= dr;

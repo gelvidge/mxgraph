@@ -1204,14 +1204,14 @@ EditorUi.prototype.installShapePicker = function()
 				this.graph.connectVertex(state.cell, dir, this.graph.defaultEdgeLength, evt, null, null, mxUtils.bind(this, function(x, y, execute)
 				{
 					let temp = graph.getCompositeParent(state.cell);
-					let geo = graph.getCellGeometry(temp);
+					let geo = temp.getGeometry();
 					me.consume();
 					
 					while (temp != null && graph.model.isVertex(temp) && geo != null && geo.relative)
 					{
 						cell = temp;
 						temp = cell.getParent()
-						geo = graph.getCellGeometry(temp);
+						geo = temp.getGeometry();
 					}
 					
 					// Asynchronous to avoid direct insert after double tap
@@ -1645,7 +1645,7 @@ EditorUi.prototype.initClipboard = function()
 				
 				if (state != null)
 				{
-					let geo = graph.getCellGeometry(clones[i]);
+					let geo = clones[i].getGeometry();
 				
 					if (geo != null && geo.relative && !result[i].isEdge() &&
 						lookup[mxObjectIdentity.get(result[i].getParent())] == null)
@@ -4595,7 +4595,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 						{
 							if (cells[i].isVertex() && graph.isCellResizable(cells[i]))
 							{
-								let geo = graph.getCellGeometry(cells[i]);
+								let geo = cells[i].getGeometry();
 								
 								if (geo != null)
 								{

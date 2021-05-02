@@ -1,6 +1,6 @@
 import mxDragSource from './drag_pan/mxDragSource';
 import mxPoint from './datatypes/mxPoint';
-import mxConstants from './mxConstants';
+import { TOOLTIP_VERTICAL_OFFSET } from './mxConstants';
 
 /**
  * Function: makeDraggable
@@ -85,7 +85,7 @@ export const makeDraggable = (
   const dragSource = new mxDragSource(element, funct);
   dragSource.dragOffset = new mxPoint(
     dx != null ? dx : 0,
-    dy != null ? dy : mxConstants.TOOLTIP_VERTICAL_OFFSET
+    dy != null ? dy : TOOLTIP_VERTICAL_OFFSET
   );
   dragSource.autoscroll = autoscroll;
 
@@ -103,7 +103,7 @@ export const makeDraggable = (
   }
 
   // Overrides function to get current graph
-  dragSource.getGraphForEvent = evt => {
+  dragSource.getGraphForEvent = (evt) => {
     return typeof graphF === 'function' ? graphF(evt) : graphF;
   };
 
@@ -114,7 +114,7 @@ export const makeDraggable = (
     };
 
     if (scalePreview) {
-      dragSource.createPreviewElement = graph => {
+      dragSource.createPreviewElement = (graph) => {
         const elt = dragElement.cloneNode(true);
 
         const w = parseInt(elt.style.width);

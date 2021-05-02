@@ -5,11 +5,12 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxUtils from '../../util/mxUtils';
-import mxConstants from '../../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../../util/mxConstants';
 import mxGeometry from '../../util/datatypes/mxGeometry';
 import mxCellOverlay from './mxCellOverlay';
 import { clone } from '../../util/mxCloneUtils';
+import mxPoint from '../../util/datatypes/mxPoint';
+import mxCellPath from './mxCellPath';
 
 /**
  * Cells are the elements of the graph model. They represent the state
@@ -436,7 +437,8 @@ class mxCell {
    */
   // getIndex(child: mxCell): number;
   getIndex(child: mxCell | null): number {
-    return mxUtils.indexOf(this.children, child);
+    if (child === null || !this.children) return -1;
+    return this.children.indexOf(child);
   }
 
   /**
@@ -538,7 +540,8 @@ class mxCell {
    */
   // getEdgeIndex(edge: mxCell): number;
   getEdgeIndex(edge: mxCell): number {
-    return mxUtils.indexOf(this.edges, edge);
+    if (!this.edges) return -1;
+    return this.edges.indexOf(edge);
   }
 
   /**
@@ -571,7 +574,7 @@ class mxCell {
       if (
         this.edges == null ||
         edge.getTerminal(!isOutgoing) !== this ||
-        mxUtils.indexOf(this.edges, edge) < 0
+        this.edges.indexOf(edge) < 0
       ) {
         if (this.edges == null) {
           this.edges = [];
@@ -634,8 +637,7 @@ class mxCell {
     const userObject = this.getValue();
     return (
       userObject != null &&
-      (userObject.nodeType === mxConstants.NODETYPE_ELEMENT &&
-      userObject.hasAttribute
+      (userObject.nodeType === NODETYPE_ELEMENT && userObject.hasAttribute
         ? userObject.hasAttribute(name)
         : userObject.getAttribute(name) != null)
     );
@@ -655,7 +657,7 @@ class mxCell {
   getAttribute(name: string, defaultValue: any): any {
     const userObject = this.getValue();
     const val =
-      userObject != null && userObject.nodeType === mxConstants.NODETYPE_ELEMENT
+      userObject != null && userObject.nodeType === NODETYPE_ELEMENT
         ? userObject.getAttribute(name)
         : null;
     return val != null ? val : defaultValue;
@@ -672,10 +674,7 @@ class mxCell {
   // setAttribute(name: string, value: any): void;
   setAttribute(name: string, value: any): void {
     const userObject = this.getValue();
-    if (
-      userObject != null &&
-      userObject.nodeType === mxConstants.NODETYPE_ELEMENT
-    ) {
+    if (userObject != null && userObject.nodeType === NODETYPE_ELEMENT) {
       userObject.setAttribute(name, value);
     }
   }
@@ -706,6 +705,288 @@ class mxCell {
       }
     }
     return value;
+  }
+
+  /**
+   * Returns the nearest common ancestor for the specified cells to `this`.
+   *
+   * @param {mxCell} cell2  that specifies the second cell in the tree.
+   */
+  // getNearestCommonAncestor(cell1: mxCell, cell2: mxCell): mxCell;
+  getNearestCommonAncestor(cell2: mxCell | null): mxCell | null {
+    // Creates the cell path for the second cell
+    let path = mxCellPath.create(<mxCell>cell2);
+
+    if (path != null && path.length > 0) {
+      // Bubbles through the ancestors of the first
+      // cell to find the nearest common ancestor.
+      let cell: mxCell | null = this;
+      let current: string | null = mxCellPath.create(<mxCell>cell);
+
+      // Inverts arguments
+      if (path.length < current.length) {
+        cell = cell2;
+        const tmp = current;
+        current = path;
+        path = tmp;
+      }
+
+      while (cell != null) {
+        const parent = <mxCell>cell.getParent();
+
+        // Checks if the cell path is equal to the beginning of the given cell path
+        if (
+          path.indexOf(current + mxCellPath.PATH_SEPARATOR) === 0 &&
+          parent != null
+        ) {
+          return cell;
+        }
+
+        current = mxCellPath.getParentPath(<string>current);
+        cell = parent;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Returns true if the given parent is an ancestor of the given child. Note
+   * returns true if child == parent.
+   *
+   * @param {mxCell} child  that specifies the child.
+   */
+  // isAncestor(parent: mxCell, child: mxCell): boolean;
+  isAncestor(child: mxCell | null): boolean {
+    while (child != null && child !== this) {
+      child = <mxCell>child.getParent();
+    }
+    return child === this;
+  }
+
+  /**
+   * Returns the child vertices of the given parent.
+   */
+  // getChildVertices(parent: mxCell): Array<mxCell>;
+  getChildVertices() {
+    return this.getChildCells(true, false);
+  }
+
+  /**
+   * Returns the child edges of the given parent.
+   */
+  // getChildEdges(parent: mxCell): Array<mxCell>;
+  getChildEdges(): mxCell[] {
+    return this.getChildCells(false, true);
+  }
+
+  /**
+   * Returns the children of the given cell that are vertices and/or edges
+   * depending on the arguments.
+   *
+   * @param vertices  Boolean indicating if child vertices should be returned.
+   * Default is false.
+   * @param edges  Boolean indicating if child edges should be returned.
+   * Default is false.
+   */
+  // getChildCells(parent: mxCell, vertices: boolean, edges: boolean): Array<mxCell>;
+  getChildCells(vertices: boolean = false, edges: boolean = false): mxCell[] {
+    const childCount = this.getChildCount();
+    const result = [];
+
+    for (let i = 0; i < childCount; i += 1) {
+      const child = <mxCell>this.getChildAt(i);
+
+      if (
+        (!edges && !vertices) ||
+        (edges && child.isEdge()) ||
+        (vertices && child.isVertex())
+      ) {
+        result.push(child);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Returns the number of incoming or outgoing edges, ignoring the given
+   * edge.
+   *
+   * @param outgoing  Boolean that specifies if the number of outgoing or
+   * incoming edges should be returned.
+   * @param {mxCell} ignoredEdge  that represents an edge to be ignored.
+   */
+  // getDirectedEdgeCount(cell: mxCell, outgoing: boolean, ignoredEdge: boolean): number;
+  getDirectedEdgeCount(
+    outgoing: boolean,
+    ignoredEdge: mxCell | null = null
+  ): number {
+    let count = 0;
+    const edgeCount = this.getEdgeCount();
+
+    for (let i = 0; i < edgeCount; i += 1) {
+      const edge = this.getEdgeAt(i);
+      if (edge !== ignoredEdge && edge && edge.getTerminal(outgoing) === this) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Returns all edges of the given cell without loops.
+   */
+  // getConnections(cell: mxCell): Array<mxCell>;
+  getConnections() {
+    return this.getEdges(true, true, false);
+  }
+
+  /**
+   * Returns the incoming edges of the given cell without loops.
+   */
+  // getIncomingEdges(cell: mxCell): Array<mxCell>;
+  getIncomingEdges(): mxCell[] {
+    return this.getEdges(true, false, false);
+  }
+
+  /**
+   * Returns the outgoing edges of the given cell without loops.
+   */
+  // getOutgoingEdges(cell: mxCell): Array<mxCell>;
+  getOutgoingEdges(): mxCell[] {
+    return this.getEdges(false, true, false);
+  }
+
+  /**
+   * Returns all distinct edges connected to this cell as a new array of
+   * {@link mxCell}. If at least one of incoming or outgoing is true, then loops
+   * are ignored, otherwise if both are false, then all edges connected to
+   * the given cell are returned including loops.
+   *
+   * @param incoming  Optional boolean that specifies if incoming edges should be
+   * returned. Default is true.
+   * @param outgoing  Optional boolean that specifies if outgoing edges should be
+   * returned. Default is true.
+   * @param includeLoops  Optional boolean that specifies if loops should be returned.
+   * Default is true.
+   */
+  // getEdges(cell: mxCell, incoming?: boolean, outgoing?: boolean, includeLoops?: boolean): Array<mxCell>;
+  getEdges(
+    incoming: boolean = true,
+    outgoing: boolean = true,
+    includeLoops: boolean = true
+  ) {
+    const edgeCount = this.getEdgeCount();
+    const result = [];
+
+    for (let i = 0; i < edgeCount; i += 1) {
+      const edge = <mxCell>this.getEdgeAt(i);
+      const source = edge.getTerminal(true);
+      const target = edge.getTerminal(false);
+
+      if (
+        (includeLoops && source === target) ||
+        (source !== target &&
+          ((incoming && target === this) || (outgoing && source === this)))
+      ) {
+        result.push(edge);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns the absolute, accumulated origin for the children inside the
+   * given parent as an {@link mxPoint}.
+   */
+  // getOrigin(cell: mxCell): mxPoint;
+  getOrigin(): mxPoint {
+    let result = null;
+
+    if (this != null && this.getParent()) {
+      result = (<mxCell>this.getParent()).getOrigin();
+
+      if (!this.isEdge()) {
+        const geo = this.getGeometry();
+
+        if (geo != null) {
+          result.x += geo.x;
+          result.y += geo.y;
+        }
+      }
+    } else {
+      result = new mxPoint();
+    }
+    return result;
+  }
+
+  /**
+   * Returns all descendants of the given cell and the cell itself in an array.
+   */
+  // getDescendants(parent: mxCell): Array<mxCell>;
+  getDescendants(): mxCell[] {
+    return this.filterDescendants(null);
+  }
+
+  /**
+   * Visits all cells recursively and applies the specified filter function
+   * to each cell. If the function returns true then the cell is added
+   * to the resulting array. The parent and result paramters are optional.
+   * If parent is not specified then the recursion starts at {@link root}.
+   *
+   * Example:
+   * The following example extracts all vertices from a given model:
+   * ```javascript
+   * var filter(cell)
+   * {
+   * 	return model.isVertex(cell);
+   * }
+   * var vertices = model.filterDescendants(filter);
+   * ```
+   *
+   * @param filter  JavaScript function that takes an {@link mxCell} as an argument
+   * and returns a boolean.
+   */
+  // filterDescendants(filter: (...args: any) => boolean, parent?: mxCell): Array<mxCell>;
+  filterDescendants(filter: Function | null): mxCell[] {
+    let parent = this;
+
+    // Creates a new array for storing the result
+    let result: mxCell[] = [];
+
+    // Recursion starts at the root of the model
+    parent = parent || this.getRoot();
+
+    // Checks if the filter returns true for the cell
+    // and adds it to the result array
+    if (filter == null || filter(parent)) {
+      result.push(parent);
+    }
+
+    // Visits the children of the cell
+    const childCount = parent.getChildCount();
+    for (let i = 0; i < childCount; i += 1) {
+      const child = <mxCell>parent.getChildAt(i);
+      result = result.concat(child.filterDescendants(filter));
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns the root of the model or the topmost parent of the given cell.
+   */
+  // getRoot(cell?: mxCell): mxCell;
+  getRoot(): mxCell {
+    let root: mxCell = this;
+    let cell: mxCell = this;
+
+    while (cell != null) {
+      root = cell;
+      cell = <mxCell>cell.getParent();
+    }
+    return root;
   }
 }
 

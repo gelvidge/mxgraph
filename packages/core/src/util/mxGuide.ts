@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxConstants from './mxConstants';
+import { DIALECT_SVG, GUIDE_COLOR, GUIDE_STROKEWIDTH } from './mxConstants';
 import mxPoint from './datatypes/mxPoint';
 import mxPolyline from '../shape/edge/mxPolyline';
 import mxCellState from '../view/cell/mxCellState';
@@ -13,7 +13,7 @@ import mxShape from '../shape/mxShape';
 import mxRectangle from './datatypes/mxRectangle';
 import mxGraph from '../view/graph/mxGraph';
 import mxEventObject from './event/mxEventObject';
-import mxGraphView from "../view/graph/mxGraphView";
+import mxGraphView from '../view/graph/mxGraphView';
 
 /**
  * Class: mxGuide
@@ -119,7 +119,7 @@ class mxGuide {
    * Returns the tolerance for the guides. Default value is gridSize / 2.
    */
   // getGuideTolerance(): number;
-  getGuideTolerance(gridEnabled: boolean=false) {
+  getGuideTolerance(gridEnabled: boolean = false) {
     return gridEnabled && this.graph.gridEnabled
       ? this.graph.gridSize / 2
       : this.tolerance;
@@ -139,11 +139,7 @@ class mxGuide {
   // createGuideShape(horizontal: boolean): mxPolyline;
   createGuideShape(horizontal: boolean = false) {
     // TODO: Should vertical guides be supported here?? ============================
-    const guide = new mxPolyline(
-      [],
-      mxConstants.GUIDE_COLOR,
-      mxConstants.GUIDE_STROKEWIDTH
-    );
+    const guide = new mxPolyline([], GUIDE_COLOR, GUIDE_STROKEWIDTH);
     guide.isDashed = true;
     return guide;
   }
@@ -225,7 +221,7 @@ class mxGuide {
             // Makes sure to use SVG shapes in order to implement
             // event-transparency on the background area of the rectangle since
             // HTML shapes do not let mouseevents through even when transparent
-            this.guideX.dialect = mxConstants.DIALECT_SVG;
+            this.guideX.dialect = DIALECT_SVG;
             this.guideX.pointerEvents = false;
             this.guideX.init(this.graph.getView().getOverlayPane());
           }
@@ -264,7 +260,7 @@ class mxGuide {
             // Makes sure to use SVG shapes in order to implement
             // event-transparency on the background area of the rectangle since
             // HTML shapes do not let mouseevents through even when transparent
-            this.guideY.dialect = mxConstants.DIALECT_SVG;
+            this.guideY.dialect = DIALECT_SVG;
             this.guideY.pointerEvents = false;
             this.guideY.init(this.graph.getView().getOverlayPane());
           }
@@ -320,7 +316,7 @@ class mxGuide {
           minY = Math.min(bounds.y + delta.y - this.graph.panDy, stateX.y);
           maxY = Math.max(
             bounds.y + bounds.height + delta.y - this.graph.panDy,
-              // @ts-ignore
+            // @ts-ignore
             stateX.y + stateX.height
           );
         }
@@ -352,7 +348,7 @@ class mxGuide {
           minX = Math.min(bounds.x + delta.x - this.graph.panDx, stateY.x);
           maxX = Math.max(
             bounds.x + bounds.width + delta.x - this.graph.panDx,
-              // @ts-ignore
+            // @ts-ignore
             stateY.x + stateY.width
           );
         }
@@ -407,7 +403,7 @@ class mxGuide {
    */
   // getGuideColor(state: mxCellState, horizontal: any): string;
   getGuideColor(state: mxCellState | null, horizontal: boolean | null): string {
-    return mxConstants.GUIDE_COLOR;
+    return GUIDE_COLOR;
   }
 
   /**
@@ -428,10 +424,14 @@ class mxGuide {
   // setVisible(visible: boolean): void;
   setVisible(visible: boolean): void {
     if (this.guideX != null) {
-      (<SVGElement>this.guideX.node).style.visibility = visible ? 'visible' : 'hidden';
+      (<SVGElement>this.guideX.node).style.visibility = visible
+        ? 'visible'
+        : 'hidden';
     }
     if (this.guideY != null) {
-      (<SVGElement>this.guideY.node).style.visibility = visible ? 'visible' : 'hidden';
+      (<SVGElement>this.guideY.node).style.visibility = visible
+        ? 'visible'
+        : 'hidden';
     }
   }
 

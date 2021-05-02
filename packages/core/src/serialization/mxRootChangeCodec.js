@@ -7,7 +7,7 @@
 
 import mxRootChange from '../atomic_changes/mxRootChange';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxConstants from '../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 import mxObjectCodec from './mxObjectCodec';
 
 /**
@@ -48,7 +48,7 @@ class mxRootChangeCodec extends mxObjectCodec {
   beforeDecode(dec, node, obj) {
     if (
       node.firstChild != null &&
-      node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT
+      node.firstChild.nodeType === NODETYPE_ELEMENT
     ) {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);

@@ -7,7 +7,7 @@
 import mxActor from '../mxActor';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxUtils from '../../util/mxUtils';
-import mxConstants from '../../util/mxConstants';
+import { LINE_ARCSIZE, STYLE_ARCSIZE } from '../../util/mxConstants';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
 /**
@@ -31,11 +31,7 @@ class mxHexagon extends mxActor {
   // redrawPath(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   redrawPath(c: mxSvgCanvas2D, x: number, y: number, w: number, h: number) {
     const arcSize =
-      mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_ARCSIZE,
-        mxConstants.LINE_ARCSIZE
-      ) / 2;
+      mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2;
     this.addPoints(
       c,
       [

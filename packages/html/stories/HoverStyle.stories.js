@@ -16,10 +16,8 @@ export default {
 const Template = ({ label, ...args }) => {
   const {
     mxGraph,
-    mxUtils,
     mxConstants,
     mxRubberband,
-    mxStencilRegistry,
     mxCloneUtils
   } = mxgraph;
 

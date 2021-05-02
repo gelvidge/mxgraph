@@ -1,6 +1,7 @@
 import mxPoint from './datatypes/mxPoint';
 import mxTemporaryCellStates from '../view/cell/mxTemporaryCellStates';
 import mxCodec from '../serialization/mxCodec';
+import { DIALECT_SVG, NS_SVG } from './mxConstants';
 
 /**
  * Function: createXmlDocument
@@ -56,7 +57,7 @@ export const createMsXmlDocument = () => {
  *
  * xml - String that contains the XML data.
  */
-export const parseXml = xml => {
+export const parseXml = (xml) => {
   const parser = new DOMParser();
   return parser.parseFromString(xml, 'text/xml');
 };
@@ -87,12 +88,12 @@ export const getViewXml = (graph, scale, cells, x0, y0) => {
   const { drawPane } = view;
   const { overlayPane } = view;
 
-  if (graph.dialect === mxConstants.DIALECT_SVG) {
-    view.drawPane = document.createElementNS(mxConstants.NS_SVG, 'g');
+  if (graph.dialect === DIALECT_SVG) {
+    view.drawPane = document.createElementNS(NS_SVG, 'g');
     view.canvas.appendChild(view.drawPane);
 
     // Redirects cell overlays into temporary container
-    view.overlayPane = document.createElementNS(mxConstants.NS_SVG, 'g');
+    view.overlayPane = document.createElementNS(NS_SVG, 'g');
     view.canvas.appendChild(view.overlayPane);
   } else {
     view.drawPane = view.drawPane.cloneNode(false);

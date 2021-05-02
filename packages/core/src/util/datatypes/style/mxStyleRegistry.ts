@@ -5,7 +5,20 @@
  * Type definitions from the typed-mxgraph project
  */
 
-import mxConstants from '../../mxConstants';
+import {
+  EDGESTYLE_ELBOW,
+  EDGESTYLE_ENTITY_RELATION,
+  EDGESTYLE_LOOP,
+  EDGESTYLE_ORTHOGONAL,
+  EDGESTYLE_SEGMENT,
+  EDGESTYLE_SIDETOSIDE,
+  EDGESTYLE_TOPTOBOTTOM,
+  PERIMETER_ELLIPSE,
+  PERIMETER_HEXAGON,
+  PERIMETER_RECTANGLE,
+  PERIMETER_RHOMBUS,
+  PERIMETER_TRIANGLE,
+} from '../../mxConstants';
 import mxEdgeStyle from './mxEdgeStyle';
 import mxPerimeter from './mxPerimeter';
 
@@ -56,51 +69,18 @@ class mxStyleRegistry {
   }
 }
 
-mxStyleRegistry.putValue(
-  mxConstants.EDGESTYLE_ELBOW,
-  mxEdgeStyle.ElbowConnector
-);
-mxStyleRegistry.putValue(
-  mxConstants.EDGESTYLE_ENTITY_RELATION,
-  mxEdgeStyle.EntityRelation
-);
-mxStyleRegistry.putValue(mxConstants.EDGESTYLE_LOOP, mxEdgeStyle.Loop);
-mxStyleRegistry.putValue(
-  mxConstants.EDGESTYLE_SIDETOSIDE,
-  mxEdgeStyle.SideToSide
-);
-mxStyleRegistry.putValue(
-  mxConstants.EDGESTYLE_TOPTOBOTTOM,
-  mxEdgeStyle.TopToBottom
-);
-mxStyleRegistry.putValue(
-  mxConstants.EDGESTYLE_ORTHOGONAL,
-  mxEdgeStyle.OrthConnector
-);
-mxStyleRegistry.putValue(
-  mxConstants.EDGESTYLE_SEGMENT,
-  mxEdgeStyle.SegmentConnector
-);
+mxStyleRegistry.putValue(EDGESTYLE_ELBOW, mxEdgeStyle.ElbowConnector);
+mxStyleRegistry.putValue(EDGESTYLE_ENTITY_RELATION, mxEdgeStyle.EntityRelation);
+mxStyleRegistry.putValue(EDGESTYLE_LOOP, mxEdgeStyle.Loop);
+mxStyleRegistry.putValue(EDGESTYLE_SIDETOSIDE, mxEdgeStyle.SideToSide);
+mxStyleRegistry.putValue(EDGESTYLE_TOPTOBOTTOM, mxEdgeStyle.TopToBottom);
+mxStyleRegistry.putValue(EDGESTYLE_ORTHOGONAL, mxEdgeStyle.OrthConnector);
+mxStyleRegistry.putValue(EDGESTYLE_SEGMENT, mxEdgeStyle.SegmentConnector);
 
-mxStyleRegistry.putValue(
-  mxConstants.PERIMETER_ELLIPSE,
-  mxPerimeter.EllipsePerimeter
-);
-mxStyleRegistry.putValue(
-  mxConstants.PERIMETER_RECTANGLE,
-  mxPerimeter.RectanglePerimeter
-);
-mxStyleRegistry.putValue(
-  mxConstants.PERIMETER_RHOMBUS,
-  mxPerimeter.RhombusPerimeter
-);
-mxStyleRegistry.putValue(
-  mxConstants.PERIMETER_TRIANGLE,
-  mxPerimeter.TrianglePerimeter
-);
-mxStyleRegistry.putValue(
-  mxConstants.PERIMETER_HEXAGON,
-  mxPerimeter.HexagonPerimeter
-);
+mxStyleRegistry.putValue(PERIMETER_ELLIPSE, mxPerimeter.EllipsePerimeter);
+mxStyleRegistry.putValue(PERIMETER_RECTANGLE, mxPerimeter.RectanglePerimeter);
+mxStyleRegistry.putValue(PERIMETER_RHOMBUS, mxPerimeter.RhombusPerimeter);
+mxStyleRegistry.putValue(PERIMETER_TRIANGLE, mxPerimeter.TrianglePerimeter);
+mxStyleRegistry.putValue(PERIMETER_HEXAGON, mxPerimeter.HexagonPerimeter);
 
 export default mxStyleRegistry;

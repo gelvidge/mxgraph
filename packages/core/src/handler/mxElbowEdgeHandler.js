@@ -5,7 +5,15 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxEdgeHandler from './mxEdgeHandler';
-import mxConstants from '../util/mxConstants';
+import {
+  CURSOR_TERMINAL_HANDLE,
+  EDGESTYLE_ELBOW,
+  EDGESTYLE_TOPTOBOTTOM,
+  ELBOW_VERTICAL,
+  HANDLE_SIZE,
+  STYLE_EDGE,
+  STYLE_ELBOW,
+} from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxEdgeStyle from '../util/datatypes/style/mxEdgeStyle';
@@ -66,12 +74,12 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     // Source
     let bend = this.createHandleShape(0);
     this.initBend(bend);
-    bend.setCursor(mxConstants.CURSOR_TERMINAL_HANDLE);
+    bend.setCursor(CURSOR_TERMINAL_HANDLE);
     bends.push(bend);
 
     // Virtual
     bends.push(
-      this.createVirtualBend(evt => {
+      this.createVirtualBend((evt) => {
         if (!isConsumed(evt) && this.flipEnabled) {
           this.graph.flipEdge(this.state.cell, evt);
           mxEvent.consume(evt);
@@ -84,7 +92,7 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
     // Target
     bend = this.createHandleShape(2);
     this.initBend(bend);
-    bend.setCursor(mxConstants.CURSOR_TERMINAL_HANDLE);
+    bend.setCursor(CURSOR_TERMINAL_HANDLE);
     bends.push(bend);
 
     return bends;
@@ -117,16 +125,11 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
    */
   // getCursorForBend(): string;
   getCursorForBend() {
-    return this.state.style[mxConstants.STYLE_EDGE] ===
-      mxEdgeStyle.TopToBottom ||
-      this.state.style[mxConstants.STYLE_EDGE] ===
-        mxConstants.EDGESTYLE_TOPTOBOTTOM ||
-      ((this.state.style[mxConstants.STYLE_EDGE] ===
-        mxEdgeStyle.ElbowConnector ||
-        this.state.style[mxConstants.STYLE_EDGE] ===
-          mxConstants.EDGESTYLE_ELBOW) &&
-        this.state.style[mxConstants.STYLE_ELBOW] ===
-          mxConstants.ELBOW_VERTICAL)
+    return this.state.style[STYLE_EDGE] === mxEdgeStyle.TopToBottom ||
+      this.state.style[STYLE_EDGE] === EDGESTYLE_TOPTOBOTTOM ||
+      ((this.state.style[STYLE_EDGE] === mxEdgeStyle.ElbowConnector ||
+        this.state.style[STYLE_EDGE] === EDGESTYLE_ELBOW) &&
+        this.state.style[STYLE_ELBOW] === ELBOW_VERTICAL)
       ? 'row-resize'
       : 'col-resize';
   }
@@ -234,8 +237,8 @@ class mxElbowEdgeHandler extends mxEdgeHandler {
       this.labelShape.visible &&
       mxUtils.intersects(bounds, this.labelShape.bounds)
     ) {
-      w = mxConstants.HANDLE_SIZE + 3;
-      h = mxConstants.HANDLE_SIZE + 3;
+      w = HANDLE_SIZE + 3;
+      h = HANDLE_SIZE + 3;
       bounds = new mxRectangle(
         Math.floor(pt.x - w / 2),
         Math.floor(pt.y - h / 2),

@@ -142,7 +142,7 @@ Format.prototype.updateSelectionStateForCell = function(result, cell, cells)
 		result.cell = result.cell || graph.isTableCell(cell);
 		result.row = result.row || graph.isTableRow(cell);
 		result.vertices.push(cell);
-		let geo = graph.getCellGeometry(cell);
+		let geo = cell.getGeometry();
 		
 		if (geo != null)
 		{
@@ -2426,7 +2426,7 @@ ArrangePanel.prototype.addGeometryHandler = function(input, fn)
 					{
 						if (cells[i].isVertex())
 						{
-							let geo = graph.getCellGeometry(cells[i]);
+							let geo = cells[i].getGeometry();
 							
 							if (geo != null)
 							{
@@ -2498,7 +2498,7 @@ ArrangePanel.prototype.addEdgeGeometryHandler = function(input, fn)
                     {
                         if (cells[i].isEdge())
                         {
-                            let geo = graph.getCellGeometry(cells[i]);
+                            let geo = cells[i].getGeometry();
 
                             if (geo != null)
                             {

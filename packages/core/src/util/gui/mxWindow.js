@@ -11,10 +11,11 @@ import mxEventSource from '../event/mxEventSource';
 import mxUtils from '../mxUtils';
 import mxEvent from '../event/mxEvent';
 import mxClient from '../../mxClient';
-import mxConstants from '../mxConstants';
+import { NODETYPE_TEXT } from '../mxConstants';
 import { br, write } from '../mxDomUtils';
 import mxResources from '../mxResources';
 import { getClientX, getClientY } from '../mxEventUtils';
+import { htmlEntities } from '../mxStringUtils';
 
 /**
  * Basic window inside a document.
@@ -276,7 +277,7 @@ class mxWindow extends mxEventSource {
     this.div.appendChild(this.table);
 
     // Puts the window on top of other windows when clicked
-    const activator = evt => {
+    const activator = (evt) => {
       this.activate();
     };
 
@@ -360,7 +361,7 @@ class mxWindow extends mxEventSource {
     while (child != null) {
       const next = child.nextSibling;
 
-      if (child.nodeType === mxConstants.NODETYPE_TEXT) {
+      if (child.nodeType === NODETYPE_TEXT) {
         child.parentNode.removeChild(child);
       }
 
@@ -473,7 +474,7 @@ class mxWindow extends mxEventSource {
         let width = null;
         let height = null;
 
-        const start = evt => {
+        const start = (evt) => {
           // LATER: pointerdown starting on border of resize does start
           // the drag operation but does not fire consecutive events via
           // one of the listeners below (does pan instead).
@@ -491,7 +492,7 @@ class mxWindow extends mxEventSource {
 
         // Adds a temporary pair of listeners to intercept
         // the gesture event in the document
-        let dragHandler = evt => {
+        let dragHandler = (evt) => {
           if (startX != null && startY != null) {
             const dx = getClientX(evt) - startX;
             const dy = getClientY(evt) - startY;
@@ -503,7 +504,7 @@ class mxWindow extends mxEventSource {
           }
         };
 
-        let dropHandler = evt => {
+        let dropHandler = (evt) => {
           if (startX != null && startY != null) {
             startX = null;
             startY = null;
@@ -548,9 +549,11 @@ class mxWindow extends mxEventSource {
     this.table.style.width = `${width}px`;
     this.table.style.height = `${height}px`;
 
-    this.contentWrapper.style.height = `${this.div.offsetHeight -
+    this.contentWrapper.style.height = `${
+      this.div.offsetHeight -
       this.title.offsetHeight -
-      this.contentHeightCorrection}px`;
+      this.contentHeightCorrection
+    }px`;
   }
 
   /**
@@ -590,7 +593,7 @@ class mxWindow extends mxEventSource {
     let maxDisplay = null;
     let height = null;
 
-    const funct = evt => {
+    const funct = (evt) => {
       this.activate();
 
       if (!minimized) {
@@ -675,7 +678,7 @@ class mxWindow extends mxEventSource {
     let width = null;
     let minDisplay = null;
 
-    const funct = evt => {
+    const funct = (evt) => {
       this.activate();
 
       if (this.maximize.style.display !== 'none') {
@@ -714,9 +717,11 @@ class mxWindow extends mxEventSource {
           const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow === 'auto' || this.resize != null) {
-            this.contentWrapper.style.height = `${this.div.offsetHeight -
+            this.contentWrapper.style.height = `${
+              this.div.offsetHeight -
               this.title.offsetHeight -
-              this.contentHeightCorrection}px`;
+              this.contentHeightCorrection
+            }px`;
           }
 
           this.fireEvent(new mxEventObject(mxEvent.MAXIMIZE, 'event', evt));
@@ -738,9 +743,11 @@ class mxWindow extends mxEventSource {
           const style = mxUtils.getCurrentStyle(this.contentWrapper);
 
           if (style.overflow === 'auto' || this.resize != null) {
-            this.contentWrapper.style.height = `${this.div.offsetHeight -
+            this.contentWrapper.style.height = `${
+              this.div.offsetHeight -
               this.title.offsetHeight -
-              this.contentHeightCorrection}px`;
+              this.contentHeightCorrection
+            }px`;
           }
 
           this.table.style.height = height;
@@ -768,7 +775,7 @@ class mxWindow extends mxEventSource {
   installMoveHandler() {
     this.title.style.cursor = 'move';
 
-    mxEvent.addGestureListeners(this.title, evt => {
+    mxEvent.addGestureListeners(this.title, (evt) => {
       const startX = getClientX(evt);
       const startY = getClientY(evt);
       const x = this.getX();
@@ -776,7 +783,7 @@ class mxWindow extends mxEventSource {
 
       // Adds a temporary pair of listeners to intercept
       // the gesture event in the document
-      const dragHandler = evt => {
+      const dragHandler = (evt) => {
         const dx = getClientX(evt) - startX;
         const dy = getClientY(evt) - startY;
         this.setLocation(x + dx, y + dy);
@@ -784,7 +791,7 @@ class mxWindow extends mxEventSource {
         mxEvent.consume(evt);
       };
 
-      const dropHandler = evt => {
+      const dropHandler = (evt) => {
         mxEvent.removeGestureListeners(
           document,
           null,
@@ -847,7 +854,7 @@ class mxWindow extends mxEventSource {
 
     this.buttons.appendChild(this.closeImg);
 
-    mxEvent.addGestureListeners(this.closeImg, evt => {
+    mxEvent.addGestureListeners(this.closeImg, (evt) => {
       this.fireEvent(new mxEventObject(mxEvent.CLOSE, 'event', evt));
 
       if (this.destroyOnClose) {
@@ -932,9 +939,11 @@ class mxWindow extends mxEventSource {
       (style.overflow == 'auto' || this.resize != null) &&
       this.contentWrapper.style.display != 'none'
     ) {
-      this.contentWrapper.style.height = `${this.div.offsetHeight -
+      this.contentWrapper.style.height = `${
+        this.div.offsetHeight -
         this.title.offsetHeight -
-        this.contentHeightCorrection}px`;
+        this.contentHeightCorrection
+      }px`;
     }
 
     this.fireEvent(new mxEventObject(mxEvent.SHOW));
@@ -1062,8 +1071,7 @@ export const error = (message, width, close, icon) => {
   write(div, message);
 
   const w = document.body.clientWidth;
-  const h =
-    document.body.clientHeight || document.documentElement.clientHeight;
+  const h = document.body.clientHeight || document.documentElement.clientHeight;
   const warn = new mxWindow(
     mxResources.get(mxUtils.errorResource) || mxUtils.errorResource,
     div,
@@ -1083,7 +1091,7 @@ export const error = (message, width, close, icon) => {
 
     button.setAttribute('style', 'float:right');
 
-    mxEvent.addListener(button, 'click', evt => {
+    mxEvent.addListener(button, 'click', (evt) => {
       warn.destroy();
     });
 

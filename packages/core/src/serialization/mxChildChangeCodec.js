@@ -8,8 +8,7 @@
 import mxChildChange from '../atomic_changes/mxChildChange';
 import mxObjectCodec from './mxObjectCodec';
 import mxCodecRegistry from './mxCodecRegistry';
-import mxUtils from '../util/mxUtils';
-import mxConstants from '../util/mxConstants';
+import { NODETYPE_ELEMENT } from '../util/mxConstants';
 
 /**
  * Class: mxChildChangeCodec
@@ -50,7 +49,7 @@ class mxChildChangeCodec extends mxObjectCodec {
     if (attr === 'child' && (!isWrite || obj.model.contains(obj.previous))) {
       return true;
     }
-    return mxUtils.indexOf(this.idrefs, attr) >= 0;
+    return this.idrefs.indexOf(attr) >= 0;
   }
 
   /**
@@ -99,7 +98,7 @@ class mxChildChangeCodec extends mxObjectCodec {
   beforeDecode(dec, node, obj) {
     if (
       node.firstChild != null &&
-      node.firstChild.nodeType === mxConstants.NODETYPE_ELEMENT
+      node.firstChild.nodeType === NODETYPE_ELEMENT
     ) {
       // Makes sure the original node isn't modified
       node = node.cloneNode(true);
@@ -114,7 +113,7 @@ class mxChildChangeCodec extends mxObjectCodec {
       while (tmp != null) {
         tmp2 = tmp.nextSibling;
 
-        if (tmp.nodeType === mxConstants.NODETYPE_ELEMENT) {
+        if (tmp.nodeType === NODETYPE_ELEMENT) {
           // Ignores all existing cells because those do not need to
           // be re-inserted into the model. Since the encoded version
           // of these cells contains the new parent, this would leave

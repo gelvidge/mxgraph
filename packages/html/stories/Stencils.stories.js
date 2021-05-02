@@ -1,4 +1,5 @@
 import mxgraph from '@mxgraph/core';
+import { load } from "@mxgraph/core/src/util/network/mxXmlRequest";
 
 import { globalTypes } from '../.storybook/preview';
 
@@ -23,11 +24,15 @@ const Template = ({ label, ...args }) => {
     mxConnectionHandler,
     mxDomHelpers,
     mxEdgeHandler,
+    mxEvent,
     mxPoint,
     mxCellHighlight,
     mxConstants,
     mxVertexHandler,
+    mxRubberband,
     mxShape,
+    mxStencil,
+    mxStencilRegistry,
     mxCellRenderer,
     mxUtils
   } = mxgraph;
@@ -120,7 +125,7 @@ const Template = ({ label, ...args }) => {
   mxCellRenderer.registerShape('customShape', CustomShape);
 
   // Loads the stencils into the registry
-  const req = mxUtils.load('stencils.xml');
+  const req = load('stencils.xml');
   const root = req.getDocumentElement();
   let shape = root.firstChild;
 

@@ -7,7 +7,13 @@
 
 import mxUtils from '../../mxUtils';
 import mxPoint from '../mxPoint';
-import mxConstants from '../../mxConstants';
+import {
+  DIRECTION_EAST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+  STYLE_DIRECTION,
+} from '../../mxConstants';
 import mxRectangle from '../mxRectangle';
 import mxCellState from '../../../view/cell/mxCellState';
 
@@ -308,11 +314,9 @@ class mxPerimeter {
     next: mxPoint,
     orthogonal: boolean = false
   ): mxPoint | null {
-    const direction =
-      vertex != null ? vertex.style[mxConstants.STYLE_DIRECTION] : null;
+    const direction = vertex != null ? vertex.style[STYLE_DIRECTION] : null;
     const vertical =
-      direction === mxConstants.DIRECTION_NORTH ||
-      direction === mxConstants.DIRECTION_SOUTH;
+      direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
 
     const { x } = bounds;
     const { y } = bounds;
@@ -326,14 +330,14 @@ class mxPerimeter {
     let corner = new mxPoint(x + w, cy);
     let end = new mxPoint(x, y + h);
 
-    if (direction === mxConstants.DIRECTION_NORTH) {
+    if (direction === DIRECTION_NORTH) {
       start = end;
       corner = new mxPoint(cx, y);
       end = new mxPoint(x + w, y + h);
-    } else if (direction === mxConstants.DIRECTION_SOUTH) {
+    } else if (direction === DIRECTION_SOUTH) {
       corner = new mxPoint(cx, y + h);
       end = new mxPoint(x + w, y);
-    } else if (direction === mxConstants.DIRECTION_WEST) {
+    } else if (direction === DIRECTION_WEST) {
       start = new mxPoint(x + w, y);
       corner = new mxPoint(x, cy);
       end = new mxPoint(x + w, y + h);
@@ -347,10 +351,7 @@ class mxPerimeter {
 
     let base = false;
 
-    if (
-      direction === mxConstants.DIRECTION_NORTH ||
-      direction === mxConstants.DIRECTION_WEST
-    ) {
+    if (direction === DIRECTION_NORTH || direction === DIRECTION_WEST) {
       base = alpha > -t && alpha < t;
     } else {
       base = alpha < -Math.PI + t || alpha > Math.PI - t;
@@ -369,11 +370,11 @@ class mxPerimeter {
         } else {
           result = new mxPoint(start.x, next.y);
         }
-      } else if (direction === mxConstants.DIRECTION_NORTH) {
+      } else if (direction === DIRECTION_NORTH) {
         result = new mxPoint(x + w / 2 + (h * Math.tan(alpha)) / 2, y + h);
-      } else if (direction === mxConstants.DIRECTION_SOUTH) {
+      } else if (direction === DIRECTION_SOUTH) {
         result = new mxPoint(x + w / 2 - (h * Math.tan(alpha)) / 2, y);
-      } else if (direction === mxConstants.DIRECTION_WEST) {
+      } else if (direction === DIRECTION_WEST) {
         result = new mxPoint(x + w, y + h / 2 + (w * Math.tan(alpha)) / 2);
       } else {
         result = new mxPoint(x, y + h / 2 - (w * Math.tan(alpha)) / 2);
@@ -383,19 +384,11 @@ class mxPerimeter {
         const pt = new mxPoint(cx, cy);
 
         if (next.y >= y && next.y <= y + h) {
-          pt.x = vertical
-            ? cx
-            : direction === mxConstants.DIRECTION_WEST
-            ? x + w
-            : x;
+          pt.x = vertical ? cx : direction === DIRECTION_WEST ? x + w : x;
           pt.y = next.y;
         } else if (next.x >= x && next.x <= x + w) {
           pt.x = next.x;
-          pt.y = !vertical
-            ? cy
-            : direction === mxConstants.DIRECTION_NORTH
-            ? y + h
-            : y;
+          pt.y = !vertical ? cy : direction === DIRECTION_NORTH ? y + h : y;
         }
 
         // Compute angle
@@ -470,15 +463,10 @@ class mxPerimeter {
 
     const direction =
       vertex != null
-        ? mxUtils.getValue(
-            vertex.style,
-            mxConstants.STYLE_DIRECTION,
-            mxConstants.DIRECTION_EAST
-          )
-        : mxConstants.DIRECTION_EAST;
+        ? mxUtils.getValue(vertex.style, STYLE_DIRECTION, DIRECTION_EAST)
+        : DIRECTION_EAST;
     const vertical =
-      direction === mxConstants.DIRECTION_NORTH ||
-      direction === mxConstants.DIRECTION_SOUTH;
+      direction === DIRECTION_NORTH || direction === DIRECTION_SOUTH;
     let a = new mxPoint();
     let b = new mxPoint();
 

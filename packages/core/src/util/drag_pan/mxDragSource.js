@@ -10,9 +10,17 @@ import mxUtils from '../mxUtils';
 import mxEvent from '../event/mxEvent';
 import mxClient from '../../mxClient';
 import mxGuide from '../mxGuide';
-import mxConstants from '../mxConstants';
+import { DROP_TARGET_COLOR } from '../mxConstants';
 import mxPoint from '../datatypes/mxPoint';
-import { getClientX, getClientY, getSource, isConsumed, isMouseEvent, isPenEvent, isTouchEvent } from '../mxEventUtils';
+import {
+  getClientX,
+  getClientY,
+  getSource,
+  isConsumed,
+  isMouseEvent,
+  isPenEvent,
+  isTouchEvent,
+} from '../mxEventUtils';
 
 /**
  * @class mxDragSource
@@ -30,12 +38,12 @@ class mxDragSource {
     this.dropHandler = dropHandler;
 
     // Handles a drag gesture on the element
-    mxEvent.addGestureListeners(element, evt => {
+    mxEvent.addGestureListeners(element, (evt) => {
       this.mouseDown(evt);
     });
 
     // Prevents native drag and drop
-    mxEvent.addListener(element, 'dragstart', evt => {
+    mxEvent.addListener(element, 'dragstart', (evt) => {
       mxEvent.consume(evt);
     });
 
@@ -297,11 +305,7 @@ class mxDragSource {
    */
   // mouseDown(evt: mxMouseEvent): void;
   mouseDown(evt) {
-    if (
-      this.enabled &&
-      !isConsumed(evt) &&
-      this.mouseMoveHandler == null
-    ) {
+    if (this.enabled && !isConsumed(evt) && this.mouseMoveHandler == null) {
       this.startDrag(evt);
       this.mouseMoveHandler = this.mouseMove.bind(this);
       this.mouseUpHandler = this.mouseUp.bind(this);
@@ -370,10 +374,7 @@ class mxDragSource {
   // getElementForEvent(evt: Event): Element;
   getElementForEvent(evt) {
     return isTouchEvent(evt) || isPenEvent(evt)
-      ? document.elementFromPoint(
-          getClientX(evt),
-          getClientY(evt)
-        )
+      ? document.elementFromPoint(getClientX(evt), getClientY(evt))
       : getSource(evt);
   }
 
@@ -545,10 +546,7 @@ class mxDragSource {
     }
 
     if (this.highlightDropTargets) {
-      this.currentHighlight = new mxCellHighlight(
-        graph,
-        mxConstants.DROP_TARGET_COLOR
-      );
+      this.currentHighlight = new mxCellHighlight(graph, DROP_TARGET_COLOR);
     }
 
     // Consumes all events in the current graph before they are fired

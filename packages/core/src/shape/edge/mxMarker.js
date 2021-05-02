@@ -4,7 +4,11 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxConstants from '../../util/mxConstants';
+import {
+  ARROW_CLASSIC,
+  ARROW_CLASSIC_THIN,
+  ARROW_DIAMOND,
+} from '../../util/mxConstants';
 
 /**
  * A static class that implements all markers for VML and SVG using a registry.
@@ -86,10 +90,7 @@ class mxMarker {
       pt.y -= endOffsetY;
 
       const f =
-        type !== mxConstants.ARROW_CLASSIC &&
-        type !== mxConstants.ARROW_CLASSIC_THIN
-          ? 1
-          : 3 / 4;
+        type !== ARROW_CLASSIC && type !== ARROW_CLASSIC_THIN ? 1 : 3 / 4;
       pe.x += -unitX * f - endOffsetX;
       pe.y += -unitY * f - endOffsetY;
 
@@ -101,10 +102,7 @@ class mxMarker {
           pt.y - unitY + unitX / widthFactor
         );
 
-        if (
-          type === mxConstants.ARROW_CLASSIC ||
-          type === mxConstants.ARROW_CLASSIC_THIN
-        ) {
+        if (type === ARROW_CLASSIC || type === ARROW_CLASSIC_THIN) {
           canvas.lineTo(pt.x - (unitX * 3) / 4, pt.y - (unitY * 3) / 4);
         }
 
@@ -216,7 +214,7 @@ class mxMarker {
     // only half the strokewidth is processed ). Or 0.9862 for thin diamond.
     // Note these values and the tk variable below are dependent, update
     // both together (saves trig hard coding it).
-    const swFactor = type === mxConstants.ARROW_DIAMOND ? 0.7071 : 0.9862;
+    const swFactor = type === ARROW_DIAMOND ? 0.7071 : 0.9862;
     const endOffsetX = unitX * sw * swFactor;
     const endOffsetY = unitY * sw * swFactor;
 
@@ -231,7 +229,7 @@ class mxMarker {
     pe.y += -unitY - endOffsetY;
 
     // thickness factor for diamond
-    const tk = type === mxConstants.ARROW_DIAMOND ? 2 : 3.4;
+    const tk = type === ARROW_DIAMOND ? 2 : 3.4;
 
     return () => {
       canvas.begin();

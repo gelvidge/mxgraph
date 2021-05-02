@@ -2818,8 +2818,8 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 		graph.model.beginUpdate();
 		try
 		{
-			let sourceGeo = graph.getCellGeometry(source);
-			var geo2 = graph.getCellGeometry(targets[dropCellIndex]);
+			let sourceGeo = source.getGeometry();
+			var geo2 = targets[dropCellIndex].getGeometry();
 
 			// Handles special case where target should be ignored for stack layouts
 			let targetParent = source.getParent();
@@ -2917,7 +2917,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 			{
 				// Adds new outgoing connection to vertex and clears points
 				graph.model.setTerminal(targets[dropCellIndex], source, true);
-				var geo3 = graph.getCellGeometry(targets[dropCellIndex]);
+				var geo3 = targets[dropCellIndex].getGeometry();
 				geo3.points = null;
 				
 				if (geo3.getTerminalPoint(false) != null)
@@ -2936,7 +2936,7 @@ Sidebar.prototype.dropAndConnect = function(source, targets, direction, dropCell
 			}
 			else
 			{
-				geo2 = graph.getCellGeometry(targets[dropCellIndex]);
+				geo2 = targets[dropCellIndex].getGeometry();
 				dx = geo.x - Math.round(geo2.x);
 				dy = geo.y - Math.round(geo2.y);
 				geo.x = Math.round(geo2.x);
@@ -2984,8 +2984,8 @@ Sidebar.prototype.getDropAndConnectGeometry = function(source, target, direction
 	let graph = this.editorUi.editor.graph;
 	let view = graph.view;
 	let keepSize = targets.length > 1;
-	let geo = graph.getCellGeometry(source);
-	var geo2 = graph.getCellGeometry(target);
+	let geo = source.getGeometry();
+	var geo2 = target.getGeometry();
 	
 	if (geo != null && geo2 != null)
 	{
@@ -3097,7 +3097,7 @@ Sidebar.prototype.getDropAndConnectGeometry = function(source, target, direction
 				if (target.isEdge() && geo2.getTerminalPoint(true) != null &&
 					target.getTerminal(false) != null)
 				{
-					let targetGeo = graph.getCellGeometry(target.getTerminal(false));
+					let targetGeo = target.getTerminal(false) && target.getTerminal(false).getGeometry();
 					
 					if (targetGeo != null)
 					{
@@ -3371,8 +3371,8 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 				
 				let index = (currentTargetState.cell.isEdge() || freeSourceEdge == null) ? firstVertex : freeSourceEdge;
 				let geo = sidebar.getDropAndConnectGeometry(currentTargetState.cell, cells[index], direction, cells);
-				var geo2 = (!currentTargetState.cell.isEdge()) ? graph.getCellGeometry(currentTargetState.cell) : null;
-				var geo3 = graph.getCellGeometry(cells[index]);
+				var geo2 = (!currentTargetState.cell.isEdge()) ? currentTargetState.cell.getGeometry() : null;
+				var geo3 = cells[index].getGeometry();
 				let parent = currentTargetState.cell.getParent();
 				let dx = view.translate.x * view.scale;
 				let dy = view.translate.y * view.scale;
@@ -3444,13 +3444,13 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			}) : null;
 		
 		// Uses connectable parent vertex if one exists
-		if (cell != null && !this.graph.isCellConnectable(cell) &&
+		if (cell != null && !cell.isConnectable() &&
 			!cell.isEdge())
 		{
-			let parent = this.cell.getParent();
+			let parent = cell.getParent();
 			
 			if (parent.isVertex() &&
-				this.graph.isCellConnectable(parent))
+				parent.isConnectable())
 			{
 				cell = parent;
 			}
@@ -3641,9 +3641,9 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			state = currentStyleTarget;
 		}
 
-		let validTarget = (firstVertex == null || graph.isCellConnectable(cells[firstVertex])) &&
+		let validTarget = (firstVertex == null || cells[firstVertex].isConnectable()) &&
 			((cell.isEdge() && firstVertex != null) ||
-			(cell.isVertex() && graph.isCellConnectable(cell)));
+			(cell.isVertex() && cell.isConnectable()));
 		
 		// Drop arrows shown after this.dropTargetDelay, hidden after 5 secs, switches arrows after 500ms
 		if ((currentTargetState != null && timeOnTarget >= 5000) ||

@@ -20,14 +20,8 @@ export default {
 const Template = ({ label, ...args }) => {
   const {
     mxGraph, 
-    mxDomUtils, 
     mxRubberband,
-    mxDragSource,
     mxUtils,
-    mxGestureUtils,
-    mxEdgeHandler,
-    mxGraphHandler,
-    mxGuide,
     mxEventUtils,
     mxEvent,
     mxClient

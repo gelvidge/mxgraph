@@ -6,7 +6,12 @@
  */
 
 import mxMouseEvent from '../../util/event/mxMouseEvent';
-import mxConstants from '../../util/mxConstants';
+import {
+  OUTLINE_COLOR,
+  OUTLINE_HANDLE_FILLCOLOR,
+  OUTLINE_HANDLE_STROKECOLOR,
+  OUTLINE_STROKEWIDTH,
+} from '../../util/mxConstants';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxRectangleShape from '../../shape/node/mxRectangleShape';
@@ -15,7 +20,7 @@ import mxImageShape from '../../shape/node/mxImageShape';
 import mxEvent from '../../util/event/mxEvent';
 import mxUtils from '../../util/mxUtils';
 import mxImage from '../../util/image/mxImage';
-import mxEventObject from "../../util/event/mxEventObject";
+import mxEventObject from '../../util/event/mxEventObject';
 import { getSource, isMouseEvent } from '../../util/mxEventUtils';
 
 /**
@@ -82,11 +87,11 @@ class mxOutline {
 
     // Do not repaint when suspended
     const outlineGraphModelChanged = this.outline.graphModelChanged;
-    this.outline.graphModelChanged = mxUtils.bind(this, (changes: any) => {
+    this.outline.graphModelChanged = (changes: any) => {
       if (!this.suspended && this.outline != null) {
         outlineGraphModelChanged.apply(this.outline, [changes]);
       }
-    });
+    };
 
     // Enable faster painting in SVG
     //const node = <SVGElement>this.outline.getView().getCanvas().parentNode;
@@ -136,10 +141,10 @@ class mxOutline {
     // Creates the blue rectangle for the viewport
     this.bounds = new mxRectangle(0, 0, 0, 0);
     this.selectionBorder = new mxRectangleShape(
-        this.bounds,
-        null,
-        mxConstants.OUTLINE_COLOR,
-        mxConstants.OUTLINE_STROKEWIDTH
+      this.bounds,
+      null,
+      OUTLINE_COLOR,
+      OUTLINE_STROKEWIDTH
     );
     this.selectionBorder.dialect = this.outline.dialect;
     this.selectionBorder.init(this.outline.getView().getOverlayPane());
@@ -171,7 +176,7 @@ class mxOutline {
     mxEvent.addGestureListeners(this.selectionBorder.node, handler);
 
     // Creates a small blue rectangle for sizing (sizer handle)
-    const sizer = this.sizer = this.createSizer();
+    const sizer = (this.sizer = this.createSizer());
     const sizerNode = <SVGGElement>sizer.node;
 
     sizer.init(this.outline.getView().getOverlayPane());
@@ -190,31 +195,31 @@ class mxOutline {
   }
 
   // TODO: Document me!!
-  sizer: mxRectangleShape | null=null;
+  sizer: mxRectangleShape | null = null;
 
-  selectionBorder: mxRectangleShape | null=null;
+  selectionBorder: mxRectangleShape | null = null;
 
-  updateHandler: Function | null=null;
+  updateHandler: Function | null = null;
 
-  refreshHandler: Function | null=null;
+  refreshHandler: Function | null = null;
 
-  panHandler: Function | null=null;
+  panHandler: Function | null = null;
 
-  active: boolean | null=null;
+  active: boolean | null = null;
 
-  bounds: mxRectangle | null=null;
+  bounds: mxRectangle | null = null;
 
-  zoom: boolean=false;
+  zoom: boolean = false;
 
-  startX: number | null=null;
+  startX: number | null = null;
 
-  startY: number | null=null;
+  startY: number | null = null;
 
-  dx0: number | null=null;
+  dx0: number | null = null;
 
-  dy0: number | null=null;
+  dy0: number | null = null;
 
-  index: number | null=null;
+  index: number | null = null;
 
   /**
    * Reference to the source {@link mxGraph}.
@@ -226,7 +231,7 @@ class mxOutline {
    * Reference to the {@link mxGraph} that renders the outline.
    */
   // outline: mxGraph;
-  outline: mxGraph | null=null;
+  outline: mxGraph | null = null;
 
   /**
    * Renderhint to be used for the outline graph.
@@ -385,8 +390,8 @@ class mxOutline {
 
     const sizer = new mxRectangleShape(
       new mxRectangle(0, 0, this.sizerSize, this.sizerSize),
-      mxConstants.OUTLINE_HANDLE_FILLCOLOR,
-      mxConstants.OUTLINE_HANDLE_STROKECOLOR
+      OUTLINE_HANDLE_FILLCOLOR,
+      OUTLINE_HANDLE_STROKECOLOR
     );
     sizer.dialect = outline.dialect;
     return sizer;
@@ -409,7 +414,8 @@ class mxOutline {
    * Returns the offset for drawing the outline graph.
    */
   // getOutlineOffset(scale?: number): mxPoint;
-  getOutlineOffset(scale: number): mxPoint | null {  // TODO: Should number -> mxPoint?
+  getOutlineOffset(scale: number): mxPoint | null {
+    // TODO: Should number -> mxPoint?
     return null;
   }
 
@@ -580,9 +586,7 @@ class mxOutline {
   // mouseDown(sender: mxEventSource, me: mxMouseEvent): void;
   mouseDown(sender: any, me: mxMouseEvent) {
     if (this.enabled && this.showViewport) {
-      const tol = !isMouseEvent(me.getEvent())
-        ? this.source.tolerance
-        : 0;
+      const tol = !isMouseEvent(me.getEvent()) ? this.source.tolerance : 0;
       const hit =
         tol > 0
           ? new mxRectangle(
@@ -594,7 +598,7 @@ class mxOutline {
           : null;
       this.zoom =
         me.isSource(this.sizer) ||
-          // @ts-ignore
+        // @ts-ignore
         (hit != null && mxUtils.intersects(this.sizer.bounds, hit));
       this.startX = me.getX();
       this.startY = me.getY();
@@ -643,10 +647,10 @@ class mxOutline {
         // Previews the panning on the source graph
         const { scale } = outline.getView();
         bounds = new mxRectangle(
-            myBounds.x + dx,
-            myBounds.y + dy,
-            myBounds.width,
-            myBounds.height
+          myBounds.x + dx,
+          myBounds.y + dy,
+          myBounds.width,
+          myBounds.height
         );
         selectionBorder.bounds = bounds;
         selectionBorder.redraw();
@@ -662,8 +666,8 @@ class mxOutline {
         const viewRatio = container.clientWidth / container.clientHeight;
         dy = dx / viewRatio;
         bounds = new mxRectangle(
-            myBounds.x,
-            myBounds.y,
+          myBounds.x,
+          myBounds.y,
           Math.max(1, myBounds.width + dx),
           Math.max(1, myBounds.height + dy)
         );
@@ -711,7 +715,10 @@ class mxOutline {
    */
   // getTranslateForEvent(me: mxMouseEvent): mxPoint;
   getTranslateForEvent(me: mxMouseEvent) {
-    return new mxPoint(me.getX() - <number>this.startX, me.getY() - <number>this.startY);
+    return new mxPoint(
+      me.getX() - <number>this.startX,
+      me.getY() - <number>this.startY
+    );
   }
 
   /**

@@ -11,10 +11,7 @@ export default {
 
 const Template = ({ label, ...args }) => {
   const {
-    mxGraph,
-    mxRubberband,
-    mxGraphView,
-    mxUtils
+    mxGraph
   } = mxgraph;
 
   const container = document.createElement('div');

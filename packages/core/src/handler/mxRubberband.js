@@ -44,9 +44,9 @@ class mxRubberband {
       );
 
       // Repaints the marquee after autoscroll
-      this.panHandler = mxUtils.bind(this, () => {
+      this.panHandler = () => {
         this.repaint();
-      });
+      };
 
       this.graph.addListener(mxEvent.PAN, this.panHandler);
 
@@ -185,9 +185,9 @@ class mxRubberband {
       return me;
     }
 
-    this.dragHandler = mxUtils.bind(this, evt => {
+    this.dragHandler = evt => {
       this.mouseMove(this.graph, createMouseEvent(evt));
-    });
+    };
 
     this.dropHandler = evt => {
       this.mouseUp(this.graph, createMouseEvent(evt));

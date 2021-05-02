@@ -5,7 +5,23 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxConstants from '../util/mxConstants';
+import {
+  CURSOR_LABEL_HANDLE,
+  CURSOR_MOVABLE_VERTEX,
+  DIALECT_MIXEDHTML,
+  DIALECT_STRICTHTML,
+  DIALECT_SVG,
+  HANDLE_FILLCOLOR,
+  HANDLE_SIZE,
+  HANDLE_STROKECOLOR,
+  LABEL_HANDLE_FILLCOLOR,
+  LABEL_HANDLE_SIZE,
+  STYLE_ASPECT,
+  STYLE_ROTATION,
+  VERTEX_SELECTION_COLOR,
+  VERTEX_SELECTION_DASHED,
+  VERTEX_SELECTION_STROKEWIDTH,
+} from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxRectangleShape from '../shape/node/mxRectangleShape';
 import mxImageShape from '../shape/node/mxImageShape';
@@ -231,10 +247,10 @@ class mxVertexHandler {
     );
     this.selectionBorder = this.createSelectionShape(this.bounds);
     // VML dialect required here for event transparency in IE
-    this.selectionBorder.dialect = mxConstants.DIALECT_SVG;
+    this.selectionBorder.dialect = DIALECT_SVG;
     this.selectionBorder.pointerEvents = false;
     this.selectionBorder.rotation = Number(
-      this.state.style[mxConstants.STYLE_ROTATION] || '0'
+      this.state.style[STYLE_ROTATION] || '0'
     );
     this.selectionBorder.init(this.graph.getView().getOverlayPane());
     mxEvent.redirectMouseEvents(
@@ -244,7 +260,7 @@ class mxVertexHandler {
     );
 
     if (this.graph.isCellMovable(this.state.cell)) {
-      this.selectionBorder.setCursor(mxConstants.CURSOR_MOVABLE_VERTEX);
+      this.selectionBorder.setCursor(CURSOR_MOVABLE_VERTEX);
     }
 
     // Adds the sizer handles
@@ -287,10 +303,10 @@ class mxVertexHandler {
         ) {
           // Marks this as the label handle for getHandleForEvent
           this.labelShape = this.createSizer(
-            mxConstants.CURSOR_LABEL_HANDLE,
+            CURSOR_LABEL_HANDLE,
             mxEvent.LABEL_HANDLE,
-            mxConstants.LABEL_HANDLE_SIZE,
-            mxConstants.LABEL_HANDLE_FILLCOLOR
+            LABEL_HANDLE_SIZE,
+            LABEL_HANDLE_FILLCOLOR
           );
           this.sizers.push(this.labelShape);
         }
@@ -301,10 +317,10 @@ class mxVertexHandler {
         this.state.height < 2
       ) {
         this.labelShape = this.createSizer(
-          mxConstants.CURSOR_MOVABLE_VERTEX,
+          CURSOR_MOVABLE_VERTEX,
           mxEvent.LABEL_HANDLE,
           null,
-          mxConstants.LABEL_HANDLE_FILLCOLOR
+          LABEL_HANDLE_FILLCOLOR
         );
         this.sizers.push(this.labelShape);
       }
@@ -315,8 +331,8 @@ class mxVertexHandler {
       this.rotationShape = this.createSizer(
         this.rotationCursor,
         mxEvent.ROTATION_HANDLE,
-        mxConstants.HANDLE_SIZE + 3,
-        mxConstants.HANDLE_FILLCOLOR
+        HANDLE_SIZE + 3,
+        HANDLE_FILLCOLOR
       );
       this.sizers.push(this.rotationShape);
     }
@@ -353,8 +369,7 @@ class mxVertexHandler {
   // isConstrainedEvent(me: mxMouseEvent): boolean;
   isConstrainedEvent(me) {
     return (
-      isShiftDown(me.getEvent()) ||
-      this.state.style[mxConstants.STYLE_ASPECT] === 'fixed'
+      isShiftDown(me.getEvent()) || this.state.style[STYLE_ASPECT] === 'fixed'
     );
   }
 
@@ -457,7 +472,7 @@ class mxVertexHandler {
    */
   // getSelectionColor(): string;
   getSelectionColor() {
-    return mxConstants.VERTEX_SELECTION_COLOR;
+    return VERTEX_SELECTION_COLOR;
   }
 
   /**
@@ -467,7 +482,7 @@ class mxVertexHandler {
    */
   // getSelectionStrokeWidth(): number;
   getSelectionStrokeWidth() {
-    return mxConstants.VERTEX_SELECTION_STROKEWIDTH;
+    return VERTEX_SELECTION_STROKEWIDTH;
   }
 
   /**
@@ -477,7 +492,7 @@ class mxVertexHandler {
    */
   // isSelectionDashed(): boolean;
   isSelectionDashed() {
-    return mxConstants.VERTEX_SELECTION_DASHED;
+    return VERTEX_SELECTION_DASHED;
   }
 
   /**
@@ -488,7 +503,7 @@ class mxVertexHandler {
    */
   // createSizer(cursor: string, index: number, size: number, fillColor: string): mxRectangleShape;
   createSizer(cursor, index, size, fillColor) {
-    size = size || mxConstants.HANDLE_SIZE;
+    size = size || HANDLE_SIZE;
 
     const bounds = new mxRectangle(0, 0, size, size);
     const sizer = this.createSizerShape(bounds, index, fillColor);
@@ -500,13 +515,11 @@ class mxVertexHandler {
     ) {
       sizer.bounds.height -= 1;
       sizer.bounds.width -= 1;
-      sizer.dialect = mxConstants.DIALECT_STRICTHTML;
+      sizer.dialect = DIALECT_STRICTHTML;
       sizer.init(this.graph.container);
     } else {
       sizer.dialect =
-        this.graph.dialect !== mxConstants.DIALECT_SVG
-          ? mxConstants.DIALECT_MIXEDHTML
-          : mxConstants.DIALECT_SVG;
+        this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
       sizer.init(this.graph.getView().getOverlayPane());
     }
 
@@ -560,14 +573,14 @@ class mxVertexHandler {
     if (index === mxEvent.ROTATION_HANDLE) {
       return new mxEllipse(
         bounds,
-        fillColor || mxConstants.HANDLE_FILLCOLOR,
-        mxConstants.HANDLE_STROKECOLOR
+        fillColor || HANDLE_FILLCOLOR,
+        HANDLE_STROKECOLOR
       );
     }
     return new mxRectangleShape(
       bounds,
-      fillColor || mxConstants.HANDLE_FILLCOLOR,
-      mxConstants.HANDLE_STROKECOLOR
+      fillColor || HANDLE_FILLCOLOR,
+      HANDLE_STROKECOLOR
     );
   }
 
@@ -610,7 +623,7 @@ class mxVertexHandler {
           )
         : null;
 
-    const checkShape = shape => {
+    const checkShape = (shape) => {
       const st =
         shape != null &&
         shape.constructor !== mxImageShape &&
@@ -719,8 +732,7 @@ class mxVertexHandler {
   start(x, y, index) {
     if (this.selectionBorder != null) {
       this.livePreviewActive =
-        this.livePreview &&
-        this.state.cell.getChildCount() === 0;
+        this.livePreview && this.state.cell.getChildCount() === 0;
       this.inTolerance = true;
       this.childOffsetX = 0;
       this.childOffsetY = 0;
@@ -753,15 +765,15 @@ class mxVertexHandler {
           if (
             !(
               mxClient.IS_SVG &&
-              Number(this.state.style[mxConstants.STYLE_ROTATION] || '0') !== 0
+              Number(this.state.style[STYLE_ROTATION] || '0') !== 0
             ) &&
             this.state.text != null &&
             this.state.text.node.parentNode === this.graph.container
           ) {
-            this.preview.dialect = mxConstants.DIALECT_STRICTHTML;
+            this.preview.dialect = DIALECT_STRICTHTML;
             this.preview.init(this.graph.container);
           } else {
-            this.preview.dialect = mxConstants.DIALECT_SVG;
+            this.preview.dialect = DIALECT_SVG;
             this.preview.init(this.graph.view.getOverlayPane());
           }
         }
@@ -1070,9 +1082,7 @@ class mxVertexHandler {
   // resizeVertex(me: mxMouseEvent): void;
   resizeVertex(me) {
     const ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
-    const alpha = mxUtils.toRadians(
-      this.state.style[mxConstants.STYLE_ROTATION] || '0'
-    );
+    const alpha = mxUtils.toRadians(this.state.style[STYLE_ROTATION] || '0');
     const point = new mxPoint(me.getGraphX(), me.getGraphY());
     const tr = this.graph.view.translate;
     const { scale } = this.graph.view;
@@ -1089,7 +1099,7 @@ class mxVertexHandler {
     dx = tx;
     dy = ty;
 
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
     this.unscaledBounds = this.union(
       geo,
       dx / scale,
@@ -1222,10 +1232,7 @@ class mxVertexHandler {
     this.unscaledBounds.height = this.roundLength(this.unscaledBounds.height);
 
     // Shifts the children according to parent offset
-    if (
-      !this.graph.isCellCollapsed(this.state.cell) &&
-      (dx3 !== 0 || dy3 !== 0)
-    ) {
+    if (!this.state.cell.isCollapsed() && (dx3 !== 0 || dy3 !== 0)) {
       this.childOffsetX = this.state.x - this.bounds.x + dx5;
       this.childOffsetY = this.state.y - this.bounds.y + dy5;
     } else {
@@ -1277,7 +1284,7 @@ class mxVertexHandler {
     // Required to store and reset absolute offset for updating label position
     this.state.absoluteOffset.x = 0;
     this.state.absoluteOffset.y = 0;
-    const geo = this.graph.getCellGeometry(this.state.cell);
+    const geo = this.state.cell.getGeometry();
 
     if (geo != null) {
       const offset = geo.offset || this.EMPTY_POINT;
@@ -1382,8 +1389,7 @@ class mxVertexHandler {
         } else if (index === mxEvent.ROTATION_HANDLE) {
           if (this.currentAlpha != null) {
             const delta =
-              this.currentAlpha -
-              (this.state.style[mxConstants.STYLE_ROTATION] || 0);
+              this.currentAlpha - (this.state.style[STYLE_ROTATION] || 0);
 
             if (delta !== 0) {
               this.rotateCell(this.state.cell, delta);
@@ -1394,7 +1400,7 @@ class mxVertexHandler {
         } else {
           const gridEnabled = this.graph.isGridEnabledEvent(me.getEvent());
           const alpha = mxUtils.toRadians(
-            this.state.style[mxConstants.STYLE_ROTATION] || '0'
+            this.state.style[STYLE_ROTATION] || '0'
           );
           const cos = Math.cos(-alpha);
           const sin = Math.sin(-alpha);
@@ -1469,14 +1475,14 @@ class mxVertexHandler {
       if (cell.isVertex() || cell.isEdge()) {
         if (!cell.isEdge()) {
           const style = this.graph.getCurrentCellStyle(cell);
-          const total = (style[mxConstants.STYLE_ROTATION] || 0) + angle;
-          this.graph.setCellStyles(mxConstants.STYLE_ROTATION, total, [cell]);
+          const total = (style[STYLE_ROTATION] || 0) + angle;
+          this.graph.setCellStyles(STYLE_ROTATION, total, [cell]);
         }
 
-        let geo = this.graph.getCellGeometry(cell);
+        let geo = cell.getGeometry();
 
         if (geo != null) {
-          const pgeo = this.graph.getCellGeometry(parent);
+          const pgeo = parent.getGeometry();
 
           if (pgeo != null && !parent.isEdge()) {
             geo = geo.clone();
@@ -1585,7 +1591,7 @@ class mxVertexHandler {
     if (geo != null) {
       if (index === mxEvent.LABEL_HANDLE) {
         const alpha = -mxUtils.toRadians(
-          this.state.style[mxConstants.STYLE_ROTATION] || '0'
+          this.state.style[STYLE_ROTATION] || '0'
         );
         const cos = Math.cos(alpha);
         const sin = Math.sin(alpha);
@@ -1641,7 +1647,7 @@ class mxVertexHandler {
 
     for (let i = 0; i < childCount; i += 1) {
       const child = cell.getChildAt(i);
-      let geo = this.graph.getCellGeometry(child);
+      let geo = child.getGeometry();
 
       if (geo != null) {
         geo = geo.clone();
@@ -1773,7 +1779,7 @@ class mxVertexHandler {
     let height = bottom - top;
 
     if (constrained) {
-      const geo = this.graph.getCellGeometry(this.state.cell);
+      const geo = this.state.cell.getGeometry();
 
       if (geo != null) {
         const aspect = geo.width / geo.height;
@@ -1996,7 +2002,7 @@ class mxVertexHandler {
           ];
 
           const alpha = mxUtils.toRadians(
-            this.state.style[mxConstants.STYLE_ROTATION] || '0'
+            this.state.style[STYLE_ROTATION] || '0'
           );
           const cos = Math.cos(alpha);
           const sin = Math.sin(alpha);
@@ -2069,7 +2075,7 @@ class mxVertexHandler {
       const alpha = mxUtils.toRadians(
         this.currentAlpha != null
           ? this.currentAlpha
-          : this.state.style[mxConstants.STYLE_ROTATION] || '0'
+          : this.state.style[STYLE_ROTATION] || '0'
       );
       const cos = Math.cos(alpha);
       const sin = Math.sin(alpha);
@@ -2095,7 +2101,7 @@ class mxVertexHandler {
 
     if (this.selectionBorder != null) {
       this.selectionBorder.rotation = Number(
-        this.state.style[mxConstants.STYLE_ROTATION] || '0'
+        this.state.style[STYLE_ROTATION] || '0'
       );
     }
 
@@ -2137,9 +2143,7 @@ class mxVertexHandler {
    * always returns true.
    */
   isParentHighlightVisible() {
-    return !this.graph.isCellSelected(
-      this.state.cell.getParent()
-    );
+    return !this.graph.isCellSelected(this.state.cell.getParent());
   }
 
   /**
@@ -2187,10 +2191,10 @@ class mxVertexHandler {
         ) {
           this.parentHighlight = this.createParentHighlightShape(pstate);
           // VML dialect required here for event transparency in IE
-          this.parentHighlight.dialect = mxConstants.DIALECT_SVG;
+          this.parentHighlight.dialect = DIALECT_SVG;
           this.parentHighlight.pointerEvents = false;
           this.parentHighlight.rotation = Number(
-            pstate.style[mxConstants.STYLE_ROTATION] || '0'
+            pstate.style[STYLE_ROTATION] || '0'
           );
           this.parentHighlight.init(this.graph.getView().getOverlayPane());
           this.parentHighlight.redraw();
@@ -2220,9 +2224,7 @@ class mxVertexHandler {
         );
       }
 
-      this.preview.rotation = Number(
-        this.state.style[mxConstants.STYLE_ROTATION] || '0'
-      );
+      this.preview.rotation = Number(this.state.style[STYLE_ROTATION] || '0');
       this.preview.redraw();
     }
 

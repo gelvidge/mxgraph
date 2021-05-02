@@ -7,10 +7,32 @@
 
 import mxUtils from '../mxUtils';
 import mxClient from '../../mxClient';
-import mxConstants from '../mxConstants';
+import {
+  ABSOLUTE_LINE_HEIGHT,
+  ALIGN_BOTTOM,
+  ALIGN_CENTER,
+  ALIGN_LEFT,
+  ALIGN_MIDDLE,
+  ALIGN_RIGHT,
+  ALIGN_TOP,
+  DEFAULT_FONTFAMILY,
+  DEFAULT_FONTSIZE,
+  DIRECTION_EAST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+  FONT_BOLD,
+  FONT_ITALIC,
+  FONT_STRIKETHROUGH,
+  FONT_UNDERLINE,
+  LINE_HEIGHT,
+  NS_SVG,
+  NS_XLINK,
+  WORD_WRAP,
+} from '../mxConstants';
 import mxRectangle from '../datatypes/mxRectangle';
 import mxAbstractCanvas2D from './mxAbstractCanvas2D';
-import {parseXml} from '../mxXmlUtils';
+import { parseXml } from '../mxXmlUtils';
 import { importNodeImplementation, isNode, write } from '../mxDomUtils';
 import { htmlEntities, trim } from '../mxStringUtils';
 
@@ -255,11 +277,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     callback
   ) => {
     let item = `box-sizing: border-box; font-size: 0; text-align: ${
-      align === mxConstants.ALIGN_LEFT
-        ? 'left'
-        : align === mxConstants.ALIGN_RIGHT
-        ? 'right'
-        : 'center'
+      align === ALIGN_LEFT ? 'left' : align === ALIGN_RIGHT ? 'right' : 'center'
     }; `;
     const pt = mxUtils.getAlignmentAsPoint(align, valign);
     let ofl = 'overflow: hidden; ';
@@ -308,7 +326,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     if (wrap && w > 0) {
-      block += `white-space: normal; word-wrap: ${mxConstants.WORD_WRAP}; `;
+      block += `white-space: normal; word-wrap: ${WORD_WRAP}; `;
       fw = `width: ${Math.round(w)}px; `;
 
       if (ofl != '' && overflow !== 'fill') {
@@ -369,7 +387,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     style.setAttribute('type', 'text/css');
     write(
       style,
-      `svg{font-family:${mxConstants.DEFAULT_FONTFAMILY};font-size:${mxConstants.DEFAULT_FONTSIZE};fill:none;stroke-miterlimit:10}`
+      `svg{font-family:${DEFAULT_FONTFAMILY};font-size:${DEFAULT_FONTSIZE};fill:none;stroke-miterlimit:10}`
     );
 
     return style;
@@ -382,7 +400,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   createElement(tagName, namespace) {
     if (this.root.ownerDocument.createElementNS != null) {
       return this.root.ownerDocument.createElementNS(
-        namespace || mxConstants.NS_SVG,
+        namespace || NS_SVG,
         tagName
       );
     }
@@ -456,16 +474,11 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     const s = this.state;
 
     if (text != null && s.fontSize > 0) {
-      const dy =
-        valign === mxConstants.ALIGN_TOP
-          ? 1
-          : valign === mxConstants.ALIGN_BOTTOM
-          ? 0
-          : 0.3;
+      const dy = valign === ALIGN_TOP ? 1 : valign === ALIGN_BOTTOM ? 0 : 0.3;
       const anchor =
-        align === mxConstants.ALIGN_RIGHT
+        align === ALIGN_RIGHT
           ? 'end'
-          : align === mxConstants.ALIGN_LEFT
+          : align === ALIGN_LEFT
           ? 'start'
           : 'middle';
 
@@ -481,27 +494,21 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         alt.setAttribute('text-anchor', anchor);
       }
 
-      if ((s.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
+      if ((s.fontStyle & FONT_BOLD) === FONT_BOLD) {
         alt.setAttribute('font-weight', 'bold');
       }
 
-      if ((s.fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
+      if ((s.fontStyle & FONT_ITALIC) === FONT_ITALIC) {
         alt.setAttribute('font-style', 'italic');
       }
 
       const txtDecor = [];
 
-      if (
-        (s.fontStyle & mxConstants.FONT_UNDERLINE) ===
-        mxConstants.FONT_UNDERLINE
-      ) {
+      if ((s.fontStyle & FONT_UNDERLINE) === FONT_UNDERLINE) {
         txtDecor.push('underline');
       }
 
-      if (
-        (s.fontStyle & mxConstants.FONT_STRIKETHROUGH) ===
-        mxConstants.FONT_STRIKETHROUGH
-      ) {
+      if ((s.fontStyle & FONT_STRIKETHROUGH) === FONT_STRIKETHROUGH) {
         txtDecor.push('line-through');
       }
 
@@ -538,18 +545,18 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     // Wrong gradient directions possible?
     let dir = null;
 
-    if (direction == null || direction === mxConstants.DIRECTION_SOUTH) {
+    if (direction == null || direction === DIRECTION_SOUTH) {
       dir = 's';
-    } else if (direction === mxConstants.DIRECTION_EAST) {
+    } else if (direction === DIRECTION_EAST) {
       dir = 'e';
     } else {
       const tmp = start;
       start = end;
       end = tmp;
 
-      if (direction === mxConstants.DIRECTION_NORTH) {
+      if (direction === DIRECTION_NORTH) {
         dir = 's';
-      } else if (direction === mxConstants.DIRECTION_WEST) {
+      } else if (direction === DIRECTION_WEST) {
         dir = 'e';
       }
     }
@@ -617,13 +624,13 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     gradient.setAttribute('x2', '0%');
     gradient.setAttribute('y2', '0%');
 
-    if (direction == null || direction === mxConstants.DIRECTION_SOUTH) {
+    if (direction == null || direction === DIRECTION_SOUTH) {
       gradient.setAttribute('y2', '100%');
-    } else if (direction === mxConstants.DIRECTION_EAST) {
+    } else if (direction === DIRECTION_EAST) {
       gradient.setAttribute('x2', '100%');
-    } else if (direction === mxConstants.DIRECTION_NORTH) {
+    } else if (direction === DIRECTION_NORTH) {
       gradient.setAttribute('y1', '100%');
-    } else if (direction === mxConstants.DIRECTION_WEST) {
+    } else if (direction === DIRECTION_WEST) {
       gradient.setAttribute('x1', '100%');
     }
 
@@ -915,7 +922,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       if (node.setAttributeNS == null || this.root.ownerDocument !== document) {
         node.setAttribute('xlink:href', link);
       } else {
-        node.setAttributeNS(mxConstants.NS_XLINK, 'xlink:href', link);
+        node.setAttributeNS(NS_XLINK, 'xlink:href', link);
       }
 
       this.root.appendChild(node);
@@ -1053,7 +1060,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     if (node.setAttributeNS == null) {
       node.setAttribute('xlink:href', src);
     } else {
-      node.setAttributeNS(mxConstants.NS_XLINK, 'xlink:href', src);
+      node.setAttributeNS(NS_XLINK, 'xlink:href', src);
     }
 
     if (!aspect) {
@@ -1307,16 +1314,16 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         : null,
       this.state.fontBorderColor != null ? this.state.fontBorderColor : null,
       `display: flex; align-items: unsafe ${
-        valign === mxConstants.ALIGN_TOP
+        valign === ALIGN_TOP
           ? 'flex-start'
-          : valign === mxConstants.ALIGN_BOTTOM
+          : valign === ALIGN_BOTTOM
           ? 'flex-end'
           : 'center'
       }; ` +
         `justify-content: unsafe ${
-          align === mxConstants.ALIGN_LEFT
+          align === ALIGN_LEFT
             ? 'flex-start'
-            : align === mxConstants.ALIGN_RIGHT
+            : align === ALIGN_RIGHT
             ? 'flex-end'
             : 'center'
         }; `,
@@ -1390,9 +1397,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
   // getTextCss(): string;
   getTextCss() {
     const s = this.state;
-    const lh = mxConstants.ABSOLUTE_LINE_HEIGHT
-      ? `${s.fontSize * mxConstants.LINE_HEIGHT}px`
-      : mxConstants.LINE_HEIGHT * this.lineHeightCorrection;
+    const lh = ABSOLUTE_LINE_HEIGHT
+      ? `${s.fontSize * LINE_HEIGHT}px`
+      : LINE_HEIGHT * this.lineHeightCorrection;
     let css =
       `display: inline-block; font-size: ${s.fontSize}px; ` +
       `font-family: ${s.fontFamily}; color: ${
@@ -1401,27 +1408,21 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         this.pointerEvents ? this.pointerEventsValue : 'none'
       }; `;
 
-    if ((s.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
+    if ((s.fontStyle & FONT_BOLD) === FONT_BOLD) {
       css += 'font-weight: bold; ';
     }
 
-    if ((s.fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
+    if ((s.fontStyle & FONT_ITALIC) === FONT_ITALIC) {
       css += 'font-style: italic; ';
     }
 
     const deco = [];
 
-    if (
-      (s.fontStyle & mxConstants.FONT_UNDERLINE) ===
-      mxConstants.FONT_UNDERLINE
-    ) {
+    if ((s.fontStyle & FONT_UNDERLINE) === FONT_UNDERLINE) {
       deco.push('underline');
     }
 
-    if (
-      (s.fontStyle & mxConstants.FONT_STRIKETHROUGH) ===
-      mxConstants.FONT_STRIKETHROUGH
-    ) {
+    if ((s.fontStyle & FONT_STRIKETHROUGH) === FONT_STRIKETHROUGH) {
       deco.push('line-through');
     }
 
@@ -1585,16 +1586,16 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       let cx = x;
       let cy = y;
 
-      if (align === mxConstants.ALIGN_CENTER) {
+      if (align === ALIGN_CENTER) {
         cx -= w / 2;
-      } else if (align === mxConstants.ALIGN_RIGHT) {
+      } else if (align === ALIGN_RIGHT) {
         cx -= w;
       }
 
       if (overflow !== 'fill') {
-        if (valign === mxConstants.ALIGN_MIDDLE) {
+        if (valign === ALIGN_MIDDLE) {
           cy -= h / 2;
-        } else if (valign === mxConstants.ALIGN_BOTTOM) {
+        } else if (valign === ALIGN_BOTTOM) {
           cy -= h;
         }
       }
@@ -1629,9 +1630,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     // Default is left
     const anchor =
-      align === mxConstants.ALIGN_RIGHT
+      align === ALIGN_RIGHT
         ? 'end'
-        : align === mxConstants.ALIGN_CENTER
+        : align === ALIGN_CENTER
         ? 'middle'
         : 'start';
 
@@ -1640,7 +1641,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       node.setAttribute('text-anchor', anchor);
     }
 
-    if (!this.styleEnabled || size !== mxConstants.DEFAULT_FONTSIZE) {
+    if (!this.styleEnabled || size !== DEFAULT_FONTSIZE) {
       node.setAttribute('font-size', `${size * s.scale}px`);
     }
 
@@ -1653,12 +1654,12 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
     }
 
     const lines = str.split('\n');
-    const lh = Math.round(size * mxConstants.LINE_HEIGHT);
+    const lh = Math.round(size * LINE_HEIGHT);
     const textHeight = size + (lines.length - 1) * lh;
 
     let cy = y + size - 1;
 
-    if (valign === mxConstants.ALIGN_MIDDLE) {
+    if (valign === ALIGN_MIDDLE) {
       if (overflow === 'fill') {
         cy -= h / 2;
       } else {
@@ -1668,7 +1669,7 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
             : textHeight) / 2;
         cy -= dy;
       }
-    } else if (valign === mxConstants.ALIGN_BOTTOM) {
+    } else if (valign === ALIGN_BOTTOM) {
       if (overflow === 'fill') {
         cy -= h;
       } else {
@@ -1719,31 +1720,25 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
 
     node.setAttribute('fill', s.fontColor);
 
-    if (!this.styleEnabled || s.fontFamily !== mxConstants.DEFAULT_FONTFAMILY) {
+    if (!this.styleEnabled || s.fontFamily !== DEFAULT_FONTFAMILY) {
       node.setAttribute('font-family', s.fontFamily);
     }
 
-    if ((s.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
+    if ((s.fontStyle & FONT_BOLD) === FONT_BOLD) {
       node.setAttribute('font-weight', 'bold');
     }
 
-    if ((s.fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
+    if ((s.fontStyle & FONT_ITALIC) === FONT_ITALIC) {
       node.setAttribute('font-style', 'italic');
     }
 
     const txtDecor = [];
 
-    if (
-      (s.fontStyle & mxConstants.FONT_UNDERLINE) ===
-      mxConstants.FONT_UNDERLINE
-    ) {
+    if ((s.fontStyle & FONT_UNDERLINE) === FONT_UNDERLINE) {
       txtDecor.push('underline');
     }
 
-    if (
-      (s.fontStyle & mxConstants.FONT_STRIKETHROUGH) ===
-      mxConstants.FONT_STRIKETHROUGH
-    ) {
+    if ((s.fontStyle & FONT_STRIKETHROUGH) === FONT_STRIKETHROUGH) {
       txtDecor.push('line-through');
     }
 
@@ -1764,15 +1759,15 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
       let bbox = null;
 
       if (overflow === 'fill' || overflow === 'width') {
-        if (align === mxConstants.ALIGN_CENTER) {
+        if (align === ALIGN_CENTER) {
           x -= w / 2;
-        } else if (align === mxConstants.ALIGN_RIGHT) {
+        } else if (align === ALIGN_RIGHT) {
           x -= w;
         }
 
-        if (valign === mxConstants.ALIGN_MIDDLE) {
+        if (valign === ALIGN_MIDDLE) {
           y -= h / 2;
-        } else if (valign === mxConstants.ALIGN_BOTTOM) {
+        } else if (valign === ALIGN_BOTTOM) {
           y -= h;
         }
 
@@ -1802,9 +1797,9 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         const div = document.createElement('div');
 
         // Wrapping and clipping can be ignored here
-        div.style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
-          ? `${s.fontSize * mxConstants.LINE_HEIGHT}px`
-          : mxConstants.LINE_HEIGHT;
+        div.style.lineHeight = ABSOLUTE_LINE_HEIGHT
+          ? `${s.fontSize * LINE_HEIGHT}px`
+          : LINE_HEIGHT;
         div.style.fontSize = `${s.fontSize}px`;
         div.style.fontFamily = s.fontFamily;
         div.style.whiteSpace = 'nowrap';
@@ -1812,14 +1807,11 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         div.style.visibility = 'hidden';
         div.style.display = 'inline-block';
 
-        if ((s.fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
+        if ((s.fontStyle & FONT_BOLD) === FONT_BOLD) {
           div.style.fontWeight = 'bold';
         }
 
-        if (
-          (s.fontStyle & mxConstants.FONT_ITALIC) ===
-          mxConstants.FONT_ITALIC
-        ) {
+        if ((s.fontStyle & FONT_ITALIC) === FONT_ITALIC) {
           div.style.fontStyle = 'italic';
         }
 
@@ -1831,15 +1823,15 @@ class mxSvgCanvas2D extends mxAbstractCanvas2D {
         const h = div.offsetHeight;
         div.parentNode.removeChild(div);
 
-        if (align === mxConstants.ALIGN_CENTER) {
+        if (align === ALIGN_CENTER) {
           x -= w / 2;
-        } else if (align === mxConstants.ALIGN_RIGHT) {
+        } else if (align === ALIGN_RIGHT) {
           x -= w;
         }
 
-        if (valign === mxConstants.ALIGN_MIDDLE) {
+        if (valign === ALIGN_MIDDLE) {
           y -= h / 2;
-        } else if (valign === mxConstants.ALIGN_BOTTOM) {
+        } else if (valign === ALIGN_BOTTOM) {
           y -= h;
         }
 

@@ -10,7 +10,13 @@ import mxPoint from '../util/datatypes/mxPoint';
 import mxImageShape from '../shape/node/mxImageShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxRectangleShape from '../shape/node/mxRectangleShape';
-import mxConstants from '../util/mxConstants';
+import {
+  DIALECT_STRICTHTML,
+  DIALECT_SVG,
+  HANDLE_FILLCOLOR,
+  HANDLE_SIZE,
+  HANDLE_STROKECOLOR,
+} from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 
 /**
@@ -173,18 +179,9 @@ class mxHandle {
    */
   // createShape(html: any): mxShape;
   createShape(html) {
-    const bounds = new mxRectangle(
-      0,
-      0,
-      mxConstants.HANDLE_SIZE,
-      mxConstants.HANDLE_SIZE
-    );
+    const bounds = new mxRectangle(0, 0, HANDLE_SIZE, HANDLE_SIZE);
 
-    return new mxRectangleShape(
-      bounds,
-      mxConstants.HANDLE_FILLCOLOR,
-      mxConstants.HANDLE_STROKECOLOR
-    );
+    return new mxRectangleShape(bounds, HANDLE_FILLCOLOR, HANDLE_STROKECOLOR);
   }
 
   /**
@@ -193,13 +190,11 @@ class mxHandle {
   // initShape(html: any): void;
   initShape(html) {
     if (html && this.shape.isHtmlAllowed()) {
-      this.shape.dialect = mxConstants.DIALECT_STRICTHTML;
+      this.shape.dialect = DIALECT_STRICTHTML;
       this.shape.init(this.graph.container);
     } else {
       this.shape.dialect =
-        this.graph.dialect !== mxConstants.DIALECT_SVG
-          ? mxConstants.DIALECT_MIXEDHTML
-          : mxConstants.DIALECT_SVG;
+        this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
 
       if (this.cursor != null) {
         this.shape.init(this.graph.getView().getOverlayPane());

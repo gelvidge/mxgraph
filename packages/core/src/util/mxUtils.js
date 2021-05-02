@@ -5,7 +5,46 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxClient from '../mxClient';
-import mxConstants from './mxConstants';
+import {
+  ALIGN_BOTTOM,
+  ALIGN_LEFT,
+  ALIGN_RIGHT,
+  ALIGN_TOP,
+  DEFAULT_FONTFAMILY,
+  DEFAULT_FONTSIZE,
+  DIRECTION_EAST,
+  DIRECTION_MASK_EAST,
+  DIRECTION_MASK_NONE,
+  DIRECTION_MASK_NORTH,
+  DIRECTION_MASK_SOUTH,
+  DIRECTION_MASK_WEST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+  FONT_BOLD,
+  FONT_ITALIC,
+  FONT_STRIKETHROUGH,
+  FONT_UNDERLINE,
+  LINE_HEIGHT,
+  NODETYPE_CDATA,
+  NODETYPE_COMMENT,
+  NODETYPE_DOCUMENT,
+  NODETYPE_DOCUMENT_FRAGMENT,
+  NODETYPE_ELEMENT,
+  NODETYPE_TEXT,
+  NONE,
+  PAGE_FORMAT_A4_PORTRAIT,
+  STYLE_DIRECTION,
+  STYLE_FLIPH,
+  STYLE_FLIPV,
+  STYLE_HORIZONTAL,
+  STYLE_PORT_CONSTRAINT,
+  STYLE_PORT_CONSTRAINT_ROTATION,
+  STYLE_ROTATION,
+  STYLE_SOURCE_PORT_CONSTRAINT,
+  STYLE_STARTSIZE,
+  STYLE_TARGET_PORT_CONSTRAINT,
+} from './mxConstants';
 import mxPoint from './datatypes/mxPoint';
 import mxDictionary from './datatypes/mxDictionary';
 import mxCellPath from '../view/cell/mxCellPath';
@@ -64,7 +103,7 @@ const mxUtils = {
    *
    * element - DOM node to remove the cursor style from.
    */
-  removeCursors: element => {
+  removeCursors: (element) => {
     if (element.style != null) {
       element.style.cursor = '';
     }
@@ -89,7 +128,7 @@ const mxUtils = {
    *
    * element - DOM node whose current style should be returned.
    */
-  getCurrentStyle: element => {
+  getCurrentStyle: (element) => {
     return element != null ? window.getComputedStyle(element, '') : null;
   },
 
@@ -99,7 +138,7 @@ const mxUtils = {
    * Parses the given CSS numeric value adding handling for the values thin,
    * medium and thick (2, 4 and 6).
    */
-  parseCssNumber: value => {
+  parseCssNumber: (value) => {
     if (value === 'thin') {
       value = '2';
     } else if (value === 'medium') {
@@ -154,7 +193,7 @@ const mxUtils = {
    *
    * node - DOM node whose style should be checked for scrollbars.
    */
-  hasScrollbars: node => {
+  hasScrollbars: (node) => {
     const style = mxUtils.getCurrentStyle(node);
 
     return (
@@ -164,24 +203,13 @@ const mxUtils = {
   },
 
   /**
-   * Function: bind
-   *
-   * Returns a wrapper function that locks the execution scope of the given
-   * function to the specified scope. Inside funct, the "this" keyword
-   * becomes a reference to that scope.
-   */
-  bind: (scope, funct) => {
-    return funct.bind(scope);
-  },
-
-  /**
    * Function: findNode
    *
    * Returns the first node where attr equals value.
    * This implementation does not use XPath.
    */
   findNode: (node, attr, value) => {
-    if (node.nodeType === mxConstants.NODETYPE_ELEMENT) {
+    if (node.nodeType === NODETYPE_ELEMENT) {
       const tmp = node.getAttribute(attr);
       if (tmp != null && tmp == value) {
         return node;
@@ -198,50 +226,6 @@ const mxUtils = {
       node = node.nextSibling;
     }
     return null;
-  },
-
-  /**
-   * Function: indexOf
-   *
-   * Returns the index of obj in array or -1 if the array does not contain
-   * the given object.
-   *
-   * Parameters:
-   *
-   * array - Array to check for the given obj.
-   * obj - Object to find in the given array.
-   */
-  indexOf: (array, obj) => {
-    if (array != null && obj != null) {
-      for (let i = 0; i < array.length; i += 1) {
-        if (array[i] == obj) {
-          return i;
-        }
-      }
-    }
-
-    return -1;
-  },
-
-  /**
-   * Function: forEach
-   *
-   * Calls the given function for each element of the given array and returns
-   * the array.
-   *
-   * Parameters:
-   *
-   * array - Array that contains the elements.
-   * fn - Function to be called for each object.
-   */
-  forEach: (array, fn) => {
-    if (array != null && fn != null) {
-      for (let i = 0; i < array.length; i += 1) {
-        fn(array[i]);
-      }
-    }
-
-    return array;
   },
 
   /**
@@ -265,12 +249,12 @@ const mxUtils = {
     let result = null;
 
     if (typeof array === 'object') {
-      let index = mxUtils.indexOf(array, obj);
+      let index = array.indexOf(obj);
 
       while (index >= 0) {
         array.splice(index, 1);
         result = obj;
-        index = mxUtils.indexOf(array, obj);
+        index = array.indexOf(obj);
       }
     }
 
@@ -350,11 +334,11 @@ const mxUtils = {
         }
       }
 
-      if (node.nodeType === mxConstants.NODETYPE_DOCUMENT) {
+      if (node.nodeType === NODETYPE_DOCUMENT) {
         result.push(
           mxUtils.getPrettyXml(node.documentElement, tab, indent, newline, ns)
         );
-      } else if (node.nodeType === mxConstants.NODETYPE_DOCUMENT_FRAGMENT) {
+      } else if (node.nodeType === NODETYPE_DOCUMENT_FRAGMENT) {
         let tmp = node.firstChild;
 
         if (tmp != null) {
@@ -363,19 +347,19 @@ const mxUtils = {
             tmp = tmp.nextSibling;
           }
         }
-      } else if (node.nodeType === mxConstants.NODETYPE_COMMENT) {
+      } else if (node.nodeType === NODETYPE_COMMENT) {
         const value = getTextContent(node);
 
         if (value.length > 0) {
           result.push(`${indent}<!--${value}-->${newline}`);
         }
-      } else if (node.nodeType === mxConstants.NODETYPE_TEXT) {
+      } else if (node.nodeType === NODETYPE_TEXT) {
         const value = trim(getTextContent(node));
 
         if (value.length > 0) {
           result.push(indent + htmlEntities(value, false) + newline);
         }
-      } else if (node.nodeType === mxConstants.NODETYPE_CDATA) {
+      } else if (node.nodeType === NODETYPE_CDATA) {
         const value = getTextContent(node);
 
         if (value.length > 0) {
@@ -426,7 +410,7 @@ const mxUtils = {
    * background can be used in IE8 standards mode (native IE8 only) to pass
    * events through the node.
    */
-  addTransparentBackgroundFilter: node => {
+  addTransparentBackgroundFilter: (node) => {
     node.style.filter += `progid:DXImageTransform.Microsoft.AlphaImageLoader(src='${mxClient.imageBasePath}/transparent.gif', sizingMethod='scale')`;
   },
 
@@ -457,7 +441,7 @@ const mxUtils = {
    * Makes sure the given node is inside the visible area of the window. This
    * is done by setting the left and top in the style.
    */
-  fit: node => {
+  fit: (node) => {
     const ds = mxUtils.getDocumentSize();
     const left = parseInt(node.offsetLeft);
     const width = parseInt(node.offsetWidth);
@@ -574,7 +558,7 @@ const mxUtils = {
 
     if (value == null) {
       value = defaultValue;
-    } else if (value === mxConstants.NONE) {
+    } else if (value === NONE) {
       value = null;
     }
 
@@ -663,7 +647,7 @@ const mxUtils = {
    *
    * Removes all duplicates from the given array.
    */
-  removeDuplicates: arr => {
+  removeDuplicates: (arr) => {
     const dict = new mxDictionary();
     const result = [];
 
@@ -682,7 +666,7 @@ const mxUtils = {
    *
    * Returns true if the given value is of type number and isNaN returns true.
    */
-  isNaN: value => {
+  isNaN: (value) => {
     return typeof value === 'number' && isNaN(value);
   },
 
@@ -695,7 +679,7 @@ const mxUtils = {
    *
    * obj - Object to return the string representation for.
    */
-  toString: obj => {
+  toString: (obj) => {
     let output = '';
 
     for (const i in obj) {
@@ -723,7 +707,7 @@ const mxUtils = {
    *
    * Converts the given degree to radians.
    */
-  toRadians: deg => {
+  toRadians: (deg) => {
     return (Math.PI * deg) / 180;
   },
 
@@ -732,7 +716,7 @@ const mxUtils = {
    *
    * Converts the given radians to degree.
    */
-  toDegree: rad => {
+  toDegree: (rad) => {
     return (rad * 180) / Math.PI;
   },
 
@@ -921,12 +905,10 @@ const mxUtils = {
   getPortConstraints: (terminal, edge, source, defaultValue) => {
     const value = mxUtils.getValue(
       terminal.style,
-      mxConstants.STYLE_PORT_CONSTRAINT,
+      STYLE_PORT_CONSTRAINT,
       mxUtils.getValue(
         edge.style,
-        source
-          ? mxConstants.STYLE_SOURCE_PORT_CONSTRAINT
-          : mxConstants.STYLE_TARGET_PORT_CONSTRAINT,
+        source ? STYLE_SOURCE_PORT_CONSTRAINT : STYLE_TARGET_PORT_CONSTRAINT,
         null
       )
     );
@@ -935,20 +917,16 @@ const mxUtils = {
       return defaultValue;
     }
     const directions = value.toString();
-    let returnValue = mxConstants.DIRECTION_MASK_NONE;
+    let returnValue = DIRECTION_MASK_NONE;
     const constraintRotationEnabled = mxUtils.getValue(
       terminal.style,
-      mxConstants.STYLE_PORT_CONSTRAINT_ROTATION,
+      STYLE_PORT_CONSTRAINT_ROTATION,
       0
     );
     let rotation = 0;
 
     if (constraintRotationEnabled == 1) {
-      rotation = mxUtils.getValue(
-        terminal.style,
-        mxConstants.STYLE_ROTATION,
-        0
-      );
+      rotation = mxUtils.getValue(terminal.style, STYLE_ROTATION, 0);
     }
 
     let quad = 0;
@@ -967,67 +945,67 @@ const mxUtils = {
       }
     }
 
-    if (directions.indexOf(mxConstants.DIRECTION_NORTH) >= 0) {
+    if (directions.indexOf(DIRECTION_NORTH) >= 0) {
       switch (quad) {
         case 0:
-          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          returnValue |= DIRECTION_MASK_NORTH;
           break;
         case 1:
-          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          returnValue |= DIRECTION_MASK_EAST;
           break;
         case 2:
-          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          returnValue |= DIRECTION_MASK_SOUTH;
           break;
         case 3:
-          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          returnValue |= DIRECTION_MASK_WEST;
           break;
       }
     }
-    if (directions.indexOf(mxConstants.DIRECTION_WEST) >= 0) {
+    if (directions.indexOf(DIRECTION_WEST) >= 0) {
       switch (quad) {
         case 0:
-          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          returnValue |= DIRECTION_MASK_WEST;
           break;
         case 1:
-          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          returnValue |= DIRECTION_MASK_NORTH;
           break;
         case 2:
-          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          returnValue |= DIRECTION_MASK_EAST;
           break;
         case 3:
-          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          returnValue |= DIRECTION_MASK_SOUTH;
           break;
       }
     }
-    if (directions.indexOf(mxConstants.DIRECTION_SOUTH) >= 0) {
+    if (directions.indexOf(DIRECTION_SOUTH) >= 0) {
       switch (quad) {
         case 0:
-          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          returnValue |= DIRECTION_MASK_SOUTH;
           break;
         case 1:
-          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          returnValue |= DIRECTION_MASK_WEST;
           break;
         case 2:
-          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          returnValue |= DIRECTION_MASK_NORTH;
           break;
         case 3:
-          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          returnValue |= DIRECTION_MASK_EAST;
           break;
       }
     }
-    if (directions.indexOf(mxConstants.DIRECTION_EAST) >= 0) {
+    if (directions.indexOf(DIRECTION_EAST) >= 0) {
       switch (quad) {
         case 0:
-          returnValue |= mxConstants.DIRECTION_MASK_EAST;
+          returnValue |= DIRECTION_MASK_EAST;
           break;
         case 1:
-          returnValue |= mxConstants.DIRECTION_MASK_SOUTH;
+          returnValue |= DIRECTION_MASK_SOUTH;
           break;
         case 2:
-          returnValue |= mxConstants.DIRECTION_MASK_WEST;
+          returnValue |= DIRECTION_MASK_WEST;
           break;
         case 3:
-          returnValue |= mxConstants.DIRECTION_MASK_NORTH;
+          returnValue |= DIRECTION_MASK_NORTH;
           break;
       }
     }
@@ -1041,13 +1019,13 @@ const mxUtils = {
    * Reverse the port constraint bitmask. For example, north | east
    * becomes south | west
    */
-  reversePortConstraints: constraint => {
+  reversePortConstraints: (constraint) => {
     let result = 0;
 
-    result = (constraint & mxConstants.DIRECTION_MASK_WEST) << 3;
-    result |= (constraint & mxConstants.DIRECTION_MASK_NORTH) << 1;
-    result |= (constraint & mxConstants.DIRECTION_MASK_SOUTH) >> 1;
-    result |= (constraint & mxConstants.DIRECTION_MASK_EAST) >> 3;
+    result = (constraint & DIRECTION_MASK_WEST) << 3;
+    result |= (constraint & DIRECTION_MASK_NORTH) << 1;
+    result |= (constraint & DIRECTION_MASK_SOUTH) >> 1;
+    result |= (constraint & DIRECTION_MASK_EAST) >> 3;
 
     return result;
   },
@@ -1095,19 +1073,9 @@ const mxUtils = {
    * rectangle according to the respective styles in style.
    */
   getDirectedBounds(rect, m, style, flipH, flipV) {
-    const d = mxUtils.getValue(
-      style,
-      mxConstants.STYLE_DIRECTION,
-      mxConstants.DIRECTION_EAST
-    );
-    flipH =
-      flipH != null
-        ? flipH
-        : mxUtils.getValue(style, mxConstants.STYLE_FLIPH, false);
-    flipV =
-      flipV != null
-        ? flipV
-        : mxUtils.getValue(style, mxConstants.STYLE_FLIPV, false);
+    const d = mxUtils.getValue(style, STYLE_DIRECTION, DIRECTION_EAST);
+    flipH = flipH != null ? flipH : mxUtils.getValue(style, STYLE_FLIPH, false);
+    flipV = flipV != null ? flipV : mxUtils.getValue(style, STYLE_FLIPV, false);
 
     m.x = Math.round(Math.max(0, Math.min(rect.width, m.x)));
     m.y = Math.round(Math.max(0, Math.min(rect.height, m.y)));
@@ -1115,11 +1083,8 @@ const mxUtils = {
     m.height = Math.round(Math.max(0, Math.min(rect.height, m.height)));
 
     if (
-      (flipV &&
-        (d === mxConstants.DIRECTION_SOUTH ||
-          d === mxConstants.DIRECTION_NORTH)) ||
-      (flipH &&
-        (d === mxConstants.DIRECTION_EAST || d === mxConstants.DIRECTION_WEST))
+      (flipV && (d === DIRECTION_SOUTH || d === DIRECTION_NORTH)) ||
+      (flipH && (d === DIRECTION_EAST || d === DIRECTION_WEST))
     ) {
       const tmp = m.x;
       m.x = m.width;
@@ -1127,11 +1092,8 @@ const mxUtils = {
     }
 
     if (
-      (flipH &&
-        (d === mxConstants.DIRECTION_SOUTH ||
-          d === mxConstants.DIRECTION_NORTH)) ||
-      (flipV &&
-        (d === mxConstants.DIRECTION_EAST || d === mxConstants.DIRECTION_WEST))
+      (flipH && (d === DIRECTION_SOUTH || d === DIRECTION_NORTH)) ||
+      (flipV && (d === DIRECTION_EAST || d === DIRECTION_WEST))
     ) {
       const tmp = m.y;
       m.y = m.height;
@@ -1140,17 +1102,17 @@ const mxUtils = {
 
     const m2 = mxRectangle.fromRectangle(m);
 
-    if (d === mxConstants.DIRECTION_SOUTH) {
+    if (d === DIRECTION_SOUTH) {
       m2.y = m.x;
       m2.x = m.height;
       m2.width = m.y;
       m2.height = m.width;
-    } else if (d === mxConstants.DIRECTION_WEST) {
+    } else if (d === DIRECTION_WEST) {
       m2.y = m.height;
       m2.x = m.width;
       m2.width = m.x;
       m2.height = m.y;
-    } else if (d === mxConstants.DIRECTION_NORTH) {
+    } else if (d === DIRECTION_NORTH) {
       m2.y = m.width;
       m2.x = m.y;
       m2.width = m.height;
@@ -1359,11 +1321,10 @@ const mxUtils = {
       let h = state.height;
 
       const start =
-        mxUtils.getValue(state.style, mxConstants.STYLE_STARTSIZE) *
-        state.view.scale;
+        mxUtils.getValue(state.style, STYLE_STARTSIZE) * state.view.scale;
 
       if (start > 0) {
-        if (mxUtils.getValue(state.style, mxConstants.STYLE_HORIZONTAL, true)) {
+        if (mxUtils.getValue(state.style, STYLE_HORIZONTAL, true)) {
           cy = state.y + start / 2;
           h = start;
         } else {
@@ -1382,7 +1343,7 @@ const mxUtils = {
 
       const rect = new mxRectangle(cx - w / 2, cy - h / 2, w, h);
       const alpha = mxUtils.toRadians(
-        mxUtils.getValue(state.style, mxConstants.STYLE_ROTATION) || 0
+        mxUtils.getValue(state.style, STYLE_ROTATION) || 0
       );
 
       if (alpha != 0) {
@@ -1455,7 +1416,7 @@ const mxUtils = {
    * Returns the scroll origin of the given document or the current document
    * if no document is given.
    */
-  getDocumentScrollOrigin: doc => {
+  getDocumentScrollOrigin: (doc) => {
     const wnd = doc.defaultView || doc.parentWindow;
 
     const x =
@@ -1563,7 +1524,7 @@ const mxUtils = {
    *
    * n - String representing the possibly numeric value.
    */
-  isNumeric: n => {
+  isNumeric: (n) => {
     return (
       !isNaN(parseFloat(n)) &&
       isFinite(n) &&
@@ -1580,7 +1541,7 @@ const mxUtils = {
    *
    * n - String representing the possibly numeric value.
    */
-  isInteger: n => {
+  isInteger: (n) => {
     return String(parseInt(n)) === String(n);
   },
 
@@ -1766,7 +1727,7 @@ const mxUtils = {
    *
    * src - URL that points to the image to be displayed.
    */
-  createImage: src => {
+  createImage: (src) => {
     let imageNode = null;
     imageNode = document.createElement('img');
     imageNode.setAttribute('src', src);
@@ -1816,7 +1777,7 @@ const mxUtils = {
    *
    * style - String of the form [(stylename|key=value);].
    */
-  getStylename: style => {
+  getStylename: (style) => {
     if (style != null) {
       const pairs = style.split(';');
       const stylename = pairs[0];
@@ -1839,7 +1800,7 @@ const mxUtils = {
    *
    * style - String of the form [(stylename|key=value);].
    */
-  getStylenames: style => {
+  getStylenames: (style) => {
     const result = [];
 
     if (style != null) {
@@ -1927,7 +1888,7 @@ const mxUtils = {
    * Removes all stylenames from the given style and returns the updated
    * style.
    */
-  removeAllStylenames: style => {
+  removeAllStylenames: (style) => {
     const result = [];
 
     if (style != null) {
@@ -1963,11 +1924,7 @@ const mxUtils = {
       try {
         for (let i = 0; i < cells.length; i += 1) {
           if (cells[i] != null) {
-            const style = mxUtils.setStyle(
-              cells[i].getStyle(),
-              key,
-              value
-            );
+            const style = mxUtils.setStyle(cells[i].getStyle(), key, value);
             model.setStyle(cells[i], style);
           }
         }
@@ -2152,16 +2109,16 @@ const mxUtils = {
     let dy = -0.5;
 
     // Horizontal alignment
-    if (align === mxConstants.ALIGN_LEFT) {
+    if (align === ALIGN_LEFT) {
       dx = 0;
-    } else if (align === mxConstants.ALIGN_RIGHT) {
+    } else if (align === ALIGN_RIGHT) {
       dx = -1;
     }
 
     // Vertical alignment
-    if (valign === mxConstants.ALIGN_TOP) {
+    if (valign === ALIGN_TOP) {
       dy = 0;
-    } else if (valign === mxConstants.ALIGN_BOTTOM) {
+    } else if (valign === ALIGN_BOTTOM) {
       dy = -1;
     }
 
@@ -2194,41 +2151,32 @@ const mxUtils = {
    * fontStyle - Optional font style.
    */
   getSizeForString: (text, fontSize, fontFamily, textWidth, fontStyle) => {
-    fontSize = fontSize != null ? fontSize : mxConstants.DEFAULT_FONTSIZE;
-    fontFamily =
-      fontFamily != null ? fontFamily : mxConstants.DEFAULT_FONTFAMILY;
+    fontSize = fontSize != null ? fontSize : DEFAULT_FONTSIZE;
+    fontFamily = fontFamily != null ? fontFamily : DEFAULT_FONTFAMILY;
     const div = document.createElement('div');
 
     // Sets the font size and family
     div.style.fontFamily = fontFamily;
     div.style.fontSize = `${Math.round(fontSize)}px`;
-    div.style.lineHeight = `${Math.round(
-      fontSize * mxConstants.LINE_HEIGHT
-    )}px`;
+    div.style.lineHeight = `${Math.round(fontSize * LINE_HEIGHT)}px`;
 
     // Sets the font style
     if (fontStyle != null) {
-      if ((fontStyle & mxConstants.FONT_BOLD) === mxConstants.FONT_BOLD) {
+      if ((fontStyle & FONT_BOLD) === FONT_BOLD) {
         div.style.fontWeight = 'bold';
       }
 
-      if ((fontStyle & mxConstants.FONT_ITALIC) === mxConstants.FONT_ITALIC) {
+      if ((fontStyle & FONT_ITALIC) === FONT_ITALIC) {
         div.style.fontStyle = 'italic';
       }
 
       const txtDecor = [];
 
-      if (
-        (fontStyle & mxConstants.FONT_UNDERLINE) ==
-        mxConstants.FONT_UNDERLINE
-      ) {
+      if ((fontStyle & FONT_UNDERLINE) == FONT_UNDERLINE) {
         txtDecor.push('underline');
       }
 
-      if (
-        (fontStyle & mxConstants.FONT_STRIKETHROUGH) ==
-        mxConstants.FONT_STRIKETHROUGH
-      ) {
+      if ((fontStyle & FONT_STRIKETHROUGH) == FONT_STRIKETHROUGH) {
         txtDecor.push('line-through');
       }
 
@@ -2283,8 +2231,7 @@ const mxUtils = {
       return 1;
     }
 
-    pageFormat =
-      pageFormat != null ? pageFormat : mxConstants.PAGE_FORMAT_A4_PORTRAIT;
+    pageFormat = pageFormat != null ? pageFormat : PAGE_FORMAT_A4_PORTRAIT;
     border = border != null ? border : 0;
 
     const availablePageWidth = pageFormat.width - border * 2;
@@ -2519,7 +2466,7 @@ const mxUtils = {
    *
    * graph - <mxGraph> to be printed.
    */
-  printScreen: graph => {
+  printScreen: (graph) => {
     const wnd = window.open();
     const bounds = graph.getGraphBounds();
     mxUtils.show(graph, wnd.document);
@@ -2537,7 +2484,7 @@ const mxUtils = {
     } else {
       print();
     }
-  }
+  },
 };
 
 export default mxUtils;

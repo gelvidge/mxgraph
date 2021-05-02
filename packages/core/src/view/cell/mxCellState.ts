@@ -480,6 +480,19 @@ class mxCellState extends mxRectangle {
   destroy(): void {
     (<mxGraph>(<mxGraphView>this.view).graph).cellRenderer.destroy(this);
   }
+
+
+  /**
+   * Returns true if the given cell state is a loop.
+   *
+   * @param state {@link mxCellState} that represents a potential loop.
+   */
+  // isLoop(state: mxCellState): boolean;
+  isLoop(): boolean {
+    const src = this.getVisibleTerminalState(true);
+    const trg = this.getVisibleTerminalState(false);
+    return src != null && src == trg;
+  }
 }
 
 export default mxCellState;

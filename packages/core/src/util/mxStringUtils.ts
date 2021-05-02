@@ -1,5 +1,5 @@
-import mxConstants from "./mxConstants";
-import { getTextContent } from "./mxDomUtils";
+import { NODETYPE_TEXT } from './mxConstants';
+import { getTextContent } from './mxDomUtils';
 
 /**
  * Function: ltrim
@@ -14,9 +14,8 @@ import { getTextContent } from "./mxDomUtils";
  * - "\0" (ASCII 0 (0x00)), the NUL-byte
  * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
  */
-export const ltrim = (str: string | null, chars: string = '\\s') => str != null
-  ? str.replace(new RegExp(`^[${chars}]+`, 'g'), '')
-  : null;
+export const ltrim = (str: string | null, chars: string = '\\s') =>
+  str != null ? str.replace(new RegExp(`^[${chars}]+`, 'g'), '') : null;
 
 /**
  * Function: rtrim
@@ -31,9 +30,8 @@ export const ltrim = (str: string | null, chars: string = '\\s') => str != null
  * - "\0" (ASCII 0 (0x00)), the NUL-byte
  * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
  */
-export const rtrim = (str: string | null, chars: string = '\\s') => str != null
-  ? str.replace(new RegExp(`[${chars}]+$`, 'g'), '')
-  : null;
+export const rtrim = (str: string | null, chars: string = '\\s') =>
+  str != null ? str.replace(new RegExp(`[${chars}]+$`, 'g'), '') : null;
 
 /**
  * Function: trim
@@ -49,7 +47,8 @@ export const rtrim = (str: string | null, chars: string = '\\s') => str != null
  * - "\0" (ASCII 0 (0x00)), the NUL-byte
  * - "\x0B" (ASCII 11 (0x0B)), a vertical tab
  */
-export const trim = (str: string | null, chars?: string) => ltrim(rtrim(str, chars), chars);
+export const trim = (str: string | null, chars?: string) =>
+  ltrim(rtrim(str, chars), chars);
 
 /**
  * Function: getFunctionName
@@ -117,7 +116,7 @@ export const replaceTrailingNewlines = (str: string, pattern: string) => {
 export const removeWhitespace = (node: HTMLElement, before: boolean) => {
   let tmp = before ? node.previousSibling : node.nextSibling;
 
-  while (tmp != null && tmp.nodeType === mxConstants.NODETYPE_TEXT) {
+  while (tmp != null && tmp.nodeType === NODETYPE_TEXT) {
     const next = before ? tmp.previousSibling : tmp.nextSibling;
     const text = getTextContent(tmp);
 

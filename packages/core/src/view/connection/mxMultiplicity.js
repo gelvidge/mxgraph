@@ -4,7 +4,7 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxUtils from '../../util/mxUtils';
+
 import mxResources from '../../util/mxResources';
 import { isNode } from '../../util/mxDomUtils';
 

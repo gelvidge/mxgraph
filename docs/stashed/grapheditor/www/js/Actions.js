@@ -124,7 +124,7 @@ Actions.prototype.init = function()
 					
 					if (cells.length == 1 && includeEdges)
 					{
-						let geo = graph.getCellGeometry(cells[0]);
+						let geo = cells[0].getGeometry();
 						
 						if (geo != null)
 						{
@@ -156,7 +156,7 @@ Actions.prototype.init = function()
 		
 		if (graph.isEnabled() && cell != null && cell.isVertex())
 		{
-			let geo = graph.getCellGeometry(cell);
+			let geo = cell.getGeometry();
 			
 			if (geo != null)
 			{
@@ -179,7 +179,7 @@ Actions.prototype.init = function()
 				{
 					if (cells[i].isVertex())
 					{
-						let geo = graph.getCellGeometry(cells[i]);
+						let geo = cells[i].getGeometry();
 						
 						if (geo != null)
 						{
@@ -599,7 +599,7 @@ Actions.prototype.init = function()
 					else
 					{
 						let state = graph.view.getState(cell);
-						let geo = graph.getCellGeometry(cell);
+						let geo = cell.getGeometry();
 
 						if (cell.isVertex() && state != null && state.text != null &&
 							geo != null && graph.isWrapping(cell))
@@ -1251,15 +1251,15 @@ Actions.prototype.init = function()
 				let dy = t.y;
 				
 				let parent = cell.getParent();
-				let pgeo = graph.getCellGeometry(parent);
-				
+				let pgeo = parent.getGeometry();
+
 				while (parent.isVertex() && pgeo != null)
 				{
 					dx += pgeo.x;
 					dy += pgeo.y;
 					
 					parent = parent.getParent();
-					pgeo = graph.getCellGeometry(parent);
+					pgeo = parent.getGeometry();
 				}
 				
 				let x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
@@ -1297,7 +1297,7 @@ Actions.prototype.init = function()
 					
 					if (cell.isEdge())
 					{
-						let geo = graph.getCellGeometry(cell);
+						let geo = cell.getGeometry();
 			
 						if (geo != null)
 						{

@@ -20,6 +20,7 @@ export default {
 const Template = ({ label, ...args }) => {
   const {
     mxGraph,
+    mxRectangle,
     mxRubberband,
     mxDomHelpers,
     mxEvent

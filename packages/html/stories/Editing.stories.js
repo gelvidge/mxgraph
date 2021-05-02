@@ -12,7 +12,6 @@ export default {
 const Template = ({ label, ...args }) => {
   const {
     mxGraph, 
-    mxEvent, 
     mxKeyHandler,
     mxUtils,
     mxDomUtils,

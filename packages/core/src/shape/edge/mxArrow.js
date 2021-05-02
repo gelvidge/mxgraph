@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxShape from '../mxShape';
-import mxConstants from '../../util/mxConstants';
+import { ARROW_SIZE, ARROW_SPACING, ARROW_WIDTH } from '../../util/mxConstants';
 
 /**
  * Extends {@link mxShape} to implement an arrow shape. The shape is used to represent edges, not vertices.
@@ -19,9 +19,9 @@ class mxArrow extends mxShape {
     this.fill = fill;
     this.stroke = stroke;
     this.strokewidth = strokewidth != null ? strokewidth : 1;
-    this.arrowWidth = arrowWidth != null ? arrowWidth : mxConstants.ARROW_WIDTH;
-    this.spacing = spacing != null ? spacing : mxConstants.ARROW_SPACING;
-    this.endSize = endSize != null ? endSize : mxConstants.ARROW_SIZE;
+    this.arrowWidth = arrowWidth != null ? arrowWidth : ARROW_WIDTH;
+    this.spacing = spacing != null ? spacing : ARROW_SPACING;
+    this.endSize = endSize != null ? endSize : ARROW_SIZE;
   }
 
   /**
@@ -41,9 +41,9 @@ class mxArrow extends mxShape {
   // paintEdgeShape(c: mxAbstractCanvas2D, pts: mxPoint[]): void;
   paintEdgeShape(c, pts) {
     // Geometry of arrow
-    const spacing = mxConstants.ARROW_SPACING;
-    const width = mxConstants.ARROW_WIDTH;
-    const arrow = mxConstants.ARROW_SIZE;
+    const spacing = ARROW_SPACING;
+    const width = ARROW_WIDTH;
+    const arrow = ARROW_SIZE;
 
     // Base vector (between end points)
     const p0 = pts[0];

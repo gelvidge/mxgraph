@@ -7,7 +7,7 @@
 
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxShape from '../mxShape';
-import mxConstants from '../../util/mxConstants';
+import { STYLE_MARGIN } from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
@@ -84,7 +84,7 @@ class mxDoubleEllipse extends mxShape {
     if (!this.outline) {
       const margin = mxUtils.getValue(
         this.style,
-        mxConstants.STYLE_MARGIN,
+        STYLE_MARGIN,
         Math.min(3 + this.strokewidth, Math.min(w / 5, h / 5))
       );
       x += margin;
@@ -109,7 +109,7 @@ class mxDoubleEllipse extends mxShape {
     const margin =
       mxUtils.getValue(
         this.style,
-        mxConstants.STYLE_MARGIN,
+        STYLE_MARGIN,
         Math.min(
           3 + this.strokewidth,
           Math.min(rect.width / 5 / this.scale, rect.height / 5 / this.scale)

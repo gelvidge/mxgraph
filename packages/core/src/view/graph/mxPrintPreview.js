@@ -9,7 +9,7 @@ import mxTemporaryCellStates from '../cell/mxTemporaryCellStates';
 import mxEvent from '../../util/event/mxEvent';
 import mxClient from '../../mxClient';
 import mxUtils from '../../util/mxUtils';
-import mxConstants from '../../util/mxConstants';
+import { DIALECT_SVG } from '../../util/mxConstants';
 import { write } from '../../util/mxDomUtils';
 
 /**
@@ -563,13 +563,13 @@ class mxPrintPreview {
             this.pageFormat.height,
             0,
             0,
-            mxUtils.bind(this, div => {
+            (div) => {
               this.addGraphFragment(-dx, -dy, this.scale, pageNum, div, clip);
 
               if (this.printBackgroundImage) {
                 this.insertBackgroundImage(div, -dx, -dy);
               }
-            }),
+            },
             pageNum
           );
 
@@ -853,7 +853,7 @@ class mxPrintPreview {
     const overlayPane = view.getOverlayPane();
     const realScale = scale;
 
-    if (this.graph.dialect === mxConstants.DIALECT_SVG) {
+    if (this.graph.dialect === DIALECT_SVG) {
       view.createSvg();
 
       // Uses CSS transform for scaling
@@ -933,7 +933,7 @@ class mxPrintPreview {
       // Creates the temporary cell states in the view and
       // draws them onto the temporary DOM nodes in the view
       const cells = [this.getRoot()];
-      temp = new mxTemporaryCellStates(view, scale, cells, null, state => {
+      temp = new mxTemporaryCellStates(view, scale, cells, null, (state) => {
         return this.getLinkForCellState(state);
       });
     } finally {

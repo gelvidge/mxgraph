@@ -21,14 +21,11 @@ const Template = ({ label, ...args }) => {
   const {
     mxGraph,
     mxDomUtils,
-    mxDomHelpers,
-    mxCellRenderer,
     mxFastOrganicLayout,
     mxHierarchicalLayout,
     mxPerimeter,
     mxEvent,
     mxRubberband,
-    mxUtils,
     mxConstants
   } = mxgraph;
 

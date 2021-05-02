@@ -5,7 +5,17 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxShape from '../mxShape';
-import mxConstants from '../../util/mxConstants';
+import {
+  ARROW_SIZE,
+  ARROW_SPACING,
+  ARROW_WIDTH,
+  NONE,
+  STYLE_ENDARROW,
+  STYLE_ENDSIZE,
+  STYLE_STARTARROW,
+  STYLE_STARTSIZE,
+  STYLE_STROKEWIDTH,
+} from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 
 /**
@@ -21,10 +31,10 @@ class mxArrowConnector extends mxShape {
     this.fill = fill;
     this.stroke = stroke;
     this.strokewidth = strokewidth != null ? strokewidth : 1;
-    this.arrowWidth = arrowWidth != null ? arrowWidth : mxConstants.ARROW_WIDTH;
-    this.arrowSpacing = spacing != null ? spacing : mxConstants.ARROW_SPACING;
-    this.startSize = mxConstants.ARROW_SIZE / 5;
-    this.endSize = endSize != null ? endSize : mxConstants.ARROW_SIZE / 5;
+    this.arrowWidth = arrowWidth != null ? arrowWidth : ARROW_WIDTH;
+    this.arrowSpacing = spacing != null ? spacing : ARROW_SPACING;
+    this.startSize = ARROW_SIZE / 5;
+    this.endSize = endSize != null ? endSize : ARROW_SIZE / 5;
   }
 
   /**
@@ -49,7 +59,7 @@ class mxArrowConnector extends mxShape {
   // resetStyles(): void;
   resetStyles() {
     super.resetStyles();
-    this.arrowSpacing = mxConstants.ARROW_SPACING;
+    this.arrowSpacing = ARROW_SPACING;
   }
 
   /**
@@ -61,17 +71,9 @@ class mxArrowConnector extends mxShape {
 
     if (this.style != null) {
       this.startSize =
-        mxUtils.getNumber(
-          this.style,
-          mxConstants.STYLE_STARTSIZE,
-          mxConstants.ARROW_SIZE / 5
-        ) * 3;
+        mxUtils.getNumber(this.style, STYLE_STARTSIZE, ARROW_SIZE / 5) * 3;
       this.endSize =
-        mxUtils.getNumber(
-          this.style,
-          mxConstants.STYLE_ENDSIZE,
-          mxConstants.ARROW_SIZE / 5
-        ) * 3;
+        mxUtils.getNumber(this.style, STYLE_ENDSIZE, ARROW_SIZE / 5) * 3;
     }
   }
 
@@ -106,11 +108,7 @@ class mxArrowConnector extends mxShape {
     if (this.outline) {
       strokeWidth = Math.max(
         1,
-        mxUtils.getNumber(
-          this.style,
-          mxConstants.STYLE_STROKEWIDTH,
-          this.strokewidth
-        )
+        mxUtils.getNumber(this.style, STYLE_STROKEWIDTH, this.strokewidth)
       );
     }
 
@@ -459,7 +457,7 @@ class mxArrowConnector extends mxShape {
    */
   // getStartArrowWidth(): number;
   getStartArrowWidth() {
-    return mxConstants.ARROW_WIDTH;
+    return ARROW_WIDTH;
   }
 
   /**
@@ -467,7 +465,7 @@ class mxArrowConnector extends mxShape {
    */
   // getEndArrowWidth(): number;
   getEndArrowWidth() {
-    return mxConstants.ARROW_WIDTH;
+    return ARROW_WIDTH;
   }
 
   /**
@@ -475,7 +473,7 @@ class mxArrowConnector extends mxShape {
    */
   // getEdgeWidth(): number;
   getEdgeWidth() {
-    return mxConstants.ARROW_WIDTH / 3;
+    return ARROW_WIDTH / 3;
   }
 
   /**
@@ -491,13 +489,7 @@ class mxArrowConnector extends mxShape {
    */
   // isMarkerStart(): boolean;
   isMarkerStart() {
-    return (
-      mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_STARTARROW,
-        mxConstants.NONE
-      ) !== mxConstants.NONE
-    );
+    return mxUtils.getValue(this.style, STYLE_STARTARROW, NONE) !== NONE;
   }
 
   /**
@@ -505,13 +497,7 @@ class mxArrowConnector extends mxShape {
    */
   // isMarkerEnd(): boolean;
   isMarkerEnd() {
-    return (
-      mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_ENDARROW,
-        mxConstants.NONE
-      ) !== mxConstants.NONE
-    );
+    return mxUtils.getValue(this.style, STYLE_ENDARROW, NONE) !== NONE;
   }
 }
 

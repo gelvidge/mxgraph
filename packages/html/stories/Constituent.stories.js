@@ -43,7 +43,7 @@ const Template = ({ label, ...args }) => {
     getInitialCellForEvent(me) {
       let cell = super.getInitialCellForEvent(me);
       if (this.graph.isPart(cell)) {
-        cell = this.cell.getParent();
+        cell = cell.getParent();
       }
       return cell;
     }

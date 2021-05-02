@@ -20,7 +20,20 @@ import mxForm from '../util/gui/mxForm';
 import mxOutline from '../view/graph/mxOutline';
 import mxCell from '../view/cell/mxCell';
 import mxGeometry from '../util/datatypes/mxGeometry';
-import mxConstants from '../util/mxConstants';
+import {
+  ALIGN_BOTTOM,
+  ALIGN_CENTER,
+  ALIGN_LEFT,
+  ALIGN_MIDDLE,
+  ALIGN_RIGHT,
+  ALIGN_TOP,
+  FONT_BOLD,
+  FONT_ITALIC,
+  FONT_UNDERLINE,
+  STYLE_ALIGN,
+  STYLE_FONTSTYLE,
+  STYLE_VERTICAL_ALIGN,
+} from '../util/mxConstants';
 import mxGraph from '../view/graph/mxGraph';
 import mxSwimlaneManager from '../view/graph/mxSwimlaneManager';
 import mxLayoutManager from '../view/graph/mxLayoutManager';
@@ -975,20 +988,20 @@ class mxEditor extends mxEventSource {
    */
   // addActions(): void;
   addActions() {
-    this.addAction('save', editor => {
+    this.addAction('save', (editor) => {
       editor.save();
     });
 
-    this.addAction('print', editor => {
+    this.addAction('print', (editor) => {
       const preview = new mxPrintPreview(editor.graph, 1);
       preview.open();
     });
 
-    this.addAction('show', editor => {
+    this.addAction('show', (editor) => {
       mxUtils.show(editor.graph, null, 10, 10);
     });
 
-    this.addAction('exportImage', editor => {
+    this.addAction('exportImage', (editor) => {
       const url = editor.getUrlImage();
 
       if (url == null || mxClient.IS_LOCAL) {
@@ -1006,77 +1019,77 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('refresh', editor => {
+    this.addAction('refresh', (editor) => {
       editor.graph.refresh();
     });
 
-    this.addAction('cut', editor => {
+    this.addAction('cut', (editor) => {
       if (editor.graph.isEnabled()) {
         mxClipboard.cut(editor.graph);
       }
     });
 
-    this.addAction('copy', editor => {
+    this.addAction('copy', (editor) => {
       if (editor.graph.isEnabled()) {
         mxClipboard.copy(editor.graph);
       }
     });
 
-    this.addAction('paste', editor => {
+    this.addAction('paste', (editor) => {
       if (editor.graph.isEnabled()) {
         mxClipboard.paste(editor.graph);
       }
     });
 
-    this.addAction('delete', editor => {
+    this.addAction('delete', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.removeCells();
       }
     });
 
-    this.addAction('group', editor => {
+    this.addAction('group', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setSelectionCell(editor.groupCells());
       }
     });
 
-    this.addAction('ungroup', editor => {
+    this.addAction('ungroup', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.setSelectionCells(editor.graph.ungroupCells());
       }
     });
 
-    this.addAction('removeFromParent', editor => {
+    this.addAction('removeFromParent', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.removeCellsFromParent();
       }
     });
 
-    this.addAction('undo', editor => {
+    this.addAction('undo', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.undo();
       }
     });
 
-    this.addAction('redo', editor => {
+    this.addAction('redo', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.redo();
       }
     });
 
-    this.addAction('zoomIn', editor => {
+    this.addAction('zoomIn', (editor) => {
       editor.graph.zoomIn();
     });
 
-    this.addAction('zoomOut', editor => {
+    this.addAction('zoomOut', (editor) => {
       editor.graph.zoomOut();
     });
 
-    this.addAction('actualSize', editor => {
+    this.addAction('actualSize', (editor) => {
       editor.graph.zoomActual();
     });
 
-    this.addAction('fit', editor => {
+    this.addAction('fit', (editor) => {
       editor.graph.fit();
     });
 
@@ -1084,25 +1097,25 @@ class mxEditor extends mxEventSource {
       editor.showProperties(cell);
     });
 
-    this.addAction('selectAll', editor => {
+    this.addAction('selectAll', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectAll();
       }
     });
 
-    this.addAction('selectNone', editor => {
+    this.addAction('selectNone', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.clearSelection();
       }
     });
 
-    this.addAction('selectVertices', editor => {
+    this.addAction('selectVertices', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectVertices();
       }
     });
 
-    this.addAction('selectEdges', editor => {
+    this.addAction('selectEdges', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectEdges();
       }
@@ -1130,180 +1143,153 @@ class mxEditor extends mxEventSource {
       editor.graph.enterGroup(cell);
     });
 
-    this.addAction('exitGroup', editor => {
+    this.addAction('exitGroup', (editor) => {
       editor.graph.exitGroup();
     });
 
-    this.addAction('home', editor => {
+    this.addAction('home', (editor) => {
       editor.graph.home();
     });
 
-    this.addAction('selectPrevious', editor => {
+    this.addAction('selectPrevious', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectPreviousCell();
       }
     });
 
-    this.addAction('selectNext', editor => {
+    this.addAction('selectNext', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectNextCell();
       }
     });
 
-    this.addAction('selectParent', editor => {
+    this.addAction('selectParent', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectParentCell();
       }
     });
 
-    this.addAction('selectChild', editor => {
+    this.addAction('selectChild', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.selectChildCell();
       }
     });
 
-    this.addAction('collapse', editor => {
+    this.addAction('collapse', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.foldCells(true);
       }
     });
 
-    this.addAction('collapseAll', editor => {
+    this.addAction('collapseAll', (editor) => {
       if (editor.graph.isEnabled()) {
         const cells = editor.graph.getChildVertices();
         editor.graph.foldCells(true, false, cells);
       }
     });
 
-    this.addAction('expand', editor => {
+    this.addAction('expand', (editor) => {
       if (editor.graph.isEnabled()) {
         editor.graph.foldCells(false);
       }
     });
 
-    this.addAction('expandAll', editor => {
+    this.addAction('expandAll', (editor) => {
       if (editor.graph.isEnabled()) {
         const cells = editor.graph.getChildVertices();
         editor.graph.foldCells(false, false, cells);
       }
     });
 
-    this.addAction('bold', editor => {
+    this.addAction('bold', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.toggleCellStyleFlags(
-          mxConstants.STYLE_FONTSTYLE,
-          mxConstants.FONT_BOLD
-        );
+        editor.graph.toggleCellStyleFlags(STYLE_FONTSTYLE, FONT_BOLD);
       }
     });
 
-    this.addAction('italic', editor => {
+    this.addAction('italic', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.toggleCellStyleFlags(
-          mxConstants.STYLE_FONTSTYLE,
-          mxConstants.FONT_ITALIC
-        );
+        editor.graph.toggleCellStyleFlags(STYLE_FONTSTYLE, FONT_ITALIC);
       }
     });
 
-    this.addAction('underline', editor => {
+    this.addAction('underline', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.toggleCellStyleFlags(
-          mxConstants.STYLE_FONTSTYLE,
-          mxConstants.FONT_UNDERLINE
-        );
+        editor.graph.toggleCellStyleFlags(STYLE_FONTSTYLE, FONT_UNDERLINE);
       }
     });
 
-    this.addAction('alignCellsLeft', editor => {
+    this.addAction('alignCellsLeft', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.alignCells(mxConstants.ALIGN_LEFT);
+        editor.graph.alignCells(ALIGN_LEFT);
       }
     });
 
-    this.addAction('alignCellsCenter', editor => {
+    this.addAction('alignCellsCenter', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.alignCells(mxConstants.ALIGN_CENTER);
+        editor.graph.alignCells(ALIGN_CENTER);
       }
     });
 
-    this.addAction('alignCellsRight', editor => {
+    this.addAction('alignCellsRight', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.alignCells(mxConstants.ALIGN_RIGHT);
+        editor.graph.alignCells(ALIGN_RIGHT);
       }
     });
 
-    this.addAction('alignCellsTop', editor => {
+    this.addAction('alignCellsTop', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.alignCells(mxConstants.ALIGN_TOP);
+        editor.graph.alignCells(ALIGN_TOP);
       }
     });
 
-    this.addAction('alignCellsMiddle', editor => {
+    this.addAction('alignCellsMiddle', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.alignCells(mxConstants.ALIGN_MIDDLE);
+        editor.graph.alignCells(ALIGN_MIDDLE);
       }
     });
 
-    this.addAction('alignCellsBottom', editor => {
+    this.addAction('alignCellsBottom', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.alignCells(mxConstants.ALIGN_BOTTOM);
+        editor.graph.alignCells(ALIGN_BOTTOM);
       }
     });
 
-    this.addAction('alignFontLeft', editor => {
-      editor.graph.setCellStyles(
-        mxConstants.STYLE_ALIGN,
-        mxConstants.ALIGN_LEFT
-      );
+    this.addAction('alignFontLeft', (editor) => {
+      editor.graph.setCellStyles(STYLE_ALIGN, ALIGN_LEFT);
     });
 
-    this.addAction('alignFontCenter', editor => {
+    this.addAction('alignFontCenter', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(
-          mxConstants.STYLE_ALIGN,
-          mxConstants.ALIGN_CENTER
-        );
+        editor.graph.setCellStyles(STYLE_ALIGN, ALIGN_CENTER);
       }
     });
 
-    this.addAction('alignFontRight', editor => {
+    this.addAction('alignFontRight', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(
-          mxConstants.STYLE_ALIGN,
-          mxConstants.ALIGN_RIGHT
-        );
+        editor.graph.setCellStyles(STYLE_ALIGN, ALIGN_RIGHT);
       }
     });
 
-    this.addAction('alignFontTop', editor => {
+    this.addAction('alignFontTop', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(
-          mxConstants.STYLE_VERTICAL_ALIGN,
-          mxConstants.ALIGN_TOP
-        );
+        editor.graph.setCellStyles(STYLE_VERTICAL_ALIGN, ALIGN_TOP);
       }
     });
 
-    this.addAction('alignFontMiddle', editor => {
+    this.addAction('alignFontMiddle', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(
-          mxConstants.STYLE_VERTICAL_ALIGN,
-          mxConstants.ALIGN_MIDDLE
-        );
+        editor.graph.setCellStyles(STYLE_VERTICAL_ALIGN, ALIGN_MIDDLE);
       }
     });
 
-    this.addAction('alignFontBottom', editor => {
+    this.addAction('alignFontBottom', (editor) => {
       if (editor.graph.isEnabled()) {
-        editor.graph.setCellStyles(
-          mxConstants.STYLE_VERTICAL_ALIGN,
-          mxConstants.ALIGN_BOTTOM
-        );
+        editor.graph.setCellStyles(STYLE_VERTICAL_ALIGN, ALIGN_BOTTOM);
       }
     });
 
-    this.addAction('zoom', editor => {
+    this.addAction('zoom', (editor) => {
       const current = editor.graph.getView().scale * 100;
       const scale =
         parseFloat(
@@ -1318,7 +1304,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleTasks', editor => {
+    this.addAction('toggleTasks', (editor) => {
       if (editor.tasks != null) {
         editor.tasks.setVisible(!editor.tasks.isVisible());
       } else {
@@ -1326,7 +1312,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleHelp', editor => {
+    this.addAction('toggleHelp', (editor) => {
       if (editor.help != null) {
         editor.help.setVisible(!editor.help.isVisible());
       } else {
@@ -1334,7 +1320,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleOutline', editor => {
+    this.addAction('toggleOutline', (editor) => {
       if (editor.outline == null) {
         editor.showOutline();
       } else {
@@ -1342,7 +1328,7 @@ class mxEditor extends mxEventSource {
       }
     });
 
-    this.addAction('toggleConsole', editor => {
+    this.addAction('toggleConsole', (editor) => {
       mxLog.setVisible(!mxLog.isVisible());
     });
   }
@@ -1529,9 +1515,9 @@ class mxEditor extends mxEventSource {
   createSwimlaneManager(graph) {
     const swimlaneMgr = new mxSwimlaneManager(graph, false);
 
-    swimlaneMgr.isHorizontal = mxUtils.bind(this, () => {
+    swimlaneMgr.isHorizontal = () => {
       return this.horizontalFlow;
-    });
+    };
 
     swimlaneMgr.isEnabled = () => {
       return this.maintainSwimlanes;
@@ -1551,7 +1537,7 @@ class mxEditor extends mxEventSource {
     const layoutMgr = new mxLayoutManager(graph);
 
     const self = this; // closure
-    layoutMgr.getLayout = cell => {
+    layoutMgr.getLayout = (cell) => {
       let layout = null;
       const model = self.graph.getModel();
 
@@ -1572,8 +1558,7 @@ class mxEditor extends mxEventSource {
         // lazy created in createDiagramLayout.
         else if (
           self.layoutDiagram &&
-          (graph.isValidRoot(cell) ||
-            cell.getParent().getParent() == null)
+          (graph.isValidRoot(cell) || cell.getParent().getParent() == null)
         ) {
           if (self.diagramLayout == null) {
             self.diagramLayout = self.createDiagramLayout();
@@ -1619,17 +1604,14 @@ class mxEditor extends mxEventSource {
   // installDblClickHandler(graph: any): void;
   installDblClickHandler(graph) {
     // Installs a listener for double click events
-    graph.addListener(
-      mxEvent.DOUBLE_CLICK,
-      mxUtils.bind(this, (sender, evt) => {
-        const cell = evt.getProperty('cell');
+    graph.addListener(mxEvent.DOUBLE_CLICK, (sender, evt) => {
+      const cell = evt.getProperty('cell');
 
-        if (cell != null && graph.isEnabled() && this.dblClickAction != null) {
-          this.execute(this.dblClickAction, cell);
-          evt.consume();
-        }
-      })
-    );
+      if (cell != null && graph.isEnabled() && this.dblClickAction != null) {
+        this.execute(this.dblClickAction, cell);
+        evt.consume();
+      }
+    });
   }
 
   /**
@@ -1662,9 +1644,9 @@ class mxEditor extends mxEventSource {
    */
   // installDrillHandler(graph: any): void;
   installDrillHandler(graph) {
-    const listener = mxUtils.bind(this, sender => {
+    const listener = (sender) => {
       this.fireEvent(new mxEventObject(mxEvent.ROOT));
-    });
+    };
 
     graph.getView().addListener(mxEvent.DOWN, listener);
     graph.getView().addListener(mxEvent.UP, listener);
@@ -1768,7 +1750,7 @@ class mxEditor extends mxEventSource {
     );
 
     // Overrides isIgnored to only take into account swimlanes
-    layout.isVertexIgnored = cell => {
+    layout.isVertexIgnored = (cell) => {
       return !layout.graph.isSwimlane(cell);
     };
 
@@ -1817,23 +1799,23 @@ class mxEditor extends mxEventSource {
 
       // Prints the last saved time in the status bar
       // when files are saved
-      this.addListener(
-        mxEvent.SAVE,
-        mxUtils.bind(this, () => {
-          const tstamp = new Date().toLocaleString();
-          this.setStatus(
-            `${mxResources.get(this.lastSavedResource) ||
-              this.lastSavedResource}: ${tstamp}`
-          );
-        })
-      );
+      this.addListener(mxEvent.SAVE, () => {
+        const tstamp = new Date().toLocaleString();
+        this.setStatus(
+          `${
+            mxResources.get(this.lastSavedResource) || this.lastSavedResource
+          }: ${tstamp}`
+        );
+      });
 
       // Updates the statusbar to display the filename
       // when new files are opened
       this.addListener(mxEvent.OPEN, () => {
         this.setStatus(
-          `${mxResources.get(this.currentFileResource) ||
-            this.currentFileResource}: ${this.filename}`
+          `${
+            mxResources.get(this.currentFileResource) ||
+            this.currentFileResource
+          }: ${this.filename}`
         );
       });
     }
@@ -1857,12 +1839,9 @@ class mxEditor extends mxEventSource {
    */
   // setTitleContainer(container: any): void;
   setTitleContainer(container) {
-    this.addListener(
-      mxEvent.ROOT,
-      mxUtils.bind(this, sender => {
-        container.innerHTML = this.getTitle();
-      })
-    );
+    this.addListener(mxEvent.ROOT, (sender) => {
+      container.innerHTML = this.getTitle();
+    });
   }
 
   /**
@@ -1890,10 +1869,7 @@ class mxEditor extends mxEventSource {
     const { graph } = this;
     let cell = graph.getCurrentRoot();
 
-    while (
-      cell != null &&
-      cell.getParent().getParent() != null
-    ) {
+    while (cell != null && cell.getParent().getParent() != null) {
       // Append each label of a valid root
       if (graph.isValidRoot(cell)) {
         title = ` > ${graph.convertValueToString(cell)}${title}`;
@@ -2068,7 +2044,7 @@ class mxEditor extends mxEventSource {
       data = encodeURIComponent(data);
     }
 
-    mxUtils.post(url, `${this.postParameterName}=${data}`, req => {
+    mxUtils.post(url, `${this.postParameterName}=${data}`, (req) => {
       this.fireEvent(
         new mxEventObject(
           mxEvent.POST,
@@ -2286,7 +2262,7 @@ class mxEditor extends mxEventSource {
 
       // Defines the function to be executed when the
       // OK button is pressed in the dialog
-      const okFunction = mxUtils.bind(this, () => {
+      const okFunction = () => {
         // Hides the dialog
         this.hideProperties();
 
@@ -2335,7 +2311,7 @@ class mxEditor extends mxEventSource {
         } finally {
           model.endUpdate();
         }
-      });
+      };
 
       // Defines the function to be executed when the
       // Cancel button is pressed in the dialog
@@ -2404,11 +2380,11 @@ class mxEditor extends mxEventSource {
       // Installs a function to update the contents
       // of the tasks window on every change of the
       // model, selection or root.
-      const funct = mxUtils.bind(this, sender => {
+      const funct = (sender) => {
         mxEvent.release(div);
         div.innerHTML = '';
         this.createTasks(div);
-      });
+      };
 
       this.graph.getModel().addListener(mxEvent.CHANGE, funct);
       this.graph.getSelectionModel().addListener(mxEvent.CHANGE, funct);
@@ -2494,7 +2470,7 @@ class mxEditor extends mxEventSource {
 
       // Workaround for ignored iframe height 100% in FF
       if (mxClient.IS_NS) {
-        const handler = sender => {
+        const handler = (sender) => {
           const h = wnd.div.offsetHeight;
           frame.setAttribute('height', `${h - 26}px`);
         };

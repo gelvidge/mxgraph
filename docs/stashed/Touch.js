@@ -356,7 +356,7 @@ export default Touch;
 
         // Only show connector image on one cell and do not show on containers
         if (this.graph.connectionHandler.isEnabled() &&
-          this.graph.isCellConnectable(this.state.cell) &&
+          this.state.cell.isConnectable() &&
           this.graph.getSelectionCount() == 1)
         {
           this.connectorImg = mxUtils.createImage(connectorSrc);

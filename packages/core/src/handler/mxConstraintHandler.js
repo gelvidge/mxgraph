@@ -6,7 +6,14 @@
  */
 import mxImage from '../util/image/mxImage';
 import mxClient from '../mxClient';
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_VALID_COLOR,
+  DIALECT_MIXEDHTML,
+  DIALECT_SVG,
+  HIGHLIGHT_OPACITY,
+  HIGHLIGHT_SIZE,
+  HIGHLIGHT_STROKEWIDTH,
+} from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxUtils from '../util/mxUtils';
 import mxRectangle from '../util/datatypes/mxRectangle';
@@ -63,10 +70,10 @@ class mxConstraintHandler {
   enabled = true;
 
   /**
-   * Specifies the color for the highlight. Default is {@link mxConstants.DEFAULT_VALID_COLOR}.
+   * Specifies the color for the highlight. Default is {@link DEFAULT_VALID_COLOR}.
    */
   // highlightColor: string;
-  highlightColor = mxConstants.DEFAULT_VALID_COLOR;
+  highlightColor = DEFAULT_VALID_COLOR;
 
   /**
    * Returns true if events are handled. This implementation
@@ -205,18 +212,19 @@ class mxConstraintHandler {
     }
 
     // Uses connectable parent vertex if one exists
-    if (cell != null && !this.graph.isCellConnectable(cell)) {
-      const parent = this.cell.getParent();
+    if (cell != null && !cell.isConnectable()) {
+      const parent = cell.getParent();
 
-      if (
-        parent.isVertex() &&
-        this.graph.isCellConnectable(parent)
-      ) {
+      if (parent.isVertex() && parent.isConnectable()) {
         cell = parent;
       }
     }
 
-    return this.graph.isCellLocked(cell) ? null : cell;
+    if (cell) {
+      return this.graph.isCellLocked(cell) ? null : cell;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -228,9 +236,9 @@ class mxConstraintHandler {
     if (this.isEnabled() && !this.isEventIgnored(me)) {
       // Lazy installation of mouseleave handler
       if (this.mouseleaveHandler == null && this.graph.container != null) {
-        this.mouseleaveHandler = mxUtils.bind(this, () => {
+        this.mouseleaveHandler = () => {
           this.reset();
-        });
+        };
 
         mxEvent.addListener(
           this.graph.container,
@@ -301,13 +309,13 @@ class mxConstraintHandler {
             minDistSq = tmp;
 
             tmp = this.focusIcons[i].bounds.clone();
-            tmp.grow(mxConstants.HIGHLIGHT_SIZE + 1);
+            tmp.grow(HIGHLIGHT_SIZE + 1);
             tmp.width -= 1;
             tmp.height -= 1;
 
             if (this.focusHighlight == null) {
               const hl = this.createHighlightShape();
-              hl.dialect = mxConstants.DIALECT_SVG;
+              hl.dialect = DIALECT_SVG;
               hl.pointerEvents = false;
 
               hl.init(this.graph.getView().getOverlayPane());
@@ -385,7 +393,7 @@ class mxConstraintHandler {
     this.constraints =
       state != null &&
       !this.isStateIgnored(state, source) &&
-      this.graph.isCellConnectable(state.cell)
+      state.cell.isConnectable()
         ? this.isEnabled()
           ? this.graph.getAllConnectionConstraints(state, source) || []
           : []
@@ -426,9 +434,7 @@ class mxConstraintHandler {
         );
         const icon = new mxImageShape(bounds, src);
         icon.dialect =
-          this.graph.dialect !== mxConstants.DIALECT_SVG
-            ? mxConstants.DIALECT_MIXEDHTML
-            : mxConstants.DIALECT_SVG;
+          this.graph.dialect !== DIALECT_SVG ? DIALECT_MIXEDHTML : DIALECT_SVG;
         icon.preserveImageAspect = false;
         icon.init(this.graph.getView().getDecoratorPane());
 
@@ -440,9 +446,9 @@ class mxConstraintHandler {
           );
         }
 
-        const getState = mxUtils.bind(this, () => {
+        const getState = () => {
           return this.currentFocus != null ? this.currentFocus : state;
-        });
+        };
 
         icon.redraw();
 
@@ -470,9 +476,9 @@ class mxConstraintHandler {
       null,
       this.highlightColor,
       this.highlightColor,
-      mxConstants.HIGHLIGHT_STROKEWIDTH
+      HIGHLIGHT_STROKEWIDTH
     );
-    hl.opacity = mxConstants.HIGHLIGHT_OPACITY;
+    hl.opacity = HIGHLIGHT_OPACITY;
 
     return hl;
   }

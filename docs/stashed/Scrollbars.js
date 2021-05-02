@@ -205,7 +205,7 @@ export default Scrollbars;
         // Overrides connectable state
         graph.isCellConnectable = function(cell)
         {
-          return !this.isCellCollapsed(cell);
+          return !cell.isCollapsed();
         };
 
         // Enables HTML markup in all labels
@@ -371,7 +371,7 @@ export default Scrollbars;
         {
           if (cell.isVertex())
           {
-            if (this.isCellCollapsed(cell))
+            if (cell.isCollapsed())
             {
               return '<table style="overflow:hidden;" width="100%" height="100%" border="1" cellpadding="4" class="title" style="height:100%;">' +
                 '<tr><th>Customers</th></tr>' +
@@ -473,7 +473,7 @@ export default Scrollbars;
       {
         y = start.getCenterY() - div.scrollTop;
 
-        if (mxUtils.isNode(edge.cell.value) && !this.graph.isCellCollapsed(start.cell))
+        if (mxUtils.isNode(edge.cell.value) && !start.cell.isCollapsed())
         {
           let attr = (source) ? 'sourceRow' : 'targetRow';
           let row = parseInt(edge.cell.value.getAttribute(attr));

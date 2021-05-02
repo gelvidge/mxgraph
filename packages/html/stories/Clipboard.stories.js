@@ -156,7 +156,7 @@ const Template = ({ label, ...args }) => {
   mxEvent.addListener(
     textInput,
     'copy',
-    mxUtils.bind(this, function(evt) {
+    (evt) => {
       if (graph.isEnabled() && !graph.isSelectionEmpty()) {
         copyCells(
           graph,
@@ -167,20 +167,20 @@ const Template = ({ label, ...args }) => {
         dx = 0;
         dy = 0;
       }
-    })
+    }
   );
 
   // Handles cut event by removing cells putting XML into text input
   mxEvent.addListener(
     textInput,
     'cut',
-    mxUtils.bind(this, function(evt) {
+    (evt) => {
       if (graph.isEnabled() && !graph.isSelectionEmpty()) {
         copyCells(graph, graph.removeCells());
         dx = -gs;
         dy = -gs;
       }
-    })
+    }
   );
 
   // Merges XML into existing graph and layers
@@ -282,15 +282,13 @@ const Template = ({ label, ...args }) => {
 
       if (provider != null) {
         data =
-          mxUtils.indexOf(provider.types, 'text/html') >= 0
+          provider.types.indexOf('text/html') >= 0
             ? provider.getData('text/html')
             : null;
 
         if (
-          mxUtils.indexOf(
-            provider.types,
-            'text/plain' && (data == null || data.length === 0)
-          )
+          provider.types.indexOf('text/plain')
+          && (data == null || data.length === 0)
         ) {
           data = provider.getData('text/plain');
         }
@@ -315,9 +313,9 @@ const Template = ({ label, ...args }) => {
       } else {
         // Timeout for new value to appear
         window.setTimeout(
-          mxUtils.bind(this, function() {
+          () => {
             pasteText(textInput.value);
-          }),
+          },
           0
         );
       }

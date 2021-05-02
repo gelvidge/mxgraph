@@ -6,14 +6,32 @@
  */
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
-import mxConstants from '../util/mxConstants';
+import {
+  DIRECTION_EAST,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+  LINE_ARCSIZE,
+  NONE,
+  RECTANGLE_ROUNDING_FACTOR,
+  SHADOW_OFFSET_X,
+  SHADOW_OFFSET_Y,
+  STYLE_ABSOLUTE_ARCSIZE,
+  STYLE_ARCSIZE,
+  STYLE_BACKGROUND_OUTLINE,
+  STYLE_DIRECTION,
+  STYLE_FIX_DASH,
+  STYLE_FLIPH,
+  STYLE_FLIPV,
+  STYLE_HORIZONTAL,
+} from '../util/mxConstants';
 import mxPoint from '../util/datatypes/mxPoint';
 import mxSvgCanvas2D from '../util/canvas/mxSvgCanvas2D';
 import mxEvent from '../util/event/mxEvent';
 import mxClient from '../mxClient';
 import mxCellState from '../view/cell/mxCellState';
 import mxStencil from './node/mxStencil';
-import mxCellOverlay from "../view/cell/mxCellOverlay";
+import mxCellOverlay from '../view/cell/mxCellOverlay';
 
 const toBool = (i: any): boolean => {
   if (i === 0) return false;
@@ -69,7 +87,7 @@ const toBool = (i: any): boolean => {
  * ```
  */
 class mxShape {
-  constructor(stencil: mxStencil | null=null) {
+  constructor(stencil: mxStencil | null = null) {
     if (stencil) {
       this.stencil = stencil;
     }
@@ -115,14 +133,14 @@ class mxShape {
   // TODO: Document me!!
 
   // Assigned in mxCellRenderer
-  preserveImageAspect: boolean=false;
-  overlay: mxCellOverlay | null=null;
-  indicator: mxShape | null=null;
-  indicatorShape: typeof mxShape | null=null;
+  preserveImageAspect: boolean = false;
+  overlay: mxCellOverlay | null = null;
+  indicator: mxShape | null = null;
+  indicatorShape: typeof mxShape | null = null;
 
   // Assigned in mxCellHighlight
-  opacity: number=100;
-  isDashed: boolean=false;
+  opacity: number = 100;
+  isDashed: boolean = false;
 
   fill: string | null = null;
 
@@ -371,7 +389,7 @@ class mxShape {
    */
   // create(container: Element): Element;
   create(container: SVGElement | HTMLElement | null): SVGGElement {
-    return document.createElementNS("http://www.w3.org/2000/svg", "g");
+    return document.createElementNS('http://www.w3.org/2000/svg', 'g');
   }
 
   /**
@@ -455,17 +473,13 @@ class mxShape {
    */
   // getLabelBounds(rect: mxRectangle): mxRectangle;
   getLabelBounds(rect: mxRectangle): mxRectangle {
-    const d = mxUtils.getValue(
-      this.style,
-      mxConstants.STYLE_DIRECTION,
-      mxConstants.DIRECTION_EAST
-    );
+    const d = mxUtils.getValue(this.style, STYLE_DIRECTION, DIRECTION_EAST);
     let bounds = rect.clone();
 
     // Normalizes argument for getLabelMargins hook
     if (
-      d !== mxConstants.DIRECTION_SOUTH &&
-      d !== mxConstants.DIRECTION_NORTH &&
+      d !== DIRECTION_SOUTH &&
+      d !== DIRECTION_NORTH &&
       this.state != null &&
       this.state.text != null &&
       this.state.text.isPaintBoundsInverted()
@@ -479,12 +493,8 @@ class mxShape {
     if (labelMargins != null) {
       labelMargins = <mxRectangle>(<mxRectangle>labelMargins).clone();
 
-      let flipH = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, false)
-      );
-      let flipV = toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, false)
-      );
+      let flipH = toBool(mxUtils.getValue(this.style, STYLE_FLIPH, false));
+      let flipV = toBool(mxUtils.getValue(this.style, STYLE_FLIPV, false));
 
       // Handles special case for vertical labels
       if (
@@ -612,7 +622,10 @@ class mxShape {
     const off = this.getSvgScreenOffset();
 
     if (off !== 0) {
-      (<SVGGElement>this.node).setAttribute('transform', `translate(${off},${off})`);
+      (<SVGGElement>this.node).setAttribute(
+        'transform',
+        `translate(${off},${off})`
+      );
     } else {
       (<SVGGElement>this.node).removeAttribute('transform');
     }
@@ -621,7 +634,7 @@ class mxShape {
 
     if (!this.antiAlias) {
       // Rounds all numbers in the SVG output to integers
-      canvas.format = value => {
+      canvas.format = (value) => {
         return Math.round(parseFloat(value));
       };
     }
@@ -718,12 +731,7 @@ class mxShape {
       (this.stencil != null && this.stencilPointerEvents)
     ) {
       const bb = this.createBoundingBox();
-      bg = this.createTransparentSvgRectangle(
-        bb.x,
-        bb.y,
-        bb.width,
-        bb.height
-      );
+      bg = this.createTransparentSvgRectangle(bb.x, bb.y, bb.width, bb.height);
       (<SVGGElement>this.node).appendChild(bg);
     }
 
@@ -766,11 +774,13 @@ class mxShape {
    * Sets the state of the canvas for drawing the shape.
    */
   // configureCanvas(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  configureCanvas(c: mxSvgCanvas2D,
-                  x: number,
-                  y: number,
-                  w: number,
-                  h: number) {
+  configureCanvas(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {
     let dash = null;
 
     if (this.style != null) {
@@ -791,9 +801,7 @@ class mxShape {
       c.setDashed(
         this.isDashed,
         this.style != null
-          ? toBool(
-              mxUtils.getValue(this.style, mxConstants.STYLE_FIX_DASH, false)
-            )
+          ? toBool(mxUtils.getValue(this.style, STYLE_FIX_DASH, false))
           : false
       );
     }
@@ -804,9 +812,9 @@ class mxShape {
 
     if (
       this.fill != null &&
-      this.fill !== mxConstants.NONE &&
+      this.fill !== NONE &&
       this.gradient &&
-      this.gradient !== mxConstants.NONE
+      this.gradient !== NONE
     ) {
       const b = this.getGradientBounds(c, x, y, w, h);
       c.setGradient(
@@ -831,11 +839,13 @@ class mxShape {
    * Returns the bounding box for the gradient box for this shape.
    */
   // getGradientBounds(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): mxRectangle;
-  getGradientBounds(c: mxSvgCanvas2D,
-                    x: number,
-                    y: number,
-                    w: number,
-                    h: number) {
+  getGradientBounds(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {
     return new mxRectangle(x, y, w, h);
   }
 
@@ -845,11 +855,13 @@ class mxShape {
    * Sets the scale and rotation on the given canvas.
    */
   // updateTransform(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  updateTransform(c: mxSvgCanvas2D,
-                  x: number,
-                  y: number,
-                  w: number,
-                  h: number) {
+  updateTransform(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {
     // NOTE: Currently, scale is implemented in state and canvas. This will
     // move to canvas in a later version, so that the states are unscaled
     // and untranslated and do not need an update after zooming or panning.
@@ -869,22 +881,20 @@ class mxShape {
    * Paints the vertex shape.
    */
   // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintVertexShape(c: mxSvgCanvas2D,
-                   x: number,
-                   y: number,
-                   w: number,
-                   h: number) {
+  paintVertexShape(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {
     this.paintBackground(c, x, y, w, h);
 
     if (
       !this.outline ||
       this.style == null ||
       toBool(
-        mxUtils.getValue(
-          this.style,
-          mxConstants.STYLE_BACKGROUND_OUTLINE,
-          0
-        ) === false
+        mxUtils.getValue(this.style, STYLE_BACKGROUND_OUTLINE, 0) === false
       )
     ) {
       c.setShadow(false);
@@ -898,21 +908,25 @@ class mxShape {
    * Hook for subclassers. This implementation is empty.
    */
   // paintBackground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintBackground(c: mxSvgCanvas2D,
-                  x: number,
-                  y: number,
-                  w: number,
-                  h: number) {}
+  paintBackground(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {}
 
   /**
    * Hook for subclassers. This implementation is empty.
    */
   // paintForeground(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
-  paintForeground(c: mxSvgCanvas2D,
-                  x: number,
-                  y: number,
-                  w: number,
-                  h: number) {}
+  paintForeground(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ) {}
 
   /**
    * Function: paintEdgeShape
@@ -920,8 +934,7 @@ class mxShape {
    * Hook for subclassers. This implementation is empty.
    */
   // paintEdgeShape(c: mxAbstractCanvas2D, pts: mxPoint[]): void;
-  paintEdgeShape(c: mxSvgCanvas2D,
-                 pts: mxPoint[]): void {}
+  paintEdgeShape(c: mxSvgCanvas2D, pts: mxPoint[]): void {}
 
   /**
    * Function: getArcSize
@@ -932,20 +945,12 @@ class mxShape {
   getArcSize(w: number, h: number): number {
     let r = 0;
 
-    if (
-      toBool(
-        mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0)
-      )
-    ) {
+    if (toBool(mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0))) {
       r = Math.min(
         w / 2,
         Math.min(
           h / 2,
-          mxUtils.getValue(
-            this.style,
-            mxConstants.STYLE_ARCSIZE,
-            mxConstants.LINE_ARCSIZE
-          ) / 2
+          mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
         )
       );
     } else {
@@ -953,8 +958,8 @@ class mxShape {
         String(
           mxUtils.getValue(
             this.style,
-            mxConstants.STYLE_ARCSIZE,
-            mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
+            STYLE_ARCSIZE,
+            RECTANGLE_ROUNDING_FACTOR * 100
           ) / 100
         )
       );
@@ -969,12 +974,14 @@ class mxShape {
    * Paints the glass gradient effect.
    */
   // paintGlassEffect(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number, arc: number): void;
-  paintGlassEffect(c: mxSvgCanvas2D,
-                   x: number,
-                   y: number,
-                   w: number,
-                   h: number,
-                   arc: number): void {
+  paintGlassEffect(
+    c: mxSvgCanvas2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    arc: number
+  ): void {
     const sw = Math.ceil(<number>this.strokewidth / 2);
     const size = 0.4;
 
@@ -1005,14 +1012,15 @@ class mxShape {
    *
    * Paints the given points with rounded corners.
    */
-  addPoints(c: mxSvgCanvas2D,
-            pts: mxPoint[] | null=null,
-            rounded: boolean=false,
-            arcSize: number,
-            close: boolean=false,
-            exclude: number[] | null=null,
-            initialMove: boolean=true) {
-
+  addPoints(
+    c: mxSvgCanvas2D,
+    pts: mxPoint[] | null = null,
+    rounded: boolean = false,
+    arcSize: number,
+    close: boolean = false,
+    exclude: number[] | null = null,
+    initialMove: boolean = true
+  ) {
     if (pts != null && pts.length > 0) {
       const pe = pts[pts.length - 1];
 
@@ -1045,7 +1053,7 @@ class mxShape {
         if (
           rounded &&
           (dx !== 0 || dy !== 0) &&
-          (exclude == null || mxUtils.indexOf(exclude, i - 1) < 0)
+          (exclude == null || exclude.indexOf(i - 1) < 0)
         ) {
           // Draws a line from the last point to the current
           // point with a spacing of size off the current point
@@ -1218,8 +1226,8 @@ class mxShape {
       }
 
       if (
-        this.direction === mxConstants.DIRECTION_NORTH ||
-        this.direction === mxConstants.DIRECTION_SOUTH
+        this.direction === DIRECTION_NORTH ||
+        this.direction === DIRECTION_SOUTH
       ) {
         const tmp = this.flipH;
         this.flipH = this.flipV;
@@ -1233,13 +1241,13 @@ class mxShape {
       );
       this.glass = toBool(ifNotNullElse(this.style.glass, this.glass));
 
-      if (this.fill === mxConstants.NONE) {
+      if (this.fill === NONE) {
         this.fill = null;
       }
-      if (this.gradient === mxConstants.NONE) {
+      if (this.gradient === NONE) {
         this.gradient = null;
       }
-      if (this.stroke === mxConstants.NONE) {
+      if (this.stroke === NONE) {
         this.stroke = null;
       }
     }
@@ -1346,8 +1354,8 @@ class mxShape {
     const bb = (<mxRectangle>this.bounds).clone();
     if (
       (this.stencil != null &&
-        (this.direction === mxConstants.DIRECTION_NORTH ||
-          this.direction === mxConstants.DIRECTION_SOUTH)) ||
+        (this.direction === DIRECTION_NORTH ||
+          this.direction === DIRECTION_SOUTH)) ||
       this.isPaintBoundsInverted()
     ) {
       bb.rotate90();
@@ -1361,8 +1369,8 @@ class mxShape {
   // augmentBoundingBox(bbox: mxRectangle): void;
   augmentBoundingBox(bbox: mxRectangle): void {
     if (this.isShadow) {
-      bbox.width += Math.ceil(mxConstants.SHADOW_OFFSET_X * this.scale);
-      bbox.height += Math.ceil(mxConstants.SHADOW_OFFSET_Y * this.scale);
+      bbox.width += Math.ceil(SHADOW_OFFSET_X * this.scale);
+      bbox.height += Math.ceil(SHADOW_OFFSET_Y * this.scale);
     }
     // Adds strokeWidth
     bbox.grow((<number>this.strokewidth * this.scale) / 2);
@@ -1378,8 +1386,7 @@ class mxShape {
     // Stencil implements inversion via aspect
     return (
       this.stencil == null &&
-      (this.direction === mxConstants.DIRECTION_NORTH ||
-        this.direction === mxConstants.DIRECTION_SOUTH)
+      (this.direction === DIRECTION_NORTH || this.direction === DIRECTION_SOUTH)
     );
   }
 
@@ -1401,9 +1408,7 @@ class mxShape {
   // getTextRotation(): number;
   getTextRotation(): number {
     let rot = this.getRotation();
-    if (
-      !toBool(mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1))
-    ) {
+    if (!toBool(mxUtils.getValue(this.style, STYLE_HORIZONTAL, 1))) {
       rot += this.verticalTextRotation || -90; // WARNING WARNING!!!! ===============================================================================================
     }
     return rot;
@@ -1418,11 +1423,11 @@ class mxShape {
   getShapeRotation(): number {
     let rot = this.getRotation();
     if (this.direction != null) {
-      if (this.direction === mxConstants.DIRECTION_NORTH) {
+      if (this.direction === DIRECTION_NORTH) {
         rot += 270;
-      } else if (this.direction === mxConstants.DIRECTION_WEST) {
+      } else if (this.direction === DIRECTION_WEST) {
         rot += 180;
-      } else if (this.direction === mxConstants.DIRECTION_SOUTH) {
+      } else if (this.direction === DIRECTION_SOUTH) {
         rot += 90;
       }
     }
@@ -1435,12 +1440,13 @@ class mxShape {
    * Adds a transparent rectangle that catches all events.
    */
   // createTransparentSvgRectangle(x: number, y: number, w: number, h: number): Element;
-  createTransparentSvgRectangle(x: number,
-                                y: number,
-                                w: number,
-                                h: number): SVGElement {
-
-    const rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+  createTransparentSvgRectangle(
+    x: number,
+    y: number,
+    w: number,
+    h: number
+  ): SVGElement {
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute('x', String(x));
     rect.setAttribute('y', String(y));
     rect.setAttribute('width', String(w));

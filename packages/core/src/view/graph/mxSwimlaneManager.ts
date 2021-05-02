@@ -8,12 +8,12 @@
 import mxEventSource from '../../util/event/mxEventSource';
 import mxUtils from '../../util/mxUtils';
 import mxEvent from '../../util/event/mxEvent';
-import mxConstants from '../../util/mxConstants';
+import { STYLE_HORIZONTAL } from '../../util/mxConstants';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxGraph from './mxGraph';
-import mxEventObject from "../../util/event/mxEventObject";
-import mxCell from "../cell/mxCell";
-import mxGeometry from "../../util/datatypes/mxGeometry";
+import mxEventObject from '../../util/event/mxEventObject';
+import mxCell from '../cell/mxCell';
+import mxGeometry from '../../util/datatypes/mxGeometry';
 
 /**
  * @class mxSwimlaneManager
@@ -26,10 +26,10 @@ import mxGeometry from "../../util/datatypes/mxGeometry";
  */
 class mxSwimlaneManager extends mxEventSource {
   constructor(
-      graph: mxGraph,
-      horizontal: boolean = true,
-      addEnabled: boolean = true,
-      resizeEnabled: boolean = true
+    graph: mxGraph,
+    horizontal: boolean = true,
+    addEnabled: boolean = true,
+    resizeEnabled: boolean = true
   ) {
     super();
 
@@ -37,17 +37,17 @@ class mxSwimlaneManager extends mxEventSource {
     this.addEnabled = addEnabled;
     this.resizeEnabled = resizeEnabled;
 
-    this.addHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
+    this.addHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled() && this.isAddEnabled()) {
         this.cellsAdded(evt.getProperty('cells'));
       }
-    });
+    };
 
-    this.resizeHandler = mxUtils.bind(this, (sender: any, evt: mxEventObject) => {
+    this.resizeHandler = (sender: any, evt: mxEventObject) => {
       if (this.isEnabled() && this.isResizeEnabled()) {
         this.cellsResized(evt.getProperty('cells'));
       }
-    });
+    };
 
     this.setGraph(graph);
   }
@@ -198,7 +198,7 @@ class mxSwimlaneManager extends mxEventSource {
    */
   // isSwimlaneIgnored(swimlane: mxCell): boolean;
   isSwimlaneIgnored(swimlane: mxCell): boolean {
-    return !((<mxGraph>this.getGraph()).isSwimlane(swimlane));
+    return !(<mxGraph>this.getGraph()).isSwimlane(swimlane);
   }
 
   /**
@@ -209,7 +209,7 @@ class mxSwimlaneManager extends mxEventSource {
   isCellHorizontal(cell: mxCell): boolean {
     if ((<mxGraph>this.graph).isSwimlane(cell)) {
       const style = (<mxGraph>this.graph).getCellStyle(cell);
-      return mxUtils.getValue(style, mxConstants.STYLE_HORIZONTAL, 1) == 1;
+      return mxUtils.getValue(style, STYLE_HORIZONTAL, 1) == 1;
     }
     return !this.isHorizontal();
   }
@@ -329,11 +329,12 @@ class mxSwimlaneManager extends mxEventSource {
    * @param swimlane {@link mxCell} whose size has changed.
    */
   // resizeSwimlane(swimlane: mxCell, w: number, h: number, parentHorizontal: boolean): void;
-  resizeSwimlane(swimlane: mxCell,
-                 w: number,
-                 h: number,
-                 parentHorizontal: boolean): void {
-
+  resizeSwimlane(
+    swimlane: mxCell,
+    w: number,
+    h: number,
+    parentHorizontal: boolean
+  ): void {
     const model = (<mxGraph>this.graph).getModel();
 
     model.beginUpdate();

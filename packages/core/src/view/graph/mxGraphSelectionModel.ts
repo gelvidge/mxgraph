@@ -9,7 +9,6 @@ import mxUndoableEdit from '../../util/undo/mxUndoableEdit';
 import mxEventSource from '../../util/event/mxEventSource';
 import mxEventObject from '../../util/event/mxEventObject';
 import mxClient from '../../mxClient';
-import mxUtils from '../../util/mxUtils';
 import mxSelectionChange from '../../atomic_changes/mxSelectionChange';
 import mxEvent from '../../util/event/mxEvent';
 import mxCell from '../cell/mxCell';
@@ -113,7 +112,7 @@ class mxGraphSelectionModel extends mxEventSource {
   // isSelected(cell: mxCell): boolean;
   isSelected(cell: mxCell): boolean {
     if (cell != null) {
-      return mxUtils.indexOf(this.cells, cell) >= 0;
+      return this.cells.indexOf(cell) >= 0;
     }
     return false;
   }
@@ -302,7 +301,7 @@ class mxGraphSelectionModel extends mxEventSource {
   // cellRemoved(cell: mxCell): void;
   cellRemoved(cell: mxCell): void {
     if (cell != null) {
-      const index = mxUtils.indexOf(this.cells, cell);
+      const index = this.cells.indexOf(cell);
       if (index >= 0) {
         this.cells.splice(index, 1);
       }

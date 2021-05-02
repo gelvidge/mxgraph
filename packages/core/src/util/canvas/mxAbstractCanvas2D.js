@@ -5,7 +5,15 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxUtils from '../mxUtils';
-import mxConstants from '../mxConstants';
+import {
+  DEFAULT_FONTFAMILY,
+  DEFAULT_FONTSIZE,
+  NONE,
+  SHADOWCOLOR,
+  SHADOW_OFFSET_X,
+  SHADOW_OFFSET_Y,
+  SHADOW_OPACITY,
+} from '../mxConstants';
 import mxUrlConverter from '../network/mxUrlConverter';
 import mxPoint from '../datatypes/mxPoint';
 
@@ -162,14 +170,14 @@ class mxAbstractCanvas2D {
       fontColor: '#000000',
       fontBackgroundColor: null,
       fontBorderColor: null,
-      fontSize: mxConstants.DEFAULT_FONTSIZE,
-      fontFamily: mxConstants.DEFAULT_FONTFAMILY,
+      fontSize: DEFAULT_FONTSIZE,
+      fontFamily: DEFAULT_FONTFAMILY,
       fontStyle: 0,
       shadow: false,
-      shadowColor: mxConstants.SHADOWCOLOR,
-      shadowAlpha: mxConstants.SHADOW_OPACITY,
-      shadowDx: mxConstants.SHADOW_OFFSET_X,
-      shadowDy: mxConstants.SHADOW_OFFSET_Y,
+      shadowColor: SHADOWCOLOR,
+      shadowAlpha: SHADOW_OPACITY,
+      shadowDx: SHADOW_OFFSET_X,
+      shadowDy: SHADOW_OFFSET_Y,
       rotation: 0,
       rotationCx: 0,
       rotationCy: 0,
@@ -316,7 +324,7 @@ class mxAbstractCanvas2D {
    * Sets the current fill color.
    */
   setFillColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -344,7 +352,7 @@ class mxAbstractCanvas2D {
    * Sets the current stroke color.
    */
   setStrokeColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -412,7 +420,7 @@ class mxAbstractCanvas2D {
    * Sets the current font color.
    */
   setFontColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -425,7 +433,7 @@ class mxAbstractCanvas2D {
    * Sets the current font background color.
    */
   setFontBackgroundColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -438,7 +446,7 @@ class mxAbstractCanvas2D {
    * Sets the current font border color.
    */
   setFontBorderColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 
@@ -491,7 +499,7 @@ class mxAbstractCanvas2D {
    * Enables or disables and configures the current shadow.
    */
   setShadowColor(value) {
-    if (value === mxConstants.NONE) {
+    if (value === NONE) {
       value = null;
     }
 

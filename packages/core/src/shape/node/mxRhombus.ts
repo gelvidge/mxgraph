@@ -7,7 +7,7 @@
 import mxShape from '../mxShape';
 import mxPoint from '../../util/datatypes/mxPoint';
 import mxUtils from '../../util/mxUtils';
-import mxConstants from '../../util/mxConstants';
+import { LINE_ARCSIZE, STYLE_ARCSIZE } from '../../util/mxConstants';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxSvgCanvas2D from '../../util/canvas/mxSvgCanvas2D';
 
@@ -59,11 +59,7 @@ class mxRhombus extends mxShape {
     const hh = h / 2;
 
     const arcSize =
-      mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_ARCSIZE,
-        mxConstants.LINE_ARCSIZE
-      ) / 2;
+      mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2;
     c.begin();
     this.addPoints(
       c,

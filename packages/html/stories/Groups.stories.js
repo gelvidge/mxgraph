@@ -64,7 +64,7 @@ const Template = ({ label, ...args }) => {
         !this.graph.isValidRoot(parent)
       ) {
         cell = parent;
-        parent = this.cell.getParent();
+        parent = cell.getParent();
       }
     }
 

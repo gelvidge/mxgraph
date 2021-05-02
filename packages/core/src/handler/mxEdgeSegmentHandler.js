@@ -5,7 +5,7 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxPoint from '../util/datatypes/mxPoint';
-import mxConstants from '../util/mxConstants';
+import { CURSOR_TERMINAL_HANDLE } from '../util/mxConstants';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxUtils from '../util/mxUtils';
 import mxElbowEdgeHandler from './mxElbowEdgeHandler';
@@ -303,7 +303,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
     // Source
     let bend = this.createHandleShape(0);
     this.initBend(bend);
-    bend.setCursor(mxConstants.CURSOR_TERMINAL_HANDLE);
+    bend.setCursor(CURSOR_TERMINAL_HANDLE);
     bends.push(bend);
 
     const pts = this.getCurrentPoints();
@@ -332,7 +332,7 @@ class mxEdgeSegmentHandler extends mxElbowEdgeHandler {
     // Target
     bend = this.createHandleShape(pts.length);
     this.initBend(bend);
-    bend.setCursor(mxConstants.CURSOR_TERMINAL_HANDLE);
+    bend.setCursor(CURSOR_TERMINAL_HANDLE);
     bends.push(bend);
 
     return bends;

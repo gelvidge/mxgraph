@@ -31,8 +31,8 @@ const Template = ({ label, ...args }) => {
   graph.centerZoom = false;
 
   // Links level of detail to zoom level but can be independent of zoom
-  const isVisible = function(cell) {
-    return cell.lod == null || cell.lod / 2 < this.view.scale;
+  const isVisible = function() {
+    return this.lod == null || this.lod / 2 < graph.view.scale;
   };
 
   // Gets the default parent for inserting new cells. This

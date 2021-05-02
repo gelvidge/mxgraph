@@ -110,9 +110,9 @@ class mxPopupMenuHandler extends mxPopupMenu {
     // the context menu
     mxEvent.addGestureListeners(
       this.div,
-      mxUtils.bind(this, evt => {
+       evt => {
         this.graph.tooltipHandler.hide();
-      })
+      }
     );
   }
 

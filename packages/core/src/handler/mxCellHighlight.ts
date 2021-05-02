@@ -4,7 +4,13 @@
  * Updated to ES9 syntax by David Morrissey 2021
  * Type definitions from the typed-mxgraph project
  */
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_VALID_COLOR,
+  DIALECT_SVG,
+  HIGHLIGHT_OPACITY,
+  HIGHLIGHT_STROKEWIDTH,
+  STYLE_ROTATION,
+} from '../util/mxConstants';
 import mxEvent from '../util/event/mxEvent';
 import mxRectangle from '../util/datatypes/mxRectangle';
 import mxCellState from '../view/cell/mxCellState';
@@ -23,8 +29,8 @@ import mxShape from '../shape/mxShape';
 class mxCellHighlight {
   constructor(
     graph: mxGraph | null = null,
-    highlightColor: string = mxConstants.DEFAULT_VALID_COLOR,
-    strokeWidth: number = mxConstants.HIGHLIGHT_STROKEWIDTH,
+    highlightColor: string = DEFAULT_VALID_COLOR,
+    strokeWidth: number = HIGHLIGHT_STROKEWIDTH,
     dashed: boolean = false
   ) {
     if (graph != null) {
@@ -32,7 +38,7 @@ class mxCellHighlight {
       this.highlightColor = highlightColor;
       this.strokeWidth = strokeWidth;
       this.dashed = dashed;
-      this.opacity = mxConstants.HIGHLIGHT_OPACITY;
+      this.opacity = HIGHLIGHT_OPACITY;
 
       // Updates the marker if the graph changes
       this.repaintHandler = () => {
@@ -68,17 +74,17 @@ class mxCellHighlight {
   }
 
   // TODO: Document me!!
-  highlightColor: string | null=null;
+  highlightColor: string | null = null;
 
-  strokeWidth: number | null=null;
+  strokeWidth: number | null = null;
 
-  dashed: boolean=false;
+  dashed: boolean = false;
 
-  opacity: number=100;
+  opacity: number = 100;
 
-  repaintHandler: Function | null=null;
+  repaintHandler: Function | null = null;
 
-  shape: mxShape | null=null;
+  shape: mxShape | null = null;
 
   /**
    * Specifies if the highlights should appear on top of everything else in the overlay pane.
@@ -139,14 +145,14 @@ class mxCellHighlight {
 
     if (
       !this.keepOnTop &&
-        // @ts-ignore
+      // @ts-ignore
       this.shape.node.parentNode.firstChild !== this.shape.node
     ) {
       // @ts-ignore
       this.shape.node.parentNode.insertBefore(
-          // @ts-ignore
-          this.shape.node,
-          // @ts-ignore
+        // @ts-ignore
+        this.shape.node,
+        // @ts-ignore
         this.shape.node.parentNode.firstChild
       );
     }
@@ -157,7 +163,9 @@ class mxCellHighlight {
    */
   // createShape(): mxShape;
   createShape(): mxShape {
-    const shape = <mxShape>(<mxGraph>this.graph).cellRenderer.createShape(<mxCellState>this.state);
+    const shape = <mxShape>(
+      (<mxGraph>this.graph).cellRenderer.createShape(<mxCellState>this.state)
+    );
 
     shape.svgStrokeTolerance = (<mxGraph>this.graph).tolerance;
     shape.points = (<mxCellState>this.state).absolutePoints;
@@ -167,11 +175,11 @@ class mxCellHighlight {
     shape.isDashed = this.dashed;
     shape.isShadow = false;
 
-    shape.dialect = mxConstants.DIALECT_SVG;
+    shape.dialect = DIALECT_SVG;
     shape.init((<mxGraph>this.graph).getView().getOverlayPane());
     mxEvent.redirectMouseEvents(shape.node, this.graph, this.state);
 
-    if ((<mxGraph>this.graph).dialect !== mxConstants.DIALECT_SVG) {
+    if ((<mxGraph>this.graph).dialect !== DIALECT_SVG) {
       shape.pointerEvents = false;
     } else {
       shape.svgPointerEvents = 'stroke';
@@ -208,10 +216,9 @@ class mxCellHighlight {
           this.state.width + 2 * this.spacing,
           this.state.height + 2 * this.spacing
         );
-        this.shape.rotation = Number(
-          this.state.style[mxConstants.STYLE_ROTATION] || '0'
-        );
-        this.shape.strokewidth = <number>this.getStrokeWidth() / this.state.view.scale;
+        this.shape.rotation = Number(this.state.style[STYLE_ROTATION] || '0');
+        this.shape.strokewidth =
+          <number>this.getStrokeWidth() / this.state.view.scale;
         this.shape.outline = true;
       }
 
@@ -236,7 +243,7 @@ class mxCellHighlight {
    * Marks the <markedState> and fires a <mark> event.
    */
   // highlight(state: mxCellState): void;
-  highlight(state: mxCellState | null=null): void {
+  highlight(state: mxCellState | null = null): void {
     if (this.state !== state) {
       if (this.shape != null) {
         this.shape.destroy();

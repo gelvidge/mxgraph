@@ -6,7 +6,25 @@
  */
 import mxShape from './mxShape';
 import mxRectangle from '../util/datatypes/mxRectangle';
-import mxConstants from '../util/mxConstants';
+import {
+  DEFAULT_STARTSIZE,
+  DIRECTION_NORTH,
+  DIRECTION_SOUTH,
+  DIRECTION_WEST,
+  LINE_ARCSIZE,
+  NONE,
+  RECTANGLE_ROUNDING_FACTOR,
+  STYLE_ABSOLUTE_ARCSIZE,
+  STYLE_ARCSIZE,
+  STYLE_FLIPH,
+  STYLE_FLIPV,
+  STYLE_HORIZONTAL,
+  STYLE_POINTER_EVENTS,
+  STYLE_SEPARATORCOLOR,
+  STYLE_STARTSIZE,
+  STYLE_SWIMLANE_FILLCOLOR,
+  STYLE_SWIMLANE_LINE,
+} from '../util/mxConstants';
 import mxUtils from '../util/mxUtils';
 
 /**
@@ -63,11 +81,7 @@ class mxSwimlane extends mxShape {
   getTitleSize() {
     return Math.max(
       0,
-      mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_STARTSIZE,
-        mxConstants.DEFAULT_STARTSIZE
-      )
+      mxUtils.getValue(this.style, STYLE_STARTSIZE, DEFAULT_STARTSIZE)
     );
   }
 
@@ -80,25 +94,24 @@ class mxSwimlane extends mxShape {
     const bounds = new mxRectangle(rect.x, rect.y, rect.width, rect.height);
     const horizontal = this.isHorizontal();
 
-    const flipH = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPH, 0) == 1;
-    const flipV = mxUtils.getValue(this.style, mxConstants.STYLE_FLIPV, 0) == 1;
+    const flipH = mxUtils.getValue(this.style, STYLE_FLIPH, 0) == 1;
+    const flipV = mxUtils.getValue(this.style, STYLE_FLIPV, 0) == 1;
 
     // East is default
     const shapeVertical =
-      this.direction === mxConstants.DIRECTION_NORTH ||
-      this.direction === mxConstants.DIRECTION_SOUTH;
+      this.direction === DIRECTION_NORTH || this.direction === DIRECTION_SOUTH;
     const realHorizontal = horizontal == !shapeVertical;
 
     const realFlipH =
       !realHorizontal &&
       flipH !=
-        (this.direction === mxConstants.DIRECTION_SOUTH ||
-          this.direction === mxConstants.DIRECTION_WEST);
+        (this.direction === DIRECTION_SOUTH ||
+          this.direction === DIRECTION_WEST);
     const realFlipV =
       realHorizontal &&
       flipV !=
-        (this.direction === mxConstants.DIRECTION_SOUTH ||
-          this.direction === mxConstants.DIRECTION_WEST);
+        (this.direction === DIRECTION_SOUTH ||
+          this.direction === DIRECTION_WEST);
 
     // Shape is horizontal
     if (!shapeVertical) {
@@ -143,26 +156,20 @@ class mxSwimlane extends mxShape {
    * Returns the arcsize for the swimlane.
    */
   getSwimlaneArcSize(w, h, start) {
-    if (
-      mxUtils.getValue(this.style, mxConstants.STYLE_ABSOLUTE_ARCSIZE, 0) == '1'
-    ) {
+    if (mxUtils.getValue(this.style, STYLE_ABSOLUTE_ARCSIZE, 0) == '1') {
       return Math.min(
         w / 2,
         Math.min(
           h / 2,
-          mxUtils.getValue(
-            this.style,
-            mxConstants.STYLE_ARCSIZE,
-            mxConstants.LINE_ARCSIZE
-          ) / 2
+          mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2
         )
       );
     }
     const f =
       mxUtils.getValue(
         this.style,
-        mxConstants.STYLE_ARCSIZE,
-        mxConstants.RECTANGLE_ROUNDING_FACTOR * 100
+        STYLE_ARCSIZE,
+        RECTANGLE_ROUNDING_FACTOR * 100
       ) / 100;
 
     return start * f * 3;
@@ -173,7 +180,7 @@ class mxSwimlane extends mxShape {
    */
   // isHorizontal(): boolean;
   isHorizontal() {
-    return mxUtils.getValue(this.style, mxConstants.STYLE_HORIZONTAL, 1) == 1;
+    return mxUtils.getValue(this.style, STYLE_HORIZONTAL, 1) == 1;
   }
 
   /**
@@ -182,13 +189,9 @@ class mxSwimlane extends mxShape {
   // paintVertexShape(c: mxAbstractCanvas2D, x: number, y: number, w: number, h: number): void;
   paintVertexShape(c, x, y, w, h) {
     let start = this.getTitleSize();
-    const fill = mxUtils.getValue(
-      this.style,
-      mxConstants.STYLE_SWIMLANE_FILLCOLOR,
-      mxConstants.NONE
-    );
+    const fill = mxUtils.getValue(this.style, STYLE_SWIMLANE_FILLCOLOR, NONE);
     const swimlaneLine =
-      mxUtils.getValue(this.style, mxConstants.STYLE_SWIMLANE_LINE, 1) == 1;
+      mxUtils.getValue(this.style, STYLE_SWIMLANE_LINE, 1) == 1;
     let r = 0;
 
     if (this.isHorizontal()) {
@@ -207,11 +210,7 @@ class mxSwimlane extends mxShape {
       this.paintRoundedSwimlane(c, x, y, w, h, start, r, fill, swimlaneLine);
     }
 
-    const sep = mxUtils.getValue(
-      this.style,
-      mxConstants.STYLE_SEPARATORCOLOR,
-      mxConstants.NONE
-    );
+    const sep = mxUtils.getValue(this.style, STYLE_SEPARATORCOLOR, NONE);
     this.paintSeparator(c, x, y, w, h, start, sep);
 
     if (this.image != null) {
@@ -245,12 +244,10 @@ class mxSwimlane extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events =
-        mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') ==
-        '1';
+      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
     }
 
-    if (!events && (this.fill == null || this.fill === mxConstants.NONE)) {
+    if (!events && (this.fill == null || this.fill === NONE)) {
       c.pointerEvents = false;
     }
 
@@ -262,11 +259,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < h) {
-        if (fill === mxConstants.NONE || !events) {
+        if (fill === NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill !== mxConstants.NONE) {
+        if (fill !== NONE) {
           c.setFillColor(fill);
         }
 
@@ -276,7 +273,7 @@ class mxSwimlane extends mxShape {
         c.lineTo(w, h);
         c.lineTo(w, start);
 
-        if (fill === mxConstants.NONE) {
+        if (fill === NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -290,11 +287,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < w) {
-        if (fill === mxConstants.NONE || !events) {
+        if (fill === NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill !== mxConstants.NONE) {
+        if (fill !== NONE) {
           c.setFillColor(fill);
         }
 
@@ -304,7 +301,7 @@ class mxSwimlane extends mxShape {
         c.lineTo(w, h);
         c.lineTo(start, h);
 
-        if (fill === mxConstants.NONE) {
+        if (fill === NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -313,7 +310,7 @@ class mxSwimlane extends mxShape {
     }
 
     if (swimlaneLine) {
-      this.paintDivider(c, x, y, w, h, start, fill === mxConstants.NONE);
+      this.paintDivider(c, x, y, w, h, start, fill === NONE);
     }
   }
 
@@ -328,12 +325,10 @@ class mxSwimlane extends mxShape {
     let events = true;
 
     if (this.style != null) {
-      events =
-        mxUtils.getValue(this.style, mxConstants.STYLE_POINTER_EVENTS, '1') ==
-        '1';
+      events = mxUtils.getValue(this.style, STYLE_POINTER_EVENTS, '1') == '1';
     }
 
-    if (!events && (this.fill == null || this.fill === mxConstants.NONE)) {
+    if (!events && (this.fill == null || this.fill === NONE)) {
       c.pointerEvents = false;
     }
 
@@ -347,11 +342,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < h) {
-        if (fill === mxConstants.NONE || !events) {
+        if (fill === NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill !== mxConstants.NONE) {
+        if (fill !== NONE) {
           c.setFillColor(fill);
         }
 
@@ -363,7 +358,7 @@ class mxSwimlane extends mxShape {
         c.quadTo(w, h, w, h - r);
         c.lineTo(w, start);
 
-        if (fill === mxConstants.NONE) {
+        if (fill === NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -379,11 +374,11 @@ class mxSwimlane extends mxShape {
       c.fillAndStroke();
 
       if (start < w) {
-        if (fill === mxConstants.NONE || !events) {
+        if (fill === NONE || !events) {
           c.pointerEvents = false;
         }
 
-        if (fill !== mxConstants.NONE) {
+        if (fill !== NONE) {
           c.setFillColor(fill);
         }
 
@@ -395,7 +390,7 @@ class mxSwimlane extends mxShape {
         c.quadTo(w, 0, w - r, 0);
         c.lineTo(start, 0);
 
-        if (fill === mxConstants.NONE) {
+        if (fill === NONE) {
           c.stroke();
         } else {
           c.fillAndStroke();
@@ -404,7 +399,7 @@ class mxSwimlane extends mxShape {
     }
 
     if (swimlaneLine) {
-      this.paintDivider(c, x, y, w, h, start, fill === mxConstants.NONE);
+      this.paintDivider(c, x, y, w, h, start, fill === NONE);
     }
   }
 
@@ -437,7 +432,7 @@ class mxSwimlane extends mxShape {
    * Paints the vertical or horizontal separator line between swimlanes.
    */
   paintSeparator(c, x, y, w, h, start, color) {
-    if (color !== mxConstants.NONE) {
+    if (color !== NONE) {
       c.setStrokeColor(color);
       c.setDashed(true);
       c.begin();

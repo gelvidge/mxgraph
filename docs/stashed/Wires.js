@@ -131,7 +131,7 @@ export default MYNAMEHERE;
       // incoming/outgoing direction.
       graph.getAllConnectionConstraints = function(terminal)
       {
-         let geo = (terminal != null) ? this.getCellGeometry(terminal.cell) : null;
+         let geo = (terminal != null) ? terminal.cell.getGeometry() : null;
 
          if ((geo != null ? !geo.relative : false) &&
            this.getModel().isVertex(terminal.cell) &&
@@ -153,7 +153,7 @@ export default MYNAMEHERE;
         }
         else
         {
-          let geo = (cell != null) ? this.graph.getCellGeometry(cell) : null;
+          let geo = (cell != null) ? cell.getGeometry() : null;
 
           return (geo != null) ? geo.relative : false;
         }
@@ -510,7 +510,7 @@ export default MYNAMEHERE;
         let s = this.scale;
         let tr = this.translate;
         let orig = edge.origin;
-        let geo = this.graph.getCellGeometry(edge.cell);
+        let geo = edge.cell.getGeometry();
         pt = geo.getTerminalPoint(source);
 
         // Computes edge-to-edge connection point

@@ -8,7 +8,6 @@
 import mxDictionary from '../../../util/datatypes/mxDictionary';
 import mxGraphHierarchyNode from './mxGraphHierarchyNode';
 import mxGraphHierarchyEdge from './mxGraphHierarchyEdge';
-import mxUtils from '../../../util/mxUtils';
 
 /**
  * Class: mxGraphHierarchyModel
@@ -94,12 +93,7 @@ class mxGraphHierarchyModel {
               internalTargetCell.connectsAsTarget = [];
             }
 
-            if (
-              mxUtils.indexOf(
-                internalTargetCell.connectsAsTarget,
-                internalEdge
-              ) < 0
-            ) {
+            if (internalTargetCell.connectsAsTarget.indexOf(internalEdge) < 0) {
               internalTargetCell.connectsAsTarget.push(internalEdge);
             }
           }
@@ -259,12 +253,7 @@ class mxGraphHierarchyModel {
 
             internalEdge.source = internalVertices[i];
 
-            if (
-              mxUtils.indexOf(
-                internalVertices[i].connectsAsSource,
-                internalEdge
-              ) < 0
-            ) {
+            if (internalVertices[i].connectsAsSource.indexOf(internalEdge) < 0) {
               internalVertices[i].connectsAsSource.push(internalEdge);
             }
           }

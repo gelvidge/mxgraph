@@ -5,7 +5,11 @@
  * Type definitions from the typed-mxgraph project
  */
 import mxShape from '../mxShape';
-import mxConstants from '../../util/mxConstants';
+import {
+  LINE_ARCSIZE,
+  STYLE_ARCSIZE,
+  STYLE_CURVED,
+} from '../../util/mxConstants';
 import mxUtils from '../../util/mxUtils';
 
 /**
@@ -68,7 +72,7 @@ class mxPolyline extends mxShape {
     const prev = c.pointerEventsValue;
     c.pointerEventsValue = 'stroke';
 
-    if (this.style == null || this.style[mxConstants.STYLE_CURVED] != 1) {
+    if (this.style == null || this.style[STYLE_CURVED] != 1) {
       this.paintLine(c, pts, this.isRounded);
     } else {
       this.paintCurvedLine(c, pts);
@@ -83,11 +87,7 @@ class mxPolyline extends mxShape {
   // paintLine(c: mxAbstractCanvas2D, pts: Array<mxPoint>, rounded?: boolean): void;
   paintLine(c, pts, rounded) {
     const arcSize =
-      mxUtils.getValue(
-        this.style,
-        mxConstants.STYLE_ARCSIZE,
-        mxConstants.LINE_ARCSIZE
-      ) / 2;
+      mxUtils.getValue(this.style, STYLE_ARCSIZE, LINE_ARCSIZE) / 2;
     c.begin();
     this.addPoints(c, pts, rounded, arcSize, false);
     c.stroke();

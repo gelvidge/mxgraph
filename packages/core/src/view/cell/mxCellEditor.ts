@@ -9,17 +9,48 @@ import mxUtils from '../../util/mxUtils';
 import mxRectangle from '../../util/datatypes/mxRectangle';
 import mxEvent from '../../util/event/mxEvent';
 import mxClient from '../../mxClient';
-import mxConstants from '../../util/mxConstants';
+import {
+  ABSOLUTE_LINE_HEIGHT,
+  ALIGN_CENTER,
+  ALIGN_LEFT,
+  ALIGN_MIDDLE,
+  DEFAULT_FONTFAMILY,
+  DEFAULT_FONTSIZE,
+  DEFAULT_TEXT_DIRECTION,
+  DIALECT_STRICTHTML,
+  FONT_BOLD,
+  FONT_ITALIC,
+  FONT_STRIKETHROUGH,
+  FONT_UNDERLINE,
+  LINE_HEIGHT,
+  STYLE_ALIGN,
+  STYLE_FONTCOLOR,
+  STYLE_LABEL_POSITION,
+  STYLE_LABEL_WIDTH,
+  STYLE_OVERFLOW,
+  STYLE_VERTICAL_ALIGN,
+  STYLE_VERTICAL_LABEL_POSITION,
+  WORD_WRAP,
+} from '../../util/mxConstants';
 import mxText from '../../shape/mxText';
 import mxGraph from '../graph/mxGraph';
 import mxCell from './mxCell';
 import mxMouseEvent from '../../util/event/mxMouseEvent';
 import mxCellState from './mxCellState';
-import mxShape from "../../shape/mxShape";
-import mxEventObject from "../../util/event/mxEventObject";
-import {extractTextWithWhitespace, isNode} from '../../util/mxDomUtils';
-import { htmlEntities, replaceTrailingNewlines } from '../../util/mxStringUtils';
-import { getSource, isConsumed, isControlDown, isMetaDown, isShiftDown } from '../../util/mxEventUtils';
+import mxShape from '../../shape/mxShape';
+import mxEventObject from '../../util/event/mxEventObject';
+import { extractTextWithWhitespace, isNode } from '../../util/mxDomUtils';
+import {
+  htmlEntities,
+  replaceTrailingNewlines,
+} from '../../util/mxStringUtils';
+import {
+  getSource,
+  isConsumed,
+  isControlDown,
+  isMetaDown,
+  isShiftDown,
+} from '../../util/mxEventUtils';
 
 /**
  * Class: mxCellEditor
@@ -141,8 +172,8 @@ class mxCellEditor {
     // Handling of deleted cells while editing
     this.changeHandler = (sender: any) => {
       if (
-          this.editingCell != null &&
-          this.graph.getView().getState(this.editingCell, false) == null
+        this.editingCell != null &&
+        this.graph.getView().getState(this.editingCell, false) == null
       ) {
         this.stopEditing(true);
       }
@@ -401,25 +432,17 @@ class mxCellEditor {
   installListeners(elt: HTMLElement) {
     // Applies value if text is dragged
     // LATER: Gesture mouse events ignored for starting move
-    mxEvent.addListener(
-      elt,
-      'dragstart',
-      (evt: Event) => {
-        this.graph.stopEditing(false);
-        mxEvent.consume(evt);
-      }
-    );
+    mxEvent.addListener(elt, 'dragstart', (evt: Event) => {
+      this.graph.stopEditing(false);
+      mxEvent.consume(evt);
+    });
 
     // Applies value if focus is lost
-    mxEvent.addListener(
-      elt,
-      'blur',
-      (evt: Event) => {
-        if (this.blurEnabled) {
-          this.focusLost();
-        }
+    mxEvent.addListener(elt, 'blur', (evt: Event) => {
+      if (this.blurEnabled) {
+        this.focusLost();
       }
-    );
+    });
 
     // Updates modified state and handles placeholder text
     mxEvent.addListener(elt, 'keydown', (evt: KeyboardEvent) => {
@@ -464,10 +487,7 @@ class mxCellEditor {
         // In Safari and FF, an empty text is represented by <BR> which isn't enough to force a valid size
         const textarea = <HTMLElement>this.textarea;
 
-        if (
-            textarea.innerHTML.length === 0 ||
-            textarea.innerHTML === '<br>'
-        ) {
+        if (textarea.innerHTML.length === 0 || textarea.innerHTML === '<br>') {
           textarea.innerHTML = this.getEmptyLabelText();
           this.clearOnChange = textarea.innerHTML.length > 0;
         } else {
@@ -484,11 +504,7 @@ class mxCellEditor {
     const evtName = 'input';
 
     const resizeHandler = (evt: Event) => {
-      if (
-        this.editingCell != null &&
-        this.autoSize &&
-        !isConsumed(evt)
-      ) {
+      if (this.editingCell != null && this.autoSize && !isConsumed(evt)) {
         // Asynchronous is needed for keydown and shows better results for input events overall
         // (ie non-blocking and cases where the offsetWidth/-Height was wrong at this time)
         if (this.resizeThread != null) {
@@ -520,7 +536,7 @@ class mxCellEditor {
     return (
       evt.keyCode === 113 /* F2 */ ||
       (this.graph.isEnterStopsCellEditing() &&
-      evt.keyCode === 13 /* Enter */ &&
+        evt.keyCode === 13 /* Enter */ &&
         !isControlDown(evt) &&
         !isShiftDown(evt))
     );
@@ -578,13 +594,13 @@ class mxCellEditor {
           (this.bounds.width >= 2 || this.bounds.height >= 2) &&
           this.textarea.innerHTML !== this.getEmptyLabelText()
         ) {
-          this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
+          this.textarea.style.wordWrap = WORD_WRAP;
           this.textarea.style.whiteSpace = 'normal';
 
           if (state.style.overflow !== 'fill') {
-            this.textarea.style.width = `${Math.round(
-              this.bounds.width / scale
-            ) + this.wordWrapPadding}px`;
+            this.textarea.style.width = `${
+              Math.round(this.bounds.width / scale) + this.wordWrapPadding
+            }px`;
           }
         } else {
           this.textarea.style.whiteSpace = 'nowrap';
@@ -594,26 +610,14 @@ class mxCellEditor {
           }
         }
       } else {
-        const lw = mxUtils.getValue(
-          state.style,
-          mxConstants.STYLE_LABEL_WIDTH,
-          null
-        );
+        const lw = mxUtils.getValue(state.style, STYLE_LABEL_WIDTH, null);
         m = state.text != null && this.align == null ? state.text.margin : null;
 
         if (m == null) {
           m = mxUtils.getAlignmentAsPoint(
             this.align ||
-              mxUtils.getValue(
-                state.style,
-                mxConstants.STYLE_ALIGN,
-                mxConstants.ALIGN_CENTER
-              ),
-            mxUtils.getValue(
-              state.style,
-              mxConstants.STYLE_VERTICAL_ALIGN,
-              mxConstants.ALIGN_MIDDLE
-            )
+              mxUtils.getValue(state.style, STYLE_ALIGN, ALIGN_CENTER),
+            mxUtils.getValue(state.style, STYLE_VERTICAL_ALIGN, ALIGN_MIDDLE)
           );
         }
 
@@ -634,13 +638,13 @@ class mxCellEditor {
           let bounds = mxRectangle.fromRectangle(state);
           let hpos = mxUtils.getValue(
             state.style,
-            mxConstants.STYLE_LABEL_POSITION,
-            mxConstants.ALIGN_CENTER
+            STYLE_LABEL_POSITION,
+            ALIGN_CENTER
           );
           let vpos = mxUtils.getValue(
             state.style,
-            mxConstants.STYLE_VERTICAL_LABEL_POSITION,
-            mxConstants.ALIGN_MIDDLE
+            STYLE_VERTICAL_LABEL_POSITION,
+            ALIGN_MIDDLE
           );
 
           bounds =
@@ -654,7 +658,7 @@ class mxCellEditor {
 
           if (
             !state.view.graph.cellRenderer.legacySpacing ||
-            state.style[mxConstants.STYLE_OVERFLOW] !== 'width'
+            state.style[STYLE_OVERFLOW] !== 'width'
           ) {
             // @ts-ignore
             const dummy = new mxText(); // FIXME!!!! ===================================================================================================
@@ -691,13 +695,11 @@ class mxCellEditor {
               bounds.x + spacingLeft,
               bounds.y + spacingTop,
               bounds.width -
-                (hpos === mxConstants.ALIGN_CENTER && lw == null
+                (hpos === ALIGN_CENTER && lw == null
                   ? spacingLeft + spacingRight
                   : 0),
               bounds.height -
-                (vpos === mxConstants.ALIGN_MIDDLE
-                  ? spacingTop + spacingBottom
-                  : 0)
+                (vpos === ALIGN_MIDDLE ? spacingTop + spacingBottom : 0)
             );
           }
 
@@ -717,7 +719,7 @@ class mxCellEditor {
           (this.bounds.width >= 2 || this.bounds.height >= 2) &&
           this.textarea.innerHTML !== this.getEmptyLabelText()
         ) {
-          this.textarea.style.wordWrap = mxConstants.WORD_WRAP;
+          this.textarea.style.wordWrap = WORD_WRAP;
           this.textarea.style.whiteSpace = 'normal';
 
           // Forces automatic reflow if text is removed from an oversize label and normal word wrap
@@ -811,7 +813,10 @@ class mxCellEditor {
    * trigger - Optional mouse event that triggered the editor.
    */
   // startEditing(cell: mxCell, trigger?: MouseEvent): void;
-  startEditing(cell: mxCell, trigger: mxMouseEvent | MouseEvent | null = null): void {
+  startEditing(
+    cell: mxCell,
+    trigger: mxMouseEvent | MouseEvent | null = null
+  ): void {
     this.stopEditing(true);
     this.align = null;
 
@@ -830,39 +835,30 @@ class mxCellEditor {
       // Configures the style of the in-place editor
       const { scale } = this.graph.getView();
       const size =
-        state.style.fontSize != null
-          ? state.style.fontSize
-          : mxConstants.DEFAULT_FONTSIZE;
+        state.style.fontSize != null ? state.style.fontSize : DEFAULT_FONTSIZE;
       const family =
         state.style.fontFamily != null
           ? state.style.fontFamily
-          : mxConstants.DEFAULT_FONTFAMILY;
-      const color = mxUtils.getValue(
-        state.style,
-        mxConstants.STYLE_FONTCOLOR,
-        'black'
-      );
-      const align = mxUtils.getValue(
-        state.style,
-        mxConstants.STYLE_ALIGN,
-        mxConstants.ALIGN_LEFT
-      );
-      const bold = (state.style.fontStyle || 0) & mxConstants.FONT_BOLD;
-      const italic = (state.style.fontStyle || 0) & mxConstants.FONT_ITALIC;
+          : DEFAULT_FONTFAMILY;
+      const color = mxUtils.getValue(state.style, STYLE_FONTCOLOR, 'black');
+      const align = mxUtils.getValue(state.style, STYLE_ALIGN, ALIGN_LEFT);
+      const bold = (state.style.fontStyle || 0) & FONT_BOLD;
+      const italic = (state.style.fontStyle || 0) & FONT_ITALIC;
 
       const txtDecor = [];
-      if ((state.style.fontStyle || 0) & mxConstants.FONT_UNDERLINE) {
+      if ((state.style.fontStyle || 0) & FONT_UNDERLINE) {
         txtDecor.push('underline');
       }
-      if ((state.style.fontStyle || 0) & mxConstants.FONT_STRIKETHROUGH) {
+      if ((state.style.fontStyle || 0) & FONT_STRIKETHROUGH) {
         txtDecor.push('line-through');
       }
 
       const textarea = <HTMLElement>this.textarea;
-      textarea.style.lineHeight = mxConstants.ABSOLUTE_LINE_HEIGHT
-        ? `${Math.round(size * mxConstants.LINE_HEIGHT)}px`
-        : String(mxConstants.LINE_HEIGHT);
-      textarea.style.backgroundColor = this.getBackgroundColor(state) || 'transparent';
+      textarea.style.lineHeight = ABSOLUTE_LINE_HEIGHT
+        ? `${Math.round(size * LINE_HEIGHT)}px`
+        : String(LINE_HEIGHT);
+      textarea.style.backgroundColor =
+        this.getBackgroundColor(state) || 'transparent';
       textarea.style.textDecoration = txtDecor.join(' ');
       textarea.style.fontWeight = bold ? 'bold' : 'normal';
       textarea.style.fontStyle = italic ? 'italic' : '';
@@ -876,12 +872,12 @@ class mxCellEditor {
       let dir = (this.textDirection =
         state.style.textDirection != null
           ? state.style.textDirection
-          : mxConstants.DEFAULT_TEXT_DIRECTION);
+          : DEFAULT_TEXT_DIRECTION);
 
       if (dir === 'auto') {
         if (
           state.text != null &&
-          state.text.dialect !== mxConstants.DIALECT_STRICTHTML &&
+          state.text.dialect !== DIALECT_STRICTHTML &&
           !isNode(state.text.value)
         ) {
           dir = state.text.getAutoDirection();
@@ -895,21 +891,18 @@ class mxCellEditor {
       }
 
       // Sets the initial editing value
-      textarea.innerHTML = this.getInitialValue(state, <mxMouseEvent>trigger) || '';
+      textarea.innerHTML =
+        this.getInitialValue(state, <mxMouseEvent>trigger) || '';
       this.initialValue = textarea.innerHTML;
 
       // Uses an optional text value for empty labels which is cleared
       // when the first keystroke appears. This makes it easier to see
       // that a label is being edited even if the label is empty.
-      if (
-          textarea.innerHTML.length === 0 ||
-          textarea.innerHTML === '<br>'
-      ) {
+      if (textarea.innerHTML.length === 0 || textarea.innerHTML === '<br>') {
         textarea.innerHTML = <string>this.getEmptyLabelText();
         this.clearOnChange = true;
       } else {
-        this.clearOnChange =
-            textarea.innerHTML === this.getEmptyLabelText();
+        this.clearOnChange = textarea.innerHTML === this.getEmptyLabelText();
       }
 
       // @ts-ignore
@@ -930,14 +923,11 @@ class mxCellEditor {
         this.autoSize &&
         // @ts-ignore
         (this.graph.model.isEdge(state.cell) ||
-          state.style[mxConstants.STYLE_OVERFLOW] !== 'fill')
+          state.style[STYLE_OVERFLOW] !== 'fill')
       ) {
-        window.setTimeout(
-          mxUtils.bind(this, () => {
-            this.resize();
-          }),
-          0
-        );
+        window.setTimeout(() => {
+          this.resize();
+        }, 0);
       }
 
       this.resize();
@@ -949,7 +939,7 @@ class mxCellEditor {
 
         if (
           this.isSelectText() &&
-            textarea.innerHTML.length > 0 &&
+          textarea.innerHTML.length > 0 &&
           (textarea.innerHTML !== this.getEmptyLabelText() ||
             !this.clearOnChange)
         ) {
@@ -1017,7 +1007,7 @@ class mxCellEditor {
 
       if (
         this.clearOnChange &&
-          textarea.innerHTML === this.getEmptyLabelText()
+        textarea.innerHTML === this.getEmptyLabelText()
       ) {
         textarea.innerHTML = '';
         this.clearOnChange = false;
@@ -1037,9 +1027,7 @@ class mxCellEditor {
           }
 
           if (this.align != null) {
-            this.graph.setCellStyles(mxConstants.STYLE_ALIGN, this.align, [
-              state.cell,
-            ]);
+            this.graph.setCellStyles(STYLE_ALIGN, this.align, [state.cell]);
           }
         } finally {
           this.graph.getModel().endUpdate();
@@ -1062,10 +1050,7 @@ class mxCellEditor {
   // prepareTextarea(): void;
   prepareTextarea(): void {
     const textarea = <HTMLElement>this.textarea;
-    if (
-        textarea.lastChild != null &&
-        textarea.lastChild.nodeName === 'BR'
-    ) {
+    if (textarea.lastChild != null && textarea.lastChild.nodeName === 'BR') {
       textarea.removeChild(textarea.lastChild);
     }
   }
@@ -1116,9 +1101,11 @@ class mxCellEditor {
     if (
       !isEdge &&
       state.view.graph.cellRenderer.legacySpacing &&
-      state.style[mxConstants.STYLE_OVERFLOW] === 'fill'
+      state.style[STYLE_OVERFLOW] === 'fill'
     ) {
-      result = (<mxShape>state.shape).getLabelBounds(mxRectangle.fromRectangle(state));
+      result = (<mxShape>state.shape).getLabelBounds(
+        mxRectangle.fromRectangle(state)
+      );
     } else {
       // @ts-ignore
       const dummy = new mxText(); // FIXME!!!! ===================================================================================================
@@ -1197,10 +1184,12 @@ class mxCellEditor {
 
       // Applies the horizontal and vertical label positions
       if (state.cell.isVertex()) {
-        const horizontal: string = <string>mxUtils.getStringValue(
-          state.style,
-          mxConstants.STYLE_LABEL_POSITION,
-          mxConstants.ALIGN_CENTER
+        const horizontal: string = <string>(
+          mxUtils.getStringValue(
+            state.style,
+            STYLE_LABEL_POSITION,
+            ALIGN_CENTER
+          )
         );
 
         if (horizontal === 'left') {

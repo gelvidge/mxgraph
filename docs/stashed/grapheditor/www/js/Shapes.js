@@ -44,7 +44,7 @@
 				for (let i = 0; i < cols.length; i++)
 				{
 					let clr = (mxUtils.mod(i, 2) == 1) ? evenColColor : oddColColor;
-					let geo = graph.getCellGeometry(cols[i]);
+					let geo = cols[i].getGeometry();
 					
 					if (geo != null && clr != mxConstants.NONE)
 					{
@@ -75,7 +75,7 @@
 				for (let i = 0; i < rows.length; i++)
 				{
 					let clr = (mxUtils.mod(i, 2) == 1) ? evenRowColor : oddRowColor;
-					let geo = graph.getCellGeometry(rows[i]);
+					let geo = rows[i].getGeometry();
 	
 					if (geo != null && clr != mxConstants.NONE)
 					{
@@ -193,7 +193,7 @@
 			{
 				for (let i = 1; i < rows.length; i++)
 				{
-					let geo = graph.getCellGeometry(rows[i]);
+					let geo = rows[i].getGeometry();
 					
 					if (geo != null)
 					{
@@ -213,7 +213,7 @@
 				// Paints column lines
 				for (let i = 1; i < cols.length; i++)
 				{
-					let geo = graph.getCellGeometry(cols[i]);
+					let geo = cols[i].getGeometry();
 					
 					if (geo != null)
 					{

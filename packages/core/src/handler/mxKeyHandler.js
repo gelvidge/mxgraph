@@ -8,7 +8,6 @@
 import mxEvent from '../util/event/mxEvent';
 import { isAncestorNode } from '../util/mxDomUtils';
 import { getSource, isAltDown, isConsumed, isControlDown as _isControlDown, isShiftDown } from '../util/mxEventUtils';
-import mxUtils from '../util/mxUtils';
 
 /**
  * Class: mxKeyHandler

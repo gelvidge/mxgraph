@@ -2578,7 +2578,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 			}
 			else if (cells[i].isVertex())
 			{
-				let geo = this.graph.getCellGeometry(cells[i]);
+				let geo = cells[i].getGeometry();
 				
 				if (geo != null && geo.relative)
 				{
@@ -2691,7 +2691,7 @@ FilenameDialog.createFileTypes = function(editorUi, nameInput, types)
 		if (immediate)
 		{
 			let geo = (cell.isEdge()) ? null :
-				this.graph.getCellGeometry(cell);
+				cell.getGeometry();
 			
 			result = !parent.isEdge() &&
 				!this.graph.isSiblingSelected(cell) &&
